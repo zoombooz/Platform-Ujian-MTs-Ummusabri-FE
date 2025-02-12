@@ -13,45 +13,45 @@ export function VerticalLayout() {
     return (
         <div className="h-full w-60 bg-green-900 flex flex-col py-8 text-white">
             <NavLink to="/" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:home" shape="micro"/>
+                <Icon name="heroicons:home" shape="outline"/>
                 <p className={style.text}>Dashboard</p>
             </NavLink>
 
             <NavLink to="/admin" className={({isActive}) => (isActive ? style.active : '') + ` ${style.list}`}>
                 <div className={style.option}>
-                    <Icon name="heroicons_outline:computer-desktop" shape="outline"/>
+                    <Icon name="heroicons:computer-desktop" shape="outline"/>
                     <p className={style.text}>Administrator</p>
                 </div>
-                <Icon name="heroicons_outline:chevron-left" shape="outline"/>
+                <Icon name="heroicons:chevron-left" shape="outline"/>
             </NavLink>
 
             <NavLink to="/daftar-ujian" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:book-open" shape="outline"/>
+                <Icon name="heroicons:book-open" shape="outline"/>
                 <p className={style.text}>Daftar Ujian</p>
             </NavLink>
 
             <NavLink to="/pengaturan" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:cog-8-tooth" shape="outline"/>
+                <Icon name="heroicons:cog-8-tooth" shape="outline"/>
                 <p className={style.text}>Pengaturan Ujian</p>
             </NavLink>
 
             <NavLink to="/ujian" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:globe-asia-australia" shape="outline"/>
+                <Icon name="heroicons:globe-asia-australia" shape="outline"/>
                 <p className={style.text}>Ujian Online</p>
             </NavLink>
 
             <NavLink to="/hasil" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:pencil-square" shape="outline"/>
+                <Icon name="heroicons:pencil-square" shape="outline"/>
                 <p className={style.text}>Hasil Ujian</p>
             </NavLink>
 
             <NavLink to="/pesanan" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:shopping-cart" shape="outline"/>
+                <Icon name="heroicons:shopping-cart" shape="outline"/>
                 <p className={style.text}>Pesanan</p>
             </NavLink>
 
             <NavLink to="/logout" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name="heroicons_outline:arrow-left-start-on-rectangle" shape="outline"/>
+                <Icon name="heroicons:arrow-left-start-on-rectangle" shape="outline"/>
                 <p className={style.text}>Logout</p>
             </NavLink>
         </div>

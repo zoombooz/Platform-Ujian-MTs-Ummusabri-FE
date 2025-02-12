@@ -1,16 +1,17 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
+// import App from './App.tsx';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router';
 import { Layout } from './layout/layout.tsx';
+import { DashboardPage } from './pages/dashboard.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route element={<Layout/>}>
-                    <Route path="" element={<App/>} />
+                    <Route path="" element={<DashboardPage/>} />
 
                     <Route path="ujian" element={
                         <div>
