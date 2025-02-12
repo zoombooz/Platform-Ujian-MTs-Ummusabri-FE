@@ -11,7 +11,7 @@ export function VerticalLayout() {
     }
 
     return (
-        <div className="h-full w-60 bg-green-900 flex flex-col py-8 text-white">
+        <div className="h-full w-60 bg-green-900 flex flex-col py-8 text-white overflow-y-hidden">
             <NavLink to="/" className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
                 <Icon name="heroicons:home" shape="outline"/>
                 <p className={style.text}>Dashboard</p>
