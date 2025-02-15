@@ -13,15 +13,16 @@ export function DashboardPage() {
             <h1 className="text-2xl font-extralight">Dashboard</h1>
 
             <div className="w-full grid grid-cols-4 gap-6">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
             </div>
 
             <div className="w-full h-fit flex flex-col md:flex-row gap-4 mb-12">
-                <div className="flex flex-col justify-between w-1/4 h-full border border-gray-200 shadow-md rounded-md">
+                <div className="flex flex-col justify-between w-1/4 h-fit border border-gray-200 shadow-md rounded-md">
                     <div className="flex flex-col items-center p-6">
+                        {/* <img src="../assets/logo-pesri.png" alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-4"/> */}
                         <img src="https://picsum.photos/200" className="rounded-full drop-shadow-xl mb-4"></img>
                         <p className="text-gray-500 text-xl font-medium">MTS UMMUSABRI</p>
                         <p className="text-blue-400 text-sm font-semibold">ADMIN SEKOLAH</p>
@@ -40,7 +41,7 @@ export function DashboardPage() {
                 </div>
 
                 <div className="w-3/4 h-full border border-gray-200 p-6 shadow-md rounded-md">
-                
+
                     <h2 className="text-blue-600/50 text-lg font-bold">DASHBOARD *USER*</h2>
 
                     <hr className="text-gray-200 my-4"/>
@@ -48,7 +49,7 @@ export function DashboardPage() {
                     <div className="flex flex-col gap-6">
                         <h2 className="text-3xl font-light">Selamat Datang</h2>
                         <p>Hai <strong>*NAMA SEKOLAH*</strong>, selamat datang di halaman Proktor Sekolah.</p>
-                        <p>
+                        <div>
                             <strong>Anda sedang login sebagai Proktor sekolah</strong>, fasilitas yang dapat anda manfaatkan adalah :
                             <ol className="list-decimal translate-x-4">
                                 <li>Mengatur Akun guru yang menggunakan aplikasi ini.</li>
@@ -66,7 +67,7 @@ export function DashboardPage() {
                                 <li>Mencetak Analisis Butir Soal.</li>
                                 <li>Melihat Detail Hasil Ujian Siswa.</li>
                             </ol>
-                        </p>
+                        </div>
                     </div>
 
                 </div>

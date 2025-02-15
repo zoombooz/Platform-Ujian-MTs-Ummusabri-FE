@@ -11,6 +11,33 @@ createRoot(document.getElementById('root')!).render(
             <Routes>
                 <Route element={<Layout/>}>
                     <Route path="" element={<DashboardPage/>} />
+                    <Route path="admin" element={
+                        <div>
+                            <h1>Ujian Works!!!</h1>
+                            <Outlet/>
+                        </div>
+                    }>
+                        <Route index element={<h2>Hello world?!?!?!</h2>} />
+                        <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
+                    </Route>
+                    <Route path="daftar-ujian" element={
+                        <div>
+                            <h1>Daftar Ujian Works!!!</h1>
+                            <Outlet/>
+                        </div>
+                    }>
+                        <Route index element={<h2>Hello world?!?!?!</h2>} />
+                        <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
+                    </Route>
+                    <Route path="pengaturan" element={
+                        <div>
+                            <h1>Pengaturan Works!!!</h1>
+                            <Outlet/>
+                        </div>
+                    }>
+                        <Route index element={<h2>Hello world?!?!?!</h2>} />
+                        <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
+                    </Route>
 
                     <Route path="ujian" element={
                         <div>
@@ -21,8 +48,26 @@ createRoot(document.getElementById('root')!).render(
                         <Route index element={<h2>Hello world?!?!?!</h2>} />
                         <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
                     </Route>
+                    <Route path="hasil" element={
+                        <div>
+                            <h1>Hasil Works!!!</h1>
+                            <Outlet/>
+                        </div>
+                    }>
+                        <Route index element={<h2>Hello world?!?!?!</h2>} />
+                        <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
+                    </Route>
+                    <Route path="pesanan" element={
+                        <div>
+                            <h1>Pesanan Works!!!</h1>
+                            <Outlet/>
+                        </div>
+                    }>
+                        <Route index element={<h2>Hello world?!?!?!</h2>} />
+                        <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
+                    </Route>
 
-                    <Route path="about">
+                    {/* <Route path="about">
                         <Route  index element={
                             <div>
                                 <h1>About works!!!</h1>
@@ -37,7 +82,7 @@ createRoot(document.getElementById('root')!).render(
                             <Route path=":idk" element={<h1>Hello idk what to say</h1>}></Route>
                         </Route>
                         
-                    </Route>
+                    </Route> */}
 
                 </Route>
 
