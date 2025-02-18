@@ -2,6 +2,10 @@ import { JSX } from "react"
 
 export function Identitas() {
 
+    const style = {
+        button: "transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer"
+    }
+
     const InputTextContainer = ({title, id}: {title: string, id: string}): JSX.Element => {
         return (
             <div className="flex flex-col gap-1.5">
@@ -47,8 +51,8 @@ export function Identitas() {
                     </div>
 
                     <div className="flex gap-2 mt-4">
-                        <button type="submit" className="bg-blue-400 hover:bg-blue-500 transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer">UPDATE</button>
-                        <button type="reset" className="bg-red-400 hover:bg-red-500 transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer">BATAL</button>
+                        <button type="submit" className={"bg-blue-400 hover:bg-blue-500 " + style.button}>UPDATE</button>
+                        <button type="reset" className={"bg-red-400 hover:bg-red-500 " + style.button}>BATAL</button>
                     </div>
 
                 </form>

@@ -40,7 +40,7 @@ export function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="w-3/4 h-full border border-gray-200 p-6 shadow-md rounded-md bg-whitew">
+                <div className="w-3/4 h-full border border-gray-200 p-6 shadow-md rounded-md bg-white">
 
                     <h2 className="text-blue-400 text-lg font-bold">DASHBOARD *USER*</h2>
 
