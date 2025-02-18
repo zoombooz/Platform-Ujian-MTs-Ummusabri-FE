@@ -29,6 +29,7 @@ export function VerticalLayout() {
         subOption: "flex items-center gap-2 px-4 py-1 transition-all",
         list: "flex items-center justify-between hover:bg-gray-700 pr-4 transition-all",
         sublist: "flex items-center justify-between hover:bg-gray-700 pl-4 transition-all",
+        sublistOpen: 'bg-gray-700',
         active: "bg-red-500 hover:bg-red-600",
         text: "text-sm font-light",
     }
@@ -57,7 +58,7 @@ export function VerticalLayout() {
         <div className="h-full w-60 bg-green-900 flex flex-col py-8 text-white overflow-y-hidden">
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />
 
-            <div onClick={() => openSublist('admin')} className={style.list}>
+            <div onClick={() => openSublist('admin')} className={`${style.list} ${subList['admin'] ? style.sublistOpen : ''} `}>
                 <div className={style.option}>
                     <Icon name="heroicons:computer-desktop" shape="outline"/>
                     <p className={style.text}>Administrator</p>
@@ -83,7 +84,7 @@ export function VerticalLayout() {
 
             <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Daftar Ujian" />
 
-            <div onClick={() => openSublist('pengaturanUjian')} className={style.list}>
+            <div onClick={() => openSublist('pengaturanUjian')} className={`${style.list} ${subList['pengaturanUjian'] ? style.sublistOpen : ''}`}>
                 <div className={style.option}>
                     <Icon name="heroicons:cog-8-tooth" shape="outline"/>
                     <p className={style.text}>Pengaturan Ujian</p>
@@ -106,7 +107,7 @@ export function VerticalLayout() {
                 </div>)
             }
 
-            <div onClick={() => openSublist('ujianOnline')} className={style.list}>
+            <div onClick={() => openSublist('ujianOnline')} className={`${style.list} ${subList['ujianOnline'] ? style.sublistOpen : ''}`}>
                 <div className={style.option}>
                     <Icon name="heroicons:globe-asia-australia" shape="outline"/>
                     <p className={style.text}>Ujian Online</p>
@@ -125,7 +126,7 @@ export function VerticalLayout() {
                 </div>)
             }
 
-            <div onClick={() => openSublist('hasilUjian')} className={style.list}>
+            <div onClick={() => openSublist('hasilUjian')} className={`${style.list} ${subList['hasilUjian'] ? style.sublistOpen : ''}`}>
                 <div className={style.option}>
                     <Icon name="heroicons:pencil-square" shape="outline"/>
                     <p className={style.text}>Ujian Online</p>
