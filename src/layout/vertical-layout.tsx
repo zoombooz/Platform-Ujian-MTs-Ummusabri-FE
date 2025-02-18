@@ -1,8 +1,11 @@
 import { NavLink } from "react-router";
 import { Icon } from "../components/icon";
 import { JSX, useState } from "react";
+import { useLayout } from "../context/LayoutContext";
 
 export function VerticalLayout() {
+
+    const { isExpanded } = useLayout();
 
     const [subList, setSubList] = useState<{[key: string]: boolean}>({
         'admin': false,
@@ -10,6 +13,16 @@ export function VerticalLayout() {
         'ujianOnline': false,
         'hasilUjian': false,
     })
+
+    const style = {
+        option: "flex items-center gap-2 px-4 py-1 transition-all hover:bg-gray-700",
+        subOption: "flex items-center gap-2 px-4 py-1 transition-all",
+        list: "flex items-center justify-between hover:bg-gray-700 transition-all",
+        sublist: "flex items-center justify-between hover:bg-gray-700 pl-4 transition-all",
+        sublistOpen: 'bg-gray-700',
+        active: "bg-red-500 hover:bg-red-600",
+        text: "text-sm font-light",
+    }
 
     const openSublist = (option: string) => {
         setSubList(prevSubList => {
@@ -24,22 +37,31 @@ export function VerticalLayout() {
         })
     }
 
-    const style = {
-        option: "flex items-center gap-2 px-4 py-2 transition-all hover:bg-gray-700",
-        subOption: "flex items-center gap-2 px-4 py-1 transition-all",
-        list: "flex items-center justify-between hover:bg-gray-700 pr-4 transition-all",
-        sublist: "flex items-center justify-between hover:bg-gray-700 pl-4 transition-all",
-        sublistOpen: 'bg-gray-700',
-        active: "bg-red-500 hover:bg-red-600",
-        text: "text-sm font-light",
-    }
-
     const ListContainer = ({href, icon, title}: {href: string, icon: string, title: string}) => {
         return (
-            <NavLink to={href} className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
-                <Icon name={icon} shape="outline"/>
-                <p className={style.text}>{title}</p>
+            <NavLink to={href} className={({isActive}) => (isActive ? style.active : '' + ` flex`)}>
+                <div className={style.option}>
+                    <Icon name={icon} shape="outline"/>
+                    {isExpanded && <p className={style.text}>{title}</p>}
+                </div>
             </NavLink>
+        )
+    }
+
+    const SublistHead = ({name, title, icon}: {name: string, title: string, icon: string}) => {
+        return (
+            <div onClick={() => openSublist(name)} className={`${style.list} ${subList[name] ? style.sublistOpen : ''} `}>
+                <div className={style.option}>
+                    <Icon name={icon} shape="outline"/>
+                    {isExpanded && <p className={style.text}>{title}</p>}
+                </div>
+                {isExpanded && 
+                    <div className="pr-4">
+                        <Icon name={`heroicons:chevron-${subList[name] ? 'down' : 'left'}`} shape="outline"/>
+                    </div>
+                }
+                
+            </div>
         )
     }
 
@@ -55,22 +77,12 @@ export function VerticalLayout() {
     }
 
     return (
-        <div className="h-full w-60 bg-green-900 flex flex-col py-8 text-white overflow-y-hidden">
+        <div className={`h-full ${isExpanded ? 'w-60' : 'w-fit'} bg-green-900 flex flex-col gap-2 py-8 text-white overflow-y-hidden`}>
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />
 
-            <div onClick={() => openSublist('admin')} className={`${style.list} ${subList['admin'] ? style.sublistOpen : ''} `}>
-                <div className={style.option}>
-                    <Icon name="heroicons:computer-desktop" shape="outline"/>
-                    <p className={style.text}>Administrator</p>
-                </div>
-                { subList['admin'] 
-                    ? <Icon name="heroicons:chevron-down" shape="outline"/>
-                    : <Icon name="heroicons:chevron-left" shape="outline"/>
-                }
-                
-            </div>
+            <SublistHead name="admin" title="Administrator" icon="heroicons:computer-desktop" />
 
-            {subList['admin'] && 
+            { (subList['admin'] && isExpanded) && 
                 (<div className="transition-all">
                     <SublistContainer href="/admin/identitas" icon="heroicons:user" title="Identitas"/>
                     <SublistContainer href="/admin/daftar-kelas" icon="heroicons:user" title="Daftar Kelas"/>
@@ -84,18 +96,9 @@ export function VerticalLayout() {
 
             <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Daftar Ujian" />
 
-            <div onClick={() => openSublist('pengaturanUjian')} className={`${style.list} ${subList['pengaturanUjian'] ? style.sublistOpen : ''}`}>
-                <div className={style.option}>
-                    <Icon name="heroicons:cog-8-tooth" shape="outline"/>
-                    <p className={style.text}>Pengaturan Ujian</p>
-                </div>
-                { subList['pengaturanUjian'] 
-                    ? <Icon name="heroicons:chevron-down" shape="outline"/>
-                    : <Icon name="heroicons:chevron-left" shape="outline"/>
-                }
-            </div>
+            <SublistHead name="pengaturanUjian" title="Pengaturan Ujian" icon="heroicons:cog-8-tooth" />
 
-            { subList['pengaturanUjian'] && 
+            { (subList['pengaturanUjian'] && isExpanded) && 
                 (<div className="transition-all">
                     <SublistContainer href="/pengaturan/server-client" icon="heroicons:user" title="Server dan Client"/>
                     <SublistContainer href="/pengaturan/sesi" icon="heroicons:user" title="Pengaturan Sesi"/>
@@ -107,18 +110,9 @@ export function VerticalLayout() {
                 </div>)
             }
 
-            <div onClick={() => openSublist('ujianOnline')} className={`${style.list} ${subList['ujianOnline'] ? style.sublistOpen : ''}`}>
-                <div className={style.option}>
-                    <Icon name="heroicons:globe-asia-australia" shape="outline"/>
-                    <p className={style.text}>Ujian Online</p>
-                </div>
-                { subList['ujianOnline'] 
-                    ? <Icon name="heroicons:chevron-down" shape="outline"/>
-                    : <Icon name="heroicons:chevron-left" shape="outline"/>
-                }
-            </div>
+            <SublistHead name="ujianOnline" title="Ujian Online" icon="heroicons:globe-asia-australia" />
 
-            { subList['ujianOnline'] && 
+            { (subList['ujianOnline'] && isExpanded) && 
                 (<div className="transition-all">
                     <SublistContainer href="/ujian/kontrol" icon="heroicons:user" title="Kontrol Ujian"/>
                     <SublistContainer href="/ujian/perangkat" icon="heroicons:user" title="Kelola Perangkat"/>
@@ -126,18 +120,9 @@ export function VerticalLayout() {
                 </div>)
             }
 
-            <div onClick={() => openSublist('hasilUjian')} className={`${style.list} ${subList['hasilUjian'] ? style.sublistOpen : ''}`}>
-                <div className={style.option}>
-                    <Icon name="heroicons:pencil-square" shape="outline"/>
-                    <p className={style.text}>Ujian Online</p>
-                </div>
-                { subList['hasilUjian'] 
-                    ? <Icon name="heroicons:chevron-down" shape="outline"/>
-                    : <Icon name="heroicons:chevron-left" shape="outline"/>
-                }
-            </div>
+            <SublistHead name="hasilUjian" title="Ujian Online" icon="heroicons:pencil-square" />
 
-            { subList['hasilUjian'] && 
+            { (subList['hasilUjian'] && isExpanded) && 
                 (<div className="transition-all">
                     <SublistContainer href="/hasil-ujian/hasil" icon="heroicons:user" title="Hasil Siswa"/>
                     <SublistContainer href="/hasil-ujian/cetak-hasil" icon="heroicons:user" title="Cetak Hasil Ujian"/>
