@@ -8,7 +8,7 @@ export function DashboardPage() {
     }
 
     return (
-        <div className="flex flex-col gap-8 p-8 w-full">
+        <div className="flex flex-col gap-8 p-8 w-full bg-gray-100">
 
             <h1 className="text-2xl font-extralight">Dashboard</h1>
 
@@ -20,7 +20,7 @@ export function DashboardPage() {
             </div>
 
             <div className="w-full h-fit flex flex-col md:flex-row gap-4 mb-12">
-                <div className="flex flex-col justify-between w-1/4 h-fit border border-gray-200 shadow-md rounded-md">
+                <div className="flex flex-col justify-between w-1/4 h-fit border border-gray-200 shadow-md rounded-md bg-white">
                     <div className="flex flex-col items-center p-6">
                         {/* <img src="../assets/logo-pesri.png" alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-4"/> */}
                         <img src="https://picsum.photos/200" className="rounded-full drop-shadow-xl mb-4"></img>
@@ -40,9 +40,9 @@ export function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="w-3/4 h-full border border-gray-200 p-6 shadow-md rounded-md">
+                <div className="w-3/4 h-full border border-gray-200 p-6 shadow-md rounded-md bg-whitew">
 
-                    <h2 className="text-blue-600/50 text-lg font-bold">DASHBOARD *USER*</h2>
+                    <h2 className="text-blue-400 text-lg font-bold">DASHBOARD *USER*</h2>
 
                     <hr className="text-gray-200 my-4"/>
 
