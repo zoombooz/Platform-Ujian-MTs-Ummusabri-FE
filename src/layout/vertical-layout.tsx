@@ -15,7 +15,7 @@ export function VerticalLayout() {
     })
 
     const style = {
-        option: "flex items-center gap-2 px-4 py-1 transition-all hover:bg-gray-700",
+        option: "flex items-center gap-2 px-4 py-2 transition-all hover:bg-gray-700",
         subOption: "flex items-center gap-2 px-4 py-1 transition-all",
         list: "flex items-center justify-between hover:bg-gray-700 transition-all",
         sublist: "flex items-center justify-between hover:bg-gray-700 pl-4 transition-all",
@@ -39,11 +39,9 @@ export function VerticalLayout() {
 
     const ListContainer = ({href, icon, title}: {href: string, icon: string, title: string}) => {
         return (
-            <NavLink to={href} className={({isActive}) => (isActive ? style.active : '' + ` flex`)}>
-                <div className={style.option}>
-                    <Icon name={icon} shape="outline"/>
-                    {isExpanded && <p className={style.text}>{title}</p>}
-                </div>
+            <NavLink to={href} className={({isActive}) => (isActive ? style.active : '') + ` ${style.option}`}>
+                <Icon name={icon} shape="outline"/>
+                {isExpanded && <p className={style.text}>{title}</p>}
             </NavLink>
         )
     }
@@ -77,7 +75,7 @@ export function VerticalLayout() {
     }
 
     return (
-        <div className={`h-full ${isExpanded ? 'w-60' : 'w-fit'} bg-green-900 flex flex-col gap-2 py-8 text-white overflow-y-hidden`}>
+        <div className={`h-full ${isExpanded ? 'w-60' : 'w-fit'} bg-green-900 flex flex-col py-8 text-white overflow-y-hidden`}>
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />
 
             <SublistHead name="admin" title="Administrator" icon="heroicons:computer-desktop" />
