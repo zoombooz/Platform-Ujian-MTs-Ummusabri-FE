@@ -2,38 +2,39 @@ import { JSX } from "react"
 
 interface IconProps {
     name: string,
-    shape: string,
+    shape: "outline" | "solid" | "mini" | "micro",
     stroke?: number,
     color?: string,
     size?: string | number,
+    customClass?: string,
 }
 
-export function Icon({name, shape, stroke = 0.9, color = "currentColor", size}: IconProps): JSX.Element {
+export function Icon({name, shape, stroke = 0.9, color = "currentColor", size, customClass}: IconProps): JSX.Element {
 
     function iconContainer(icon: JSX.Element): JSX.Element {
         switch(shape){
             case "outline":
                 return (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={stroke} stroke={color} className={size ? `size-[${size}]` : 'size-6'}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={stroke} stroke={color} className={`${customClass} ${size ? `size-[${size}]` : 'size-6'}`}>
                         {icon}
                     </svg>
                 )
             case "solid":
                 return (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={color} className={size ? `size-[${size}]` : 'size-6'}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={color} className={`${customClass} ${size ? `size-[${size}]` : 'size-6'}`}>
                         {icon}
                     </svg>
 
                 )
             case "mini":
                 return (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill={color} className={size ? `size-[${size}]` : 'size-5'}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill={color} className={`${customClass} ${size ? `size-[${size}]` : 'size-5'}`}>
                         {icon}
                     </svg>
                 )
             case "micro":
                 return (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill={color} className={size ? `size-[${size}]` : 'size-4'}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill={color} className={`${customClass} ${size ? `size-[${size}]` : 'size-4'}`}>
                         {icon}
                     </svg>
                 )
@@ -82,9 +83,17 @@ export function Icon({name, shape, stroke = 0.9, color = "currentColor", size}: 
             return iconContainer(
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
             )
+        case 'heroicons:chevron-right':
+            return iconContainer(
+                <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            )
         case 'heroicons:chevron-down':
             return iconContainer(
                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            )
+        case 'heroicons:chevron-up':
+            return iconContainer(
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
             )
         case 'heroicons:arrow-right-circle':
             return iconContainer(

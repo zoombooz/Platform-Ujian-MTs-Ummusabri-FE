@@ -1,5 +1,5 @@
-// import { useEffect, useState } from "react"
 import { ITable } from "../models/table.type";
+import { Pagination } from "./pagination";
 
 export function Table<T extends Record<string, any>>({title, data, headList, keyList, pagination, classCustom}: ITable<T>) {
 
@@ -12,7 +12,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
     }
 
     return (
-        <div className={`relative overflow-x-auto ${classCustom}`}>
+        <div className={`relative flex flex-col overflow-x-auto ${classCustom}`}>
             <h1 className="text-xl mb-4">{title}</h1>
             <table className="w-full text-sm text-left text-gray-500 border-2 border-gray-300">
                 <thead className="text-xs text-gray-700 bg-gray-200">
@@ -56,6 +56,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     })}
                 </tbody>
             </table>
+            <Pagination pagination={pagination} customClass="mt-4"/>
         </div>
 
     )
