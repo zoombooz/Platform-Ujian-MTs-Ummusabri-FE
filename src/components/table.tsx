@@ -1,29 +1,29 @@
 import { JSX } from "react";
-import { ITable } from "../models/table.type";
+import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 
-export function Table<T extends Record<string, any>>({title, data, headList, keyList, pagination, classCustom, infoAction = false, editAction = false, deleteAction = false, numberRow = true}: ITable<T>) {
+export function Table<T extends Record<string, any>>({title, data, headList, keyList, pagination, classCustom, infoAction = false, editAction = false, deleteAction = false, numberRow = true, onInfoAction, onEditAction, onDeleteAction}: ITable<T>) {
 
     const actionExist = (): boolean => {
         return infoAction || editAction || deleteAction;
     }
 
-    const Action = (): JSX.Element => {
+    const Action = ({data}: {data: T}): JSX.Element => {
         if(actionExist()) {
             return (
                 <div className="flex gap-2 justify-center items-center">
                     {infoAction && (
-                        <button className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
+                        <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
                             Info
                         </button>
                     )}
                     {editAction && (
-                        <button className="bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
+                        <button onClick={() => onEditAction && onEditAction(data)} className="bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
                             Edit
                         </button>
                     )}
                     {deleteAction && (
-                        <button className="bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
+                        <button onClick={() => onDeleteAction && onDeleteAction(data)} className="bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
                             Delete
                         </button>
                     )}
@@ -45,12 +45,17 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
 
     return (
         <div className={`relative flex flex-col overflow-x-auto ${classCustom}`}>
+            <h1 className="text-xl mb-4">{title}</h1>
             <div className="flex justify-between mb-2">
-                <h1 className="text-xl mb-4">{title}</h1>
-                <input type="text" placeholder="Search..." className="border border-gray-500 rounded-lg px-2" />
+                <input type="text" placeholder="Search..." className="border border-gray-500 rounded-lg px-2 py-1.5" />
+                <select className="border border-gray-500 rounded-lg px-2 py-1.5">
+                    {paginationLimitList.map((item, index) => (
+                        <option key={index} value={item}>{item}</option>
+                    ))}
+                </select>
             </div>
-            <table className="w-full text-sm text-left text-gray-500 border-2 border-gray-300">
-                <thead className="text-xs text-gray-700 bg-gray-200">
+            <table className="w-full border border-gray-200">
+                <thead className="text-xs bg-gray-200">
                     <tr>
                         {numberRow && (
                             <th scope="col" className="px-6 py-3 border-r-2 border-gray-300">
@@ -72,30 +77,22 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row, rowIndex) => {
+                    {data.map((row: T, rowIndex) => {
                         return (
-                            <tr key={rowIndex} className="bg-white border-b border-gray-200">
+                            <tr key={rowIndex} className="bg-white border-b border-gray-200 hover:bg-gray-100">
                                 {numberRow && (
-                                    <td className="px-6 py-4 border-r-2 border-gray-300">
+                                    <td className="px-6 py-4 border-r border-gray-300">
                                         {rowIndex + 1}    
                                     </td>
                                 )}
                                 {keyList.map((key, index) => {
-                                    if(index === 0){
-                                        return (
-                                            <th key={String(key)} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap border-r-2 border-gray-300">
-                                                {row[key]}
-                                            </th>
-                                        )
-                                    }else {
-                                        return (
-                                            <td key={String(key)} className="px-6 py-4 border-r-2 border-gray-300">
-                                                {row[key]}    
-                                            </td>
-                                        )
-                                    }
+                                    return (
+                                        <td key={String(key)} className="px-6 py-4 border-r border-gray-300">
+                                            {row[key]}    
+                                        </td>
+                                    )
                                 })}
-                                <Action/>
+                                <Action data={row}/>
                             </tr>
                         )
                     })}

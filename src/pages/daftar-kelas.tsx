@@ -19,12 +19,37 @@ const daftarKelasList: IDaftarKelas[] = [
     {
         nama_rombel: "Math",
         tingkat: "VII"
+    },
+    {
+        nama_rombel: "IPS",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "OBA",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "Science",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "VII.G CIBER",
+        tingkat: "VII"
     }
 ] 
 
 export function DaftarKelas() {
 
     const [pagination] = useState<IPagination>(defaultPaginationValue);
+
+    const checkAction = (input: IDaftarKelas): IDaftarKelas => {
+        alert(input.nama_rombel)
+        return input;
+    }
+
+    const edit = () => {
+        alert("Edit bang")
+    }
 
     return (
         <div className="w-full min-h-full bg-gray-100 p-4">
@@ -38,6 +63,8 @@ export function DaftarKelas() {
                     infoAction={true}
                     editAction={true}
                     deleteAction={true}
+                    onInfoAction={checkAction}
+                    onEditAction={edit}
                 />
             </div>
         </div>

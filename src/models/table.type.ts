@@ -8,7 +8,10 @@ export interface ITable <T> {
     infoAction?: boolean;
     editAction?: boolean;
     deleteAction?: boolean;
-    numberRow?: boolean
+    numberRow?: boolean;
+    onInfoAction?: (data: T) => void;
+    onEditAction?: (data: T) => void;
+    onDeleteAction?: (data: T) => void;
 }
 
 export interface IPagination {
@@ -28,3 +31,5 @@ export const defaultPaginationValue: IPagination = {
     has_next_page: false,
     has_previous_page: false
 }
+
+export const paginationLimitList: number[] = [10, 20, 30, 40, 50];
