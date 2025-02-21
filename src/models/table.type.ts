@@ -5,6 +5,10 @@ export interface ITable <T> {
     keyList: string[];
     pagination: IPagination,
     classCustom?: string;
+    infoAction?: boolean;
+    editAction?: boolean;
+    deleteAction?: boolean;
+    numberRow?: boolean
 }
 
 export interface IPagination {

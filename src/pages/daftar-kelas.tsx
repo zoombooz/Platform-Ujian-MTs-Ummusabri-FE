@@ -29,13 +29,15 @@ export function DaftarKelas() {
     return (
         <div className="w-full min-h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
-                <p className="mb-4">Daftar Kelas</p>
                 <Table <IDaftarKelas>
                     title="Daftar Kelas"
                     data={daftarKelasList}
                     headList={['Nama Rombel', 'Tingkat']}
                     keyList={['nama_rombel', 'tingkat']}
                     pagination={pagination}
+                    infoAction={true}
+                    editAction={true}
+                    deleteAction={true}
                 />
             </div>
         </div>
