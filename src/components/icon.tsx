@@ -115,6 +115,10 @@ export function Icon({name, shape, stroke = 0.9, color = "currentColor", size, c
             return iconContainer(
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             )
+        case 'heroicons:plus':
+            return iconContainer(
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            )
         default:
             return (
                 <></>

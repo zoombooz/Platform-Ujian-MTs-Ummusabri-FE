@@ -1,6 +1,7 @@
 import { JSX } from "react";
 import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
+import { Icon } from "./icon";
 
 export function Table<T extends Record<string, any>>({title, data, headList, keyList, pagination, classCustom, infoAction = false, editAction = false, deleteAction = false, numberRow = true, onInfoAction, onEditAction, onDeleteAction}: ITable<T>) {
 
@@ -11,19 +12,19 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
     const Action = ({data}: {data: T}): JSX.Element => {
         if(actionExist()) {
             return (
-                <div className="flex gap-2 justify-center items-center">
+                <div className="flex flex-col gap-1 justify-center items-center py-2">
                     {infoAction && (
-                        <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
+                        <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
                             Info
                         </button>
                     )}
                     {editAction && (
-                        <button onClick={() => onEditAction && onEditAction(data)} className="bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
+                        <button onClick={() => onEditAction && onEditAction(data)} className="bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
                             Edit
                         </button>
                     )}
                     {deleteAction && (
-                        <button onClick={() => onDeleteAction && onDeleteAction(data)} className="bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer">
+                        <button onClick={() => onDeleteAction && onDeleteAction(data)} className="bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
                             Delete
                         </button>
                     )}
@@ -31,6 +32,10 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
             )
         }
         return (<></>)
+    }
+
+    const style = {
+        head_column: `px-6 py-3 border border-gray-300 text-md`,
     }
 
 
@@ -45,32 +50,46 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
 
     return (
         <div className={`relative flex flex-col overflow-x-auto ${classCustom}`}>
-            <h1 className="text-xl mb-4">{title}</h1>
-            <div className="flex justify-between mb-2">
-                <input type="text" placeholder="Search..." className="border border-gray-500 rounded-lg px-2 py-1.5" />
-                <select className="border border-gray-500 rounded-lg px-2 py-1.5">
-                    {paginationLimitList.map((item, index) => (
-                        <option key={index} value={item}>{item}</option>
-                    ))}
-                </select>
+            <div className="flex justify-between">
+                <h1 className="text-xl mb-4">{title}</h1>
+                <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                    <Icon name="heroicons:plus" shape="outline"/>
+                    <p>Tambah Kelas</p>
+                </button>
             </div>
+
+            <div className="flex justify-between w-full mb-4">
+                <div className="w-[40%]">
+                    <p className="mb-2">Search your items</p>
+                    <input type="text" placeholder="Enter keywords here..." className="w-full border border-gray-500 rounded-md px-2 py-1.5" />
+                </div>
+                <div className="w-fit">
+                    <p className="mb-2">Showing items</p>
+                    <select className="w-full border border-gray-500 rounded-lg px-2 py-1.5">
+                        {paginationLimitList.map((item, index) => (
+                            <option key={index} value={item}>{item}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
             <table className="w-full border border-gray-200">
-                <thead className="text-xs bg-gray-200">
+                <thead className="text-xs bg-gray-100">
                     <tr>
                         {numberRow && (
-                            <th scope="col" className="px-6 py-3 border-r-2 border-gray-300">
+                            <th scope="col" className={style.head_column}>
                                 No.
                             </th>
                         )}
                         {headList.map((item, index) => {
                             return (
-                                <th key={index} scope="col" className="px-6 py-3 border-r-2 border-gray-300">
+                                <th key={index} scope="col" className={style.head_column}>
                                     {item}
                                 </th>
                             )
                         })}
                         {actionExist() && (
-                            <th scope="col" className="px-6 py-3 border-r-2 border-gray-300">
+                            <th scope="col" className={style.head_column}>
                                 Action
                             </th>
                         )}
@@ -85,7 +104,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                                         {rowIndex + 1}    
                                     </td>
                                 )}
-                                {keyList.map((key, index) => {
+                                {keyList.map((key) => {
                                     return (
                                         <td key={String(key)} className="px-6 py-4 border-r border-gray-300">
                                             {row[key]}    
@@ -98,7 +117,9 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     })}
                 </tbody>
             </table>
+
             <Pagination pagination={pagination} customClass="mt-4"/>
+
         </div>
 
     )
