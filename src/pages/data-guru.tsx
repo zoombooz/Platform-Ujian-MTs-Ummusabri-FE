@@ -24,12 +24,12 @@ export function DataGuru() {
                 <Table <IDataGuru>
                     title="Data Guru"
                     data={dataGuru}
-                    headList={['Username', 'Password', 'Nama Guru', 'Alamat', 'Mata Pelajaran', 'Aktif']}
-                    keyList={['username', 'password', 'nama', 'alamat', 'mata_pelajaran', 'aktif']}
+                    headList={['Username', 'Nama Guru', 'Alamat', 'Mata Pelajaran', 'Aktif']}
+                    keyList={['username', 'nama', 'alamat', 'mata_pelajaran', 'aktif']}
                     pagination={pagination}
                     infoAction={true}
                     editAction={true}
-                    deleteAction={true}
+                    deleteAction={false}
                 />
             </div>
         </div>

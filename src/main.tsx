@@ -11,6 +11,8 @@ import { DataGuru } from './pages/data-guru.tsx';
 import { DataPanitia } from './pages/data-panitia.tsx';
 import { KelompokUjian } from './pages/kelompok-ujian.tsx';
 import { MataPelajaran } from './pages/mata-pelajaran.tsx';
+import { Login } from './pages/login.tsx';
+import { Ujian } from './pages/ujian.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -74,24 +76,9 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
                     </Route>
 
-                    {/* <Route path="about">
-                        <Route  index element={
-                            <div>
-                                <h1>About works!!!</h1>
-                            </div>
-                        }/>
-                        <Route element={
-                            <div>
-                                <h1>nested child</h1>
-                                <Outlet/>
-                            </div>
-                        }>
-                            <Route path=":idk" element={<h1>Hello idk what to say</h1>}></Route>
-                        </Route>
-                        
-                    </Route> */}
-
                 </Route>
+                <Route path="login" element={<Login/>} />
+                <Route path="ujian" element={<Ujian/>} />
 
             </Routes>
         </BrowserRouter>

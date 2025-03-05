@@ -12,6 +12,8 @@ export interface ITable <T> {
     onInfoAction?: (data: T) => void;
     onEditAction?: (data: T) => void;
     onDeleteAction?: (data: T) => void;
+
+    additionalButton?: React.ReactNode;
 }
 
 export interface IPagination {

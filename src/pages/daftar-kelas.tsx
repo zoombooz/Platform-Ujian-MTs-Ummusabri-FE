@@ -1,49 +1,51 @@
 import { useState } from "react";
 import { Table } from "../components/table";
 import { defaultPaginationValue, IPagination } from "../models/table.type";
+import { useDialog } from "../context/DialogContext";
+import { Form } from "../components/form";
+import { Icon } from "../components/icon";
+import { daftarKelasList } from "../models/mockup.constant";
 
-interface IDaftarKelas {
+export interface IDaftarKelas {
     nama_rombel: string;
     tingkat: string;
 }
 
-const daftarKelasList: IDaftarKelas[] = [
-    {
-        nama_rombel: "Bahasa Indonesia",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "English",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "Math",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "IPS",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "OBA",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "Science",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "VII.G CIBER",
-        tingkat: "VII"
-    }
-] 
+const daftarKelas: IDaftarKelas[] = daftarKelasList;
+const tingkatKelas: string[] = ["VII", "VIII", "IX"];
 
 export function DaftarKelas() {
 
+    const {openDialog, closeDialog} = useDialog();
     const [pagination] = useState<IPagination>(defaultPaginationValue);
 
-    const checkAction = (input: IDaftarKelas): IDaftarKelas => {
-        alert(input.nama_rombel)
+    const addClass = () => {
+        openDialog({
+            width: "500px",
+            height: "300px",
+            content: (
+                <Form <IDaftarKelas>
+                    title="Tambah Kelas"
+                    headList={["Tingkat", "Nama Kelas"]}
+                    keyList={["tingkat", "nama_rombel"]}
+                    hint={["Hint Tingkat", "Hint Kelas"]}
+                    type={["select", "text"]}
+                    selectList={
+                        {'tingkat': tingkatKelas}
+                    }
+                    onSubmit={(data) => handleAddClass(data)}
+                    onCancel={() => closeDialog()}
+                />
+            )
+        })
+    }
+
+    const handleAddClass = (data: IDaftarKelas) => {
+        console.log("Form: ", data)
+    }
+
+    const checkAction = (input: IDaftarKelas) => {
+        alert(input)
         return input;
     }
 
@@ -52,11 +54,11 @@ export function DaftarKelas() {
     }
 
     return (
-        <div className="w-full min-h-full bg-gray-100 p-4">
+        <div className="w-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
                 <Table <IDaftarKelas>
                     title="Daftar Kelas"
-                    data={daftarKelasList}
+                    data={daftarKelas}
                     headList={['Nama Rombel', 'Tingkat']}
                     keyList={['nama_rombel', 'tingkat']}
                     pagination={pagination}
@@ -65,6 +67,12 @@ export function DaftarKelas() {
                     deleteAction={true}
                     onInfoAction={checkAction}
                     onEditAction={edit}
+                    additionalButton={(
+                        <button onClick={addClass} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                            <Icon name="heroicons:plus" shape="outline"/>
+                            <p>Tambah Kelas</p>
+                        </button>
+                    )}
                 />
             </div>
         </div>

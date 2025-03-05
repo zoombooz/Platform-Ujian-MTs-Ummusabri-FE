@@ -75,7 +75,7 @@ export function VerticalLayout() {
     }
 
     return (
-        <div className={`h-full ${isExpanded ? 'w-60' : 'w-fit'} bg-green-900 flex flex-col py-8 text-white overflow-y-hidden`}>
+        <div className={`h-full ${isExpanded ? 'w-60' : 'w-fit'} bg-green-900 flex flex-col py-8 text-white overflow-y-hidden hide-scrollbar`}>
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />
 
             <SublistHead name="admin" title="Administrator" icon="heroicons:computer-desktop" />
@@ -132,6 +132,8 @@ export function VerticalLayout() {
             <ListContainer href="/pesanan" icon="heroicons:shopping-cart" title="Pesanan" />
 
             <ListContainer href="/logout" icon="heroicons:arrow-left-start-on-rectangle" title="Logout" />
+
+            <ListContainer href="/ujian" icon="heroicons:arrow-left-start-on-rectangle" title="Ujian" />
         </div>
     )
 }

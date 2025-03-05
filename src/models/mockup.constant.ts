@@ -1,8 +1,40 @@
 import { IBiodataSiswa } from "../pages/biodata-siswa";
+import { IDaftarKelas } from "../pages/daftar-kelas";
 import { IDataGuru } from "../pages/data-guru";
 import { IDataPanitia } from "../pages/data-panitia";
 import { IKelompokUjian } from "../pages/kelompok-ujian";
 import { IMataPelajaran } from "../pages/mata-pelajaran";
+
+export const daftarKelasList: IDaftarKelas[] = [
+    {
+        nama_rombel: "Bahasa Indonesia",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "English",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "Math",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "IPS",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "OBA",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "Science",
+        tingkat: "VII"
+    },
+    {
+        nama_rombel: "VII.G CIBER",
+        tingkat: "VII"
+    }
+] 
 
 export const biodataSiswaList: IBiodataSiswa[] = [
     { nomor_peserta: "202401", nama: "Ahmad Ramadhan", alamat: "Jl. Merdeka No. 10", kelas: "XII-IPA 1", jurusan: "IPA" },
