@@ -22,8 +22,7 @@ export function DashboardPage() {
             <div className="w-full h-fit flex flex-col md:flex-row gap-4 mb-12">
                 <div className="flex flex-col justify-between w-1/4 h-fit border border-gray-200 shadow-md rounded-md bg-white">
                     <div className="flex flex-col items-center p-6">
-                        {/* <img src="../assets/logo-pesri.png" alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-4"/> */}
-                        <img src="https://picsum.photos/200" className="rounded-full drop-shadow-xl mb-4"></img>
+                        <img src="src/assets/logo-pesri.png" alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-4 w-60 h-60"/>
                         <p className="text-gray-500 text-xl font-medium">MTS UMMUSABRI</p>
                         <p className="text-blue-400 text-sm font-semibold">ADMIN SEKOLAH</p>
                     </div>
@@ -69,10 +68,8 @@ export function DashboardPage() {
                             </ol>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
     )
 }

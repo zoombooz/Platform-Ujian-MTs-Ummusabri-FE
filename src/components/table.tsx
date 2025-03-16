@@ -16,20 +16,20 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
     const Action = ({data}: {data: T}): JSX.Element => {
         if(actionExist()) {
             return (
-                <td className="flex flex-col gap-1 justify-center items-center py-2">
+                <td className="flex gap-1 justify-center items-center py-2">
                     {infoAction && (
                         <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
-                            Info
+                            <p>Info</p>
                         </button>
                     )}
                     {editAction && (
                         <button onClick={() => onEditAction && onEditAction(data)} className="bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
-                            Edit
+                            <p>Edit</p>
                         </button>
                     )}
                     {deleteAction && (
                         <button onClick={() => onDeleteAction && onDeleteAction(data)} className="bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
-                            Delete
+                            <p>Delete</p>
                         </button>
                     )}
                 </td>

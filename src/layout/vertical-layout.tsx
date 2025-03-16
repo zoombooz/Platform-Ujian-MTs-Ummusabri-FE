@@ -22,6 +22,8 @@ export function VerticalLayout() {
         sublistOpen: 'bg-gray-700',
         active: "bg-red-500 hover:bg-red-600",
         text: "text-sm font-light",
+        logo: 'w-20 h-20',
+        logo_sm: 'w-12 h-12'
     }
 
     const openSublist = (option: string) => {
@@ -75,7 +77,13 @@ export function VerticalLayout() {
     }
 
     return (
-        <div className={`h-full ${isExpanded ? 'w-60' : 'w-fit'} bg-green-900 flex flex-col py-8 text-white overflow-y-hidden hide-scrollbar`}>
+        <div className={`h-full ${isExpanded ? 'w-60' : 'w-16'} bg-green-900 flex flex-col text-white overflow-y-hidden hide-scrollbar transition-all duration-300`}>
+
+            <div className={`flex ${isExpanded ? 'flex-row' : 'flex-col'} justify-center py-4 px-2`}>
+                <img src="src/assets/logo-pesri.png" alt="Logo Pesri" className={isExpanded ? style.logo : style.logo_sm}/>
+                <img src="src/assets/logo-cambridge.png" alt="Logo Cambridge" className={`${isExpanded ? style.logo : style.logo_sm} translate-y-2`}/>
+            </div>
+
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />
 
             <SublistHead name="admin" title="Administrator" icon="heroicons:computer-desktop" />
@@ -94,7 +102,7 @@ export function VerticalLayout() {
 
             <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Daftar Ujian" />
 
-            <SublistHead name="pengaturanUjian" title="Pengaturan Ujian" icon="heroicons:cog-8-tooth" />
+            {/* <SublistHead name="pengaturanUjian" title="Pengaturan Ujian" icon="heroicons:cog-8-tooth" />
 
             { (subList['pengaturanUjian'] && isExpanded) && 
                 (<div className="transition-all">
@@ -106,15 +114,15 @@ export function VerticalLayout() {
                     <SublistContainer href="/pengaturan/daftar-hadir" icon="heroicons:user" title="Cetak Daftar Hadir"/>
                     <SublistContainer href="/pengaturan/berita-acara" icon="heroicons:user" title="Cetak Berita Acara"/>
                 </div>)
-            }
+            } */}
 
             <SublistHead name="ujianOnline" title="Ujian Online" icon="heroicons:globe-asia-australia" />
 
             { (subList['ujianOnline'] && isExpanded) && 
                 (<div className="transition-all">
-                    <SublistContainer href="/ujian/kontrol" icon="heroicons:user" title="Kontrol Ujian"/>
-                    <SublistContainer href="/ujian/perangkat" icon="heroicons:user" title="Kelola Perangkat"/>
-                    <SublistContainer href="/ujian/status-peserta" icon="heroicons:user" title="Status Peserta"/>
+                    <SublistContainer href="/ujian-online/kontrol" icon="heroicons:user" title="Kontrol Ujian"/>
+                    <SublistContainer href="/ujian-online/perangkat" icon="heroicons:user" title="Kelola Perangkat"/>
+                    <SublistContainer href="/ujian-online/status-peserta" icon="heroicons:user" title="Status Peserta"/>
                 </div>)
             }
 
@@ -129,9 +137,9 @@ export function VerticalLayout() {
                 </div>)
             }
 
-            <ListContainer href="/pesanan" icon="heroicons:shopping-cart" title="Pesanan" />
+            {/* <ListContainer href="/pesanan" icon="heroicons:shopping-cart" title="Pesanan" /> */}
 
-            <ListContainer href="/logout" icon="heroicons:arrow-left-start-on-rectangle" title="Logout" />
+            <ListContainer href="/login" icon="heroicons:arrow-left-start-on-rectangle" title="Logout" />
 
             <ListContainer href="/ujian" icon="heroicons:arrow-left-start-on-rectangle" title="Ujian" />
         </div>

@@ -32,21 +32,24 @@ export function HorizontalLayout() {
         })
     }
 
+    const style = {
+        logo: 'w-16 h-16'
+    }
+
     return (
         <div className="flex justify-between gap-4 px-4 py-2 h-12 w-full bg-green-700 text-white">
             <button onClick={toggleExpand}>
                 <Icon name="heroicons:bars-3" shape="outline"/>
             </button>
 
-            <button onClick={onOpenDialogValidation} className="cursor-pointer">
+            {/* <button onClick={onOpenDialogValidation} className="cursor-pointer">
                 Buka Validation
             </button>
 
             <button onClick={(onOpenDialogForm)} className="cursor-pointer">
                 Buka Form
-            </button>
-            <div>
-
+            </button> */}
+            <div className="flex gap-2">
             </div>
         </div>
     )

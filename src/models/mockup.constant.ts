@@ -6,34 +6,13 @@ import { IKelompokUjian } from "../pages/kelompok-ujian";
 import { IMataPelajaran } from "../pages/mata-pelajaran";
 
 export const daftarKelasList: IDaftarKelas[] = [
-    {
-        nama_rombel: "Bahasa Indonesia",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "English",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "Math",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "IPS",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "OBA",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "Science",
-        tingkat: "VII"
-    },
-    {
-        nama_rombel: "VII.G CIBER",
-        tingkat: "VII"
-    }
+    {id: 1, nama: "Bahasa Indonesia"},
+    {id: 2, nama: "English"},
+    {id: 3, nama: "Math"},
+    {id: 4, nama: "IPS"},
+    {id: 5, nama: "OBA"},
+    {id: 6, nama: "Science"},
+    {id: 7, nama: "VII.G CIBER"}
 ] 
 
 export const biodataSiswaList: IBiodataSiswa[] = [

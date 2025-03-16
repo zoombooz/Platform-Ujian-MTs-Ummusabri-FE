@@ -48,7 +48,7 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
                     </Route>
 
-                    <Route path="ujian" element={
+                    <Route path="ujian-online" element={
                         <div>
                             <h1>Ujian Works!!!</h1>
                             <Outlet/>
@@ -56,6 +56,9 @@ createRoot(document.getElementById('root')!).render(
                     }>
                         <Route index element={<h2>Hello world?!?!?!</h2>} />
                         <Route path="siswa" element={<h2>Siswa here?!?!?!</h2>} />
+                        <Route path="kontrol" element={<h2>Ujian Online - Kontrol Ujian</h2>} />
+                        <Route path="perangkat" element={<h2>Ujian Online - Kelola Perangkat</h2>} />
+                        <Route path="status-peserta" element={<h2>Ujian Online - Status Peserta</h2>} />
                     </Route>
                     <Route path="hasil" element={
                         <div>
@@ -77,7 +80,9 @@ createRoot(document.getElementById('root')!).render(
                     </Route>
 
                 </Route>
+
                 <Route path="login" element={<Login/>} />
+
                 <Route path="ujian" element={<Ujian/>} />
 
             </Routes>

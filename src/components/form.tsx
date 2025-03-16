@@ -1,6 +1,7 @@
 import { JSX, useState } from "react"
 
 interface IForm <T> {
+    data?: T,
     title: string,
     headList: string[],
     keyList: string[],
@@ -14,15 +15,14 @@ interface IForm <T> {
     onCancel: () => void,
 }
 
-export function Form<T extends Record<string, any>>({title, headList, keyList, type, hint, selectList, classCustom, onSubmit, onCancel}: IForm<T>) {
+export function Form<T extends Record<string, any>>({data, title, headList, keyList, type, hint, selectList, classCustom, onSubmit, onCancel}: IForm<T>) {
 
-    const [formData, setFormData] = useState<T>(() =>
-        keyList.reduce((acc, key) => ({...acc, [key]: ""}), {} as T)
-    );
-
-    const style = {
-        button: 'transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer'
-    }
+    const [formData, setFormData] = useState<T>(() => {
+        if(!data){
+            return keyList.reduce((acc, key) => ({...acc, [key]: ""}), {} as T)
+        }
+        return keyList.reduce((acc, key) => ({...acc, [key]: data[key]}), {} as T)
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {id, value} = e.target;
@@ -33,6 +33,10 @@ export function Form<T extends Record<string, any>>({title, headList, keyList, t
         e.preventDefault();
         onSubmit(formData)
         console.log("Form: ", formData);
+    }
+
+    const style = {
+        button: 'transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer'
     }
 
     return (
