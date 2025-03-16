@@ -13,6 +13,7 @@ import { KelompokUjian } from './pages/kelompok-ujian.tsx';
 import { MataPelajaran } from './pages/mata-pelajaran.tsx';
 import { Login } from './pages/login.tsx';
 import { Ujian } from './pages/ujian.tsx';
+import { Agama } from './pages/agama.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="data-panitia" element={<DataPanitia />} />
                         <Route path="kelompok-ujian" element={<KelompokUjian />} />
                         <Route path="mata-pelajaran" element={<MataPelajaran />} />
+                        <Route path="agama" element={<Agama/>} />
                     </Route>
                     <Route path="daftar-ujian" element={
                         <div>

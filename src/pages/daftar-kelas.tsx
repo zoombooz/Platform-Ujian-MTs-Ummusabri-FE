@@ -28,7 +28,7 @@ export function DaftarKelas() {
         delete: (id: number) => `admin/daftar_kelas/${id}`,
     }
 
-    const addClass = () => {
+    const handleAdd = () => {
         const addClass = async (data: IDaftarKelas) => {
             const url = `${baseUrl}${endpoints['add']}`;
             const response = await axios.post(url, data);
@@ -113,7 +113,7 @@ export function DaftarKelas() {
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
                     additionalButton={(
-                        <button onClick={addClass} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                        <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
                             <Icon name="heroicons:plus" shape="outline"/>
                             <p>Tambah Kelas</p>
                         </button>

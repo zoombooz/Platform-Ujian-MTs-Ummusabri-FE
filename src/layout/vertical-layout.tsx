@@ -97,6 +97,7 @@ export function VerticalLayout() {
                     <SublistContainer href="/admin/data-panitia" icon="heroicons:user" title="Data Panitia"/>
                     <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:user" title="Kelompok Ujian"/>
                     <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:user" title="Mata Pelajaran"/>
+                    <SublistContainer href="/admin/agama" icon="heroicons:user" title="Agama"/>
                 </div>)
             }
 

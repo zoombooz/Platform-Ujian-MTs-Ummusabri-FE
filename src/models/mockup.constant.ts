@@ -1,3 +1,4 @@
+import { IAgama } from "../pages/agama";
 import { IBiodataSiswa } from "../pages/biodata-siswa";
 import { IDaftarKelas } from "../pages/daftar-kelas";
 import { IDataGuru } from "../pages/data-guru";
@@ -72,3 +73,36 @@ export const mataPelajaranList: IMataPelajaran[] = [
     { nama: "Geografi", sekolah_id: "S009" },
     { nama: "Pendidikan Kewarganegaraan", sekolah_id: "S010" }
 ];
+
+export const agamaList: IAgama[] = [
+    {
+        id: 1,
+        nama: "Islam",
+        created_at: "2025-03-05T08:36:54.000000Z",
+        updated_at: "2025-03-05T08:36:54.000000Z"
+    },
+    {
+        id: 2,
+        nama: "Kristen",
+        created_at: "2025-03-05T08:36:54.000000Z",
+        updated_at: "2025-03-05T08:36:54.000000Z"
+    },
+    {
+        id: 3,
+        nama: "Hindu",
+        created_at: "2025-03-05T08:36:54.000000Z",
+        updated_at: "2025-03-05T08:36:54.000000Z"
+    },
+    {
+        id: 4,
+        nama: "Buddha",
+        created_at: "2025-03-05T08:36:54.000000Z",
+        updated_at: "2025-03-05T08:36:54.000000Z"
+    },
+    {
+        id: 5,
+        nama: "Kong Hu Cu",
+        created_at: "2025-03-05T08:36:54.000000Z",
+        updated_at: "2025-03-05T08:36:54.000000Z"
+    }
+]

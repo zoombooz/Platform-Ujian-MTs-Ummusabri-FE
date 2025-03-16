@@ -1,4 +1,4 @@
-import { JSX, useState } from "react"
+import { useState } from "react"
 
 interface IForm <T> {
     data?: T,
