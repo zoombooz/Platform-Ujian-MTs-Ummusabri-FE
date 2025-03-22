@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Icon } from "../components/icon";
 import { Countdown } from "../components/countdown";
 import { soalBIList } from "../models/soal.constant";
+import { useDialog } from "../context/DialogContext";
+import { ValidationDialog } from "../components/validation-dialog";
 
 export interface IQuestion {
     ujian_id: number,
@@ -25,6 +27,7 @@ interface IAnswerForm {
 
 export function Ujian() {
 
+    // const {openDialog, closeDialog} = useDialog();
     const [questions] = useState<IQuestion[]>(soalBIList);
     const [currentNumber, setCurrentNumber] = useState<number>(1);
     const [extendSidebar, setExtendSidebar] = useState<boolean>(false);
@@ -38,15 +41,15 @@ export function Ujian() {
         })
     )
 
-    useEffect(() => {
-        console.log("Banyak Soal: ", questions.length)
-        console.log("Answer Form: ", answers)
-    }, [])
+    // useEffect(() => {
+    //     // console.log("Banyak Soal: ", questions.length)
+    //     console.log("Answer Form: ", answers)
+    // }, [answers])
 
     const timeLimit = new Date().getTime() + (1000 * 30);
     
     const range = (start: number, end: number, step = 1): number[] => {
-        return Array.from({ length: Math.floor((end - start) / step) }, (v, i) => start + i * step);
+        return Array.from({ length: Math.floor((end - start) / step) }, (_, i) => start + i * step);
     }
 
     const currentSoal = (): IQuestion => {
@@ -63,27 +66,41 @@ export function Ujian() {
 
     const clickDoubt = (nomor: number) => {
         console.log("Check")
-        setAnswers(answers => {
-            const answer = {
-                ...answers[nomor - 1],
-                ragu: !answers[nomor - 1].ragu
-            };
-            answers[nomor - 1] = answer;
-            console.log(answers)
-            return answers;
+        setAnswers(prevAnswers => {
+            return prevAnswers.map((answer, index) => 
+                index === nomor - 1 ? {...answer, ragu: !answer.ragu} : answer
+            )
         })
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Value: ", e.target.value);
-        setAnswers(answers => {
-            answers[currentNumber - 1] = {
-                ...answers[currentNumber - 1],
-                jawaban: e.target.value
-            }
-            console.log(answers)
-            return answers;
+        setAnswers(prevAnswers => {
+            return prevAnswers.map((answer, index) => 
+                index === currentNumber - 1 ? {...answer, jawaban: e.target.value} : answer
+            )
         })
+    }
+
+    const handleSubmit = (open_dialog: boolean) => {
+        if(open_dialog){
+            // openDialog({
+            //     width: "500px",
+            //     height: "240px",
+            //     content: (
+            //         <ValidationDialog  
+            //             title={`Are you sure you want to submit`}
+            //             description="Are you sure you want to delete this data?"
+            //             response={deleteAgama}
+            //         />
+            //     )
+            // })
+        }
+
+        const answer: {nomor: number, jawaban: string}[] = answers.map(el => {
+            return {nomor: el.nomor, jawaban: el.jawaban}
+        })
+        console.log("Answer: ", answer)
     }
 
     const onDone = () => {
@@ -92,31 +109,37 @@ export function Ujian() {
 
     const style = {
         radio_button: `flex gap-2`,
-        control_button: `w-16 py-1.5 rounded-md text-white transition-all`,
+        control_button: `min-w-16 w-fit px-2 py-1.5 rounded-md text-white transition-all`,
         control_button_active: `bg-green-700 cursor-pointer hover:bg-green-800`,
         control_button_inactive: `bg-green-700/80`,
+        submit_button: `bg-red-500 cursor-pointer hover:bg-red-600`,
         doubt_button: `w-16 rounded-md py-1.5 text-white`
     }
 
     return (
         <div className="flex w-screen h-screen overflow-hidden">
-            <div id="sidebar" className={`${extendSidebar ? "w-[15%] px-2" : "w-0"} relative h-full bg-green-600 shadow-md transition-all duration-300`}>
+            <div id="sidebar" className={`${extendSidebar ? "w-[20%] px-2" : "w-0"} relative h-full bg-green-600 shadow-md transition-all duration-300`}>
                 <button className="absolute -right-8 top-20 bg-green-600 rounded-r-md py-2 px-2 cursor-pointer" onClick={() => setExtendSidebar(val => !val)}>
                     <Icon name="heroicons:bars-3" shape="outline" customClass="text-white"/>
                 </button>
 
-                <div id="soal-list" className={`${extendSidebar ? "" : "hidden"} grid grid-cols-3 gap-4 p-2 min-w-40`}>
-                    {range(1, questions.length + 1).map((el) => (
-                        <button 
-                            key={el}
-                            onClick={() => setCurrentNumber(el)} 
-                            className="group flex flex-col w-10 h-12 bg-white border-2 border-green-700 cursor-pointer transition-all"
-                        >
-                            <p className="h-[40%] bg-green-500 border-b-2 border-green-700 text-xs">{answers[el-1].jawaban}</p>
-                            <p>{el}</p>
-                        </button>
-                    ))}
+                {extendSidebar && (
+                <div>
+                    <p className="text-white px-2 pt-2 text-center">Jawaban</p>
+                    <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4 p-2`}>
+                        {range(1, questions.length + 1).map((el) => (
+                            <button 
+                                key={el}
+                                onClick={() => setCurrentNumber(el)} 
+                                className="group flex flex-col w-10 h-12 bg-white border-2 border-green-700 cursor-pointer transition-all"
+                            >
+                                <p className="h-[40%] bg-green-500 border-b-2 border-green-700 text-xs">{answers[el-1].jawaban}</p>
+                                <p className={`${answers[el-1].ragu ? 'bg-yellow-400' : 'bg-white'} h-[60%] transition-all`}>{el}</p>
+                            </button>
+                        ))}
+                    </div>
                 </div>
+                )}
             </div>
 
             <div className="flex justify-center w-full h-full bg-gray-100 p-6">
@@ -144,9 +167,16 @@ export function Ujian() {
 
                         <p>{currentSoal().pertanyaan}</p>
 
-                        {['a', 'b', 'c', 'd', 'e'].map((el, i) => (
-                            <div className={`${style.radio_button}`}>
-                                <input type="radio" id={el} value={el.toUpperCase()} name={String(currentSoal().nomor)} onChange={handleChange}/>
+                        {['a', 'b', 'c', 'd', 'e'].map((el) => (
+                            <div className={`${style.radio_button}`} key={el}>
+                                <input 
+                                    type="radio" 
+                                    id={el} 
+                                    value={el.toUpperCase()} 
+                                    name={String(currentSoal().nomor)} 
+                                    checked={answers[currentNumber - 1].jawaban === el.toUpperCase()} 
+                                    onChange={handleChange}
+                                />
                                 <label htmlFor={el}>{currentSoal()[`pilihan_${el}` as keyof IQuestion]}</label>
                             </div>
                         ))}
@@ -166,10 +196,12 @@ export function Ujian() {
                         >Ragu</button>
 
                         <button 
-                            disabled={!(currentNumber < questions.length)} 
-                            className={`${style.control_button} ${currentNumber < questions.length ? style.control_button_active : style.control_button_inactive}`} 
-                            onClick={() => changeSoal('next')}
-                        >Next</button>
+                            // disabled={!(currentNumber < questions.length)} 
+                            className={`${style.control_button} ${currentNumber < questions.length ? style.control_button_active : style.submit_button}`} 
+                            onClick={() => currentNumber < questions.length ? changeSoal('next') : handleSubmit(false)}
+                        >{currentNumber < questions.length ? 'Next' : 'Complete'}</button>
+
+                        
                     </div>
                 </div>
             </div>

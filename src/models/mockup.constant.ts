@@ -3,8 +3,10 @@ import { IBiodataSiswa } from "../pages/biodata-siswa";
 import { IDaftarKelas } from "../pages/daftar-kelas";
 import { IDataGuru } from "../pages/data-guru";
 import { IDataPanitia } from "../pages/data-panitia";
+import { IJurusan } from "../pages/jurusan";
 import { IKelompokUjian } from "../pages/kelompok-ujian";
 import { IMataPelajaran } from "../pages/mata-pelajaran";
+import { IPeserta } from "../pages/peserta";
 
 export const daftarKelasList: IDaftarKelas[] = [
     {id: 1, nama: "Bahasa Indonesia"},
@@ -54,11 +56,11 @@ export const dataPanitiaList: IDataPanitia[] = [
 ];
 
 export const kelompokUjianList: IKelompokUjian[] = [
-    { id: "KU001", nama: "Kelompok A", sekolah_id: "S001", jumlah_ujian: 5, status: true },
-    { id: "KU002", nama: "Kelompok B", sekolah_id: "S002", jumlah_ujian: 4, status: true },
-    { id: "KU003", nama: "Kelompok C", sekolah_id: "S003", jumlah_ujian: 6, status: false },
-    { id: "KU004", nama: "Kelompok D", sekolah_id: "S004", jumlah_ujian: 3, status: true },
-    { id: "KU005", nama: "Kelompok E", sekolah_id: "S005", jumlah_ujian: 7, status: false }
+    { id: 1, nama: "Kelompok A", id_sekolah: "S001", start_date: "26-11-2025", end_date: "02-12-2025", updated_at: "2025-03-15T03:20:32.000000Z", created_at: "2025-03-15T03:20:32.000000Z"},
+    { id: 2, nama: "Kelompok B", id_sekolah: "S002", start_date: "26-11-2025", end_date: "02-12-2025", updated_at: "2025-03-15T03:20:32.000000Z", created_at: "2025-03-15T03:20:32.000000Z"},
+    { id: 3, nama: "Kelompok C", id_sekolah: "S003", start_date: "26-11-2025", end_date: "02-12-2025", updated_at: "2025-03-15T03:20:32.000000Z", created_at: "2025-03-15T03:20:32.000000Z"},
+    { id: 4, nama: "Kelompok D", id_sekolah: "S004", start_date: "26-11-2025", end_date: "02-12-2025", updated_at: "2025-03-15T03:20:32.000000Z", created_at: "2025-03-15T03:20:32.000000Z"},
+    { id: 5, nama: "Kelompok E", id_sekolah: "S005", start_date: "26-11-2025", end_date: "02-12-2025", updated_at: "2025-03-15T03:20:32.000000Z", created_at: "2025-03-15T03:20:32.000000Z"}
 ];
 
 export const mataPelajaranList: IMataPelajaran[] = [
@@ -106,3 +108,181 @@ export const agamaList: IAgama[] = [
         updated_at: "2025-03-05T08:36:54.000000Z"
     }
 ]
+
+export const pesertaList: IPeserta[] = [
+    {
+      "id": 1,
+      "nama": "Ahmad Fauzi",
+      "password": "password123",
+      "jurusan_id": "1",
+      "agama_id": "1",
+      "kelas_id": "101",
+      "nomor_peserta": "PES2025001",
+      "created_at": "2025-03-22T11:00:00Z",
+      "updated_at": "2025-03-22T11:00:00Z"
+    },
+    {
+      "id": 2,
+      "nama": "Siti Aisyah",
+      "password": "password234",
+      "jurusan_id": "2",
+      "agama_id": "2",
+      "kelas_id": "102",
+      "nomor_peserta": "PES2025002",
+      "created_at": "2025-03-22T11:05:00Z",
+      "updated_at": "2025-03-22T11:05:00Z"
+    },
+    {
+      "id": 3,
+      "nama": "Budi Santoso",
+      "password": "password345",
+      "jurusan_id": "3",
+      "agama_id": "1",
+      "kelas_id": "103",
+      "nomor_peserta": "PES2025003",
+      "created_at": "2025-03-22T11:10:00Z",
+      "updated_at": "2025-03-22T11:10:00Z"
+    },
+    {
+      "id": 4,
+      "nama": "Dewi Kartika",
+      "password": "password456",
+      "jurusan_id": "4",
+      "agama_id": "2",
+      "kelas_id": "104",
+      "nomor_peserta": "PES2025004",
+      "created_at": "2025-03-22T11:15:00Z",
+      "updated_at": "2025-03-22T11:15:00Z"
+    },
+    {
+      "id": 5,
+      "nama": "Rizky Hidayat",
+      "password": "password567",
+      "jurusan_id": "5",
+      "agama_id": "1",
+      "kelas_id": "105",
+      "nomor_peserta": "PES2025005",
+      "created_at": "2025-03-22T11:20:00Z",
+      "updated_at": "2025-03-22T11:20:00Z"
+    },
+    {
+      "id": 6,
+      "nama": "Fitri Amalia",
+      "password": "password678",
+      "jurusan_id": "6",
+      "agama_id": "2",
+      "kelas_id": "106",
+      "nomor_peserta": "PES2025006",
+      "created_at": "2025-03-22T11:25:00Z",
+      "updated_at": "2025-03-22T11:25:00Z"
+    },
+    {
+      "id": 7,
+      "nama": "Hendra Wijaya",
+      "password": "password789",
+      "jurusan_id": "7",
+      "agama_id": "1",
+      "kelas_id": "107",
+      "nomor_peserta": "PES2025007",
+      "created_at": "2025-03-22T11:30:00Z",
+      "updated_at": "2025-03-22T11:30:00Z"
+    },
+    {
+      "id": 8,
+      "nama": "Nadia Rahma",
+      "password": "password890",
+      "jurusan_id": "8",
+      "agama_id": "2",
+      "kelas_id": "108",
+      "nomor_peserta": "PES2025008",
+      "created_at": "2025-03-22T11:35:00Z",
+      "updated_at": "2025-03-22T11:35:00Z"
+    },
+    {
+      "id": 9,
+      "nama": "Faisal Maulana",
+      "password": "password901",
+      "jurusan_id": "9",
+      "agama_id": "1",
+      "kelas_id": "109",
+      "nomor_peserta": "PES2025009",
+      "created_at": "2025-03-22T11:40:00Z",
+      "updated_at": "2025-03-22T11:40:00Z"
+    },
+    {
+      "id": 10,
+      "nama": "Lina Putri",
+      "password": "password012",
+      "jurusan_id": "10",
+      "agama_id": "2",
+      "kelas_id": "110",
+      "nomor_peserta": "PES2025010",
+      "created_at": "2025-03-22T11:45:00Z",
+      "updated_at": "2025-03-22T11:45:00Z"
+    }
+  ]
+  
+
+export const jurusanList: IJurusan[] = [
+    {
+      "id": "1",
+      "nama": "Teknik Informatika",
+      "created_at": "2025-03-22T10:00:00Z",
+      "updated_at": "2025-03-22T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "nama": "Sistem Informasi",
+      "created_at": "2025-03-22T10:05:00Z",
+      "updated_at": "2025-03-22T10:05:00Z"
+    },
+    {
+      "id": "3",
+      "nama": "Teknik Elektro",
+      "created_at": "2025-03-22T10:10:00Z",
+      "updated_at": "2025-03-22T10:10:00Z"
+    },
+    {
+      "id": "4",
+      "nama": "Manajemen",
+      "created_at": "2025-03-22T10:15:00Z",
+      "updated_at": "2025-03-22T10:15:00Z"
+    },
+    {
+      "id": "5",
+      "nama": "Akuntansi",
+      "created_at": "2025-03-22T10:20:00Z",
+      "updated_at": "2025-03-22T10:20:00Z"
+    },
+    {
+      "id": "6",
+      "nama": "Teknik Mesin",
+      "created_at": "2025-03-22T10:25:00Z",
+      "updated_at": "2025-03-22T10:25:00Z"
+    },
+    {
+      "id": "7",
+      "nama": "Teknik Sipil",
+      "created_at": "2025-03-22T10:30:00Z",
+      "updated_at": "2025-03-22T10:30:00Z"
+    },
+    {
+      "id": "8",
+      "nama": "Desain Komunikasi Visual",
+      "created_at": "2025-03-22T10:35:00Z",
+      "updated_at": "2025-03-22T10:35:00Z"
+    },
+    {
+      "id": "9",
+      "nama": "Ilmu Komunikasi",
+      "created_at": "2025-03-22T10:40:00Z",
+      "updated_at": "2025-03-22T10:40:00Z"
+    },
+    {
+      "id": "10",
+      "nama": "Psikologi",
+      "created_at": "2025-03-22T10:45:00Z",
+      "updated_at": "2025-03-22T10:45:00Z"
+    }
+  ]
+  

@@ -1,10 +1,11 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { Icon } from "../components/icon";
 import { JSX, useState } from "react";
 import { useLayout } from "../context/LayoutContext";
 
 export function VerticalLayout() {
 
+    const navigate = useNavigate();
     const { isExpanded } = useLayout();
 
     const [subList, setSubList] = useState<{[key: string]: boolean}>({
@@ -13,6 +14,11 @@ export function VerticalLayout() {
         'ujianOnline': false,
         'hasilUjian': false,
     })
+
+    const logout = (): void => {
+        localStorage.removeItem("authToken");
+        navigate("/login-admin")
+    }
 
     const style = {
         option: "flex items-center gap-2 px-4 py-2 transition-all hover:bg-gray-700",
@@ -90,18 +96,20 @@ export function VerticalLayout() {
 
             { (subList['admin'] && isExpanded) && 
                 (<div className="transition-all">
-                    <SublistContainer href="/admin/identitas" icon="heroicons:user" title="Identitas"/>
-                    <SublistContainer href="/admin/daftar-kelas" icon="heroicons:user" title="Daftar Kelas"/>
-                    <SublistContainer href="/admin/biodata-siswa" icon="heroicons:user" title="Biodata Siswa"/>
-                    <SublistContainer href="/admin/data-guru" icon="heroicons:user" title="Data Guru"/>
-                    <SublistContainer href="/admin/data-panitia" icon="heroicons:user" title="Data Panitia"/>
-                    <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:user" title="Kelompok Ujian"/>
-                    <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:user" title="Mata Pelajaran"/>
                     <SublistContainer href="/admin/agama" icon="heroicons:user" title="Agama"/>
+                    <SublistContainer href="/admin/peserta" icon="heroicons:user" title="Peserta"/>
+                    <SublistContainer href="/admin/jurusan" icon="heroicons:user" title="Jurusan"/>
+                    <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:user" title="Mata Pelajaran"/>
+                    <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:user" title="Kelompok Ujian"/>
+                    <SublistContainer href="/admin/daftar-kelas" icon="heroicons:user" title="Daftar Kelas"/>
+                    {/* <SublistContainer href="/admin/biodata-siswa" icon="heroicons:user" title="Peserta"/> */}
+                    {/* <SublistContainer href="/admin/data-guru" icon="heroicons:user" title="Data Guru"/> */}
+                    {/* <SublistContainer href="/admin/data-panitia" icon="heroicons:user" title="Data Panitia"/> */}
+                    {/* <SublistContainer href="/admin/identitas" icon="heroicons:user" title="Identitas"/> */}
                 </div>)
             }
 
-            <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Daftar Ujian" />
+            <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Kelompok Ujian" />
 
             {/* <SublistHead name="pengaturanUjian" title="Pengaturan Ujian" icon="heroicons:cog-8-tooth" />
 
@@ -117,7 +125,7 @@ export function VerticalLayout() {
                 </div>)
             } */}
 
-            <SublistHead name="ujianOnline" title="Ujian Online" icon="heroicons:globe-asia-australia" />
+            {/* <SublistHead name="ujianOnline" title="Ujian Online" icon="heroicons:globe-asia-australia" />
 
             { (subList['ujianOnline'] && isExpanded) && 
                 (<div className="transition-all">
@@ -136,11 +144,16 @@ export function VerticalLayout() {
                     <SublistContainer href="/hasil-ujian/analisis-hasil" icon="heroicons:user" title="Analisis Hasil Ujian"/>
                     <SublistContainer href="/hasil-ujian/analisis-butir-soal" icon="heroicons:user" title="Analisis Butir Soal"/>
                 </div>)
-            }
+            } */}
 
             {/* <ListContainer href="/pesanan" icon="heroicons:shopping-cart" title="Pesanan" /> */}
 
-            <ListContainer href="/login" icon="heroicons:arrow-left-start-on-rectangle" title="Logout" />
+            {/* <ListContainer href="/login-admin" icon="heroicons:arrow-left-start-on-rectangle" title="Logout"/> */}
+
+            <button className={`${style.option}`} onClick={logout}>
+                <Icon name={"heroicons:arrow-left-start-on-rectangle"} shape="outline"/>
+                {isExpanded && <p className={style.text}>{'Logout'}</p>}
+            </button>
 
             <ListContainer href="/ujian" icon="heroicons:arrow-left-start-on-rectangle" title="Ujian" />
         </div>

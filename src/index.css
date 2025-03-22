@@ -38,3 +38,10 @@
 .bg-dialog-animation {
     animation: backgroundColorChange 0.3s forwards;
 }
+
+/* .background-students {
+    background-image: url("./assets/students.JPG");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+} */

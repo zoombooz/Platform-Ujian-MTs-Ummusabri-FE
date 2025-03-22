@@ -60,7 +60,7 @@ const agamaList = [
 
 export function BiodataSiswa() {
 
-    const [pagination, setPagination] = useState(defaultPaginationValue);
+    const [pagination] = useState(defaultPaginationValue);
 
     const {openDialog, closeDialog} = useDialog();
 
@@ -90,7 +90,7 @@ export function BiodataSiswa() {
         <div className="w-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
                 <Table <IBiodataSiswa>
-                    title="Biodata Siswa"
+                    title="Peserta"
                     data={biodataSiswa}
                     headList={['Nomor Peserta', 'Nama', 'Alamat', 'Jurusan', 'Kelas']}
                     keyList={['nomor_peserta', 'nama', 'alamat', 'jurusan', 'kelas']}

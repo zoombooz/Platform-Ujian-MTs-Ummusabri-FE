@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Icon } from "../components/icon";
 import axios from "axios";
 import { Environment } from "../environment/environment";
+import { Link, useNavigate } from "react-router";
 
 interface LoginForm {
     username: string,
@@ -13,9 +14,10 @@ interface RegisterForm extends LoginForm {
     alamat: string,
 }
 
-export function Login() {
+export function Login({type, role}: {type: 'login' | 'register', role: 'admin' | 'student'}) {
 
-    const [page, setPage] = useState<'login' | 'register'>('login');
+    const navigate = useNavigate();
+
     const [loginForm, setLoginForm] = useState<LoginForm>({
         username: '',
         password: ''
@@ -28,42 +30,48 @@ export function Login() {
     });
     const [showPassword, setShowPassword] = useState(false);
 
-    const endpoints = {
-        login: `admin/login`,
-        register: `admin/agama`
+    const getTitle = (): string => {
+        switch(type){
+            case "login":
+                return "Log In";
+            case "register":
+                return "Register";
+            default:
+                return "";
+        }
     }
-    
-    const changePage = () => {
-        setPage(prevPage => {
-            if(prevPage === 'login'){
-                setLoginForm({username: '', password: ''});
-                return 'register';
-            }
-            setRegisterForm({username: '', password: '', nama: '', alamat: ''});
-            return 'login';
-        })
+
+    const endpoints = {
+        login_admin: `admin/login`,
+        register_admin: `admin/register`,
+        login_student: `siswa/login`,
     }
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {id, value} = e.target;
-        if(page === 'login'){
+        if(type === 'login'){
             setLoginForm(prevData => ({...prevData, [id]: value}));
         }
-        if(page === 'register'){
+        if(type === 'register'){
             setRegisterForm(prevData => ({...prevData, [id]: value}));
         }
     }
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log(page === 'login' ? loginForm : registerForm)
-        const url = `${Environment.base_url}${page === 'login' ? endpoints['login'] : endpoints['register']}`;
+        console.log(type === 'login' ? loginForm : registerForm)
+        const endpoint = type === 'login' ? role === 'admin' ? endpoints['login_admin'] : endpoints['login_student'] : endpoints['register_admin'];
+        const url = `${Environment.base_url}${endpoint}`;
 
-        const response = await axios.get(url);
+        // const response = await axios.post(url, (type === 'login' ? loginForm : registerForm));
+        // console.log(`Response ${type}: `, response);
+
+        localStorage.setItem("authToken", 'Test');
+        navigate("/");
     }
 
     const style = {
-        input_container: `flex items-center gap-2`,
+        input_container: `flex flex-col gap-2`,
         input: `px-2 py-1 w-80`,
         button: `transition-all w-40 text-white px-2 py-2 rounded-sm cursor-pointer`,
         text_button: `text-blue-500 hover:text-blue-600 transition-all hover:underline cursor-pointer`
@@ -72,103 +80,103 @@ export function Login() {
     return (
         <div className="flex w-full h-screen">
 
-            <div className="flex w-1/2 bg-blue-100">
-                <img src="src/assets/students.JPG" alt="Students Studying" className="object-cover"/>
-            </div>
+            <div className="relative flex justify-center items-center w-full bg-blue-100">
+                <img src="src/assets/students.JPG" alt="Students Studying" className="absolute w-full h-full object-fill"/>
 
-            <div className="relative flex flex-col justify-center items-center w-1/2 bg-white p-6 text-left gap-10">
-                <div className="flex flex-col gap-4 w-[80%]">
-                    <h1 className="text-3xl text-gray-600 font-light">CMS Ujian</h1>
-                    {page === 'login' 
-                    ? <p className="text-gray-400 font-normal">Belum punya akun? <button className={style.text_button} onClick={() => changePage()}>Daftar</button></p>
-                    : <p className="text-gray-400 font-normal">Sudah punya akun? <button className={style.text_button} onClick={() => changePage()}>Masuk</button></p>
-                    }
-                </div>
+                <div className="relative flex flex-col justify-center items-center p-6 bg-gray-100 text-left gap-6 rounded-md">
 
-                <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
 
-                    <div className={style.input_container}>
-                        <label htmlFor="username" className="text-sm w-20">Username</label>
-                        <div className="flex items-center border border-gray-300 w-fit rounded-md">
-                            <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
-                                <Icon name="heroicons:user" shape="outline"/>
-                            </div>
-                            <input 
-                                required
-                                id="username" 
-                                type="text" 
-                                placeholder="P1918xxx atau U1918xxx" 
-                                className={style.input}
-                                value={page === 'login' ? loginForm.username : registerForm.username}
-                                onChange={handleChange}
-                            />
-                        </div>
+                    <div id="header" className="flex flex-col gap-4 w-full">
+                        <h1 className="text-3xl text-gray-600 font-light">{getTitle()}</h1>
+                        {type === 'login' 
+                        ? <p className="text-gray-400 font-normal">Belum punya akun? <Link to="/register-admin" className={style.text_button}>Daftar</Link></p>
+                        : <p className="text-gray-400 font-normal">Sudah punya akun? <Link to="/login-admin" className={style.text_button}>Masuk</Link></p>
+                        }
                     </div>
 
-                    <div className={style.input_container}>
-                        <label htmlFor="password" className="text-sm w-20">Password</label>
-                        <div className="flex items-center border border-gray-300 w-fit rounded-md">
-                            <div onClick={() => setShowPassword(!showPassword)} className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
-                                <Icon name={`heroicons:eye${showPassword ? '-slash' : ''}`} shape="outline" />
-                            </div>
-                            <input 
-                                required
-                                id="password" 
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Password" 
-                                className={style.input}
-                                value={page === 'login' ? loginForm.password : registerForm.password}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
 
-                    {page === 'register' && <>
                         <div className={style.input_container}>
-                            <label htmlFor="alamat" className="text-sm w-20">Alamat</label>
+                            <label htmlFor="username" className="text-sm">Username</label>
                             <div className="flex items-center border border-gray-300 w-fit rounded-md">
                                 <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
                                     <Icon name="heroicons:user" shape="outline"/>
                                 </div>
                                 <input 
                                     required
-                                    id="alamat" 
+                                    id="username" 
                                     type="text" 
                                     placeholder="P1918xxx atau U1918xxx" 
                                     className={style.input}
-                                    value={registerForm.alamat}
+                                    value={type === 'login' ? loginForm.username : registerForm.username}
                                     onChange={handleChange}
                                 />
                             </div>
                         </div>
 
                         <div className={style.input_container}>
-                            <label htmlFor="nama" className="text-sm w-20">Nama</label>
+                            <label htmlFor="password" className="text-sm">Password</label>
                             <div className="flex items-center border border-gray-300 w-fit rounded-md">
-                                <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
-                                    <Icon name="heroicons:user" shape="outline"/>
+                                <div onClick={() => setShowPassword(!showPassword)} className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
+                                    <Icon name={`heroicons:eye${showPassword ? '-slash' : ''}`} shape="outline" />
                                 </div>
                                 <input 
                                     required
-                                    id="nama" 
-                                    type="text" 
-                                    placeholder="P1918xxx atau U1918xxx" 
+                                    id="password" 
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Password" 
                                     className={style.input}
-                                    value={registerForm.nama}
+                                    value={type === 'login' ? loginForm.password : registerForm.password}
                                     onChange={handleChange}
                                 />
                             </div>
                         </div>
-                    </>}
 
-                    <button className={`bg-blue-500 mt-8 ${style.button}`}>Sign In</button>
+                        {type === 'register' && <>
+                            <div className={style.input_container}>
+                                <label htmlFor="alamat" className="text-sm">Alamat</label>
+                                <div className="flex items-center border border-gray-300 w-fit rounded-md">
+                                    <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
+                                        <Icon name="heroicons:user" shape="outline"/>
+                                    </div>
+                                    <input 
+                                        required
+                                        id="alamat" 
+                                        type="text" 
+                                        placeholder="Alamat" 
+                                        className={style.input}
+                                        value={registerForm.alamat}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
-                </form>
+                            <div className={style.input_container}>
+                                <label htmlFor="nama" className="text-sm">Nama Lengkap</label>
+                                <div className="flex items-center border border-gray-300 w-fit rounded-md">
+                                    <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
+                                        <Icon name="heroicons:user" shape="outline"/>
+                                    </div>
+                                    <input 
+                                        required
+                                        id="nama" 
+                                        type="text" 
+                                        placeholder="Nama lengkap" 
+                                        className={style.input}
+                                        value={registerForm.nama}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+                        </>}
 
-                <div className="absolute bottom-2 right-4">
-                    <p className="text-gray-400">Copyright © Work In Progress </p>
+                        <button className={`bg-blue-500 mt-8 ${style.button}`}>{type === 'login' ? 'Sign In' : 'Sign Up'}</button>
+
+                    </form>
                 </div>
             </div>
+
+            
         </div>
     )
 

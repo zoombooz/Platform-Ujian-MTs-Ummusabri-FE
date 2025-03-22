@@ -8,16 +8,13 @@ import { Form } from "../components/form";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import { ValidationDialog } from "../components/validation-dialog";
+import Swal from "sweetalert2";
 
 export interface IAgama {
     id: number,
     nama: string,
     created_at: string,
     updated_at: string
-}
-
-export interface IAgamaForm {
-    nama: string
 }
 
 const agama: IAgama[] = agamaList;
@@ -39,7 +36,7 @@ export function Agama() {
     }, [])
 
     const handleAdd = () => {
-        const addAgama = async (body: IAgamaForm) => {
+        const addAgama = async (body: Partial<IAgama>) => {
             const url = `${baseUrl}${endpoints['add']}`;
             const response = await axios.post(url, body);
             console.log("Add Agama Response: ", response);
@@ -50,7 +47,7 @@ export function Agama() {
             width: "500px",
             height: "240px",
             content: (
-                <Form <IAgamaForm>
+                <Form <Partial<IAgama>>
                     title="Tambah Agama"
                     headList={["Agama"]}
                     keyList={["nama"]}
@@ -87,24 +84,19 @@ export function Agama() {
     }
 
     const handleDelete = (agama: IAgama) => {
-        const deleteAgama = async (valid: boolean) => {
-            if(valid){
+        Swal.fire({
+            title: "Menghapus Item",
+            text: "Apakah anda yakin ingin menghapus item ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak"
+        }).then(async result => {
+            if(result){
                 const url = `${baseUrl}${endpoints['delete'](agama.id)}`;
                 const response = await axios.delete(url);
                 console.log("Delete Agama Response: ", response);
             }
-        }
-
-        openDialog({
-            width: "500px",
-            height: "240px",
-            content: (
-                <ValidationDialog  
-                    title={`Deleting ${agama.nama}`}
-                    description="Are you sure you want to delete this data?"
-                    response={deleteAgama}
-                />
-            )
         })
     }
 
