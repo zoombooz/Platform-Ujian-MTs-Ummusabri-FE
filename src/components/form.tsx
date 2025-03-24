@@ -8,7 +8,7 @@ interface IForm <T> {
     type: string[],
     hint?: string[],
     selectList?: {
-        [key: string]: string[]
+        [key: string]: {key: string, name: string}[]
     }
     classCustom?: string,
     onSubmit: (data: T) => void,
@@ -54,7 +54,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                             <select id={item} value={formData[item]} onChange={handleChange} className="bg-white border border-black rounded-sm px-2 py-1.5 text-black">
                                 <option value="" disabled>Pilih Item</option>
                                 {selectList[item].map(item => (
-                                    <option value={item}>{item}</option>
+                                    <option key={item.key} value={item.key}>{item.name}</option>
                                 ))}
                             </select>
                         )}

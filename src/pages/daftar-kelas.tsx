@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "../components/table";
 import { defaultPaginationValue, IPagination } from "../models/table.type";
 import { useDialog } from "../context/DialogContext";
@@ -7,32 +7,62 @@ import { Icon } from "../components/icon";
 import { daftarKelasList } from "../models/mockup.constant";
 import { Environment } from "../environment/environment";
 import axios from "axios";
-import { ValidationDialog } from "../components/validation-dialog";
+import Swal from "sweetalert2";
 
 export interface IDaftarKelas {
     id: number,
-    nama: string;
+    nama: string,
+    updated_at: string,
+    created_at: string
 }
 
 const baseUrl = Environment.base_url;
-const daftarKelas: IDaftarKelas[] = daftarKelasList;
-// const tingkatKelas: string[] = ["VII", "VIII", "IX"];
 
 export function DaftarKelas() {
 
     const {openDialog, closeDialog} = useDialog();
     const [pagination] = useState<IPagination>(defaultPaginationValue);
+    const [daftarKelas, setDaftarKelas] = useState<IDaftarKelas[]>([]);
     const endpoints = {
-        add: `admin/daftar_kelas`,
-        edit: `admin/daftar_kelas`,
+        create: `admin/daftar_kelas`,
+        get: `admin/daftar_kelas`,
+        edit: (id: number) => `admin/daftar_kelas/${id}`,
         delete: (id: number) => `admin/daftar_kelas/${id}`,
     }
 
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+    const fetchData = () => {
+        const url = `${baseUrl}${endpoints['get']}`;
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }).then(response => {
+            setDaftarKelas(response.data.data);
+        }).catch(error => {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Request Failed",
+                text: `${(error as Error).message}`
+            })
+        })
+    }
+
     const handleAdd = () => {
-        const addClass = async (data: IDaftarKelas) => {
-            const url = `${baseUrl}${endpoints['add']}`;
-            const response = await axios.post(url, data);
-            console.log("Add Class Response: ", response);
+        const addClass = (data: IDaftarKelas) => {
+            const url = `${baseUrl}${endpoints['create']}`;
+            axios.post(url, data, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(() => {
+                fetchData();
+                closeDialog();
+            });
         }
 
         openDialog({
@@ -52,11 +82,24 @@ export function DaftarKelas() {
         })
     }
 
-    const handleEdit = (data: IDaftarKelas) => {
-        const editClass = async (editedData: IDaftarKelas) => {
-            const url = `${baseUrl}${endpoints['edit']}`;
-            const response = await axios.put(url, editedData);
-            console.log("Edit Response: ", response);
+    const handleEdit = (daftar_kelas: IDaftarKelas) => {
+        const editClass = (editedData: IDaftarKelas) => {
+            const url = `${baseUrl}${endpoints['edit'](daftar_kelas.id)}`;
+            axios.put(url, editedData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(() => {
+                fetchData();
+                closeDialog();
+            }).catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            });
         }
 
         openDialog({
@@ -64,7 +107,7 @@ export function DaftarKelas() {
             height: "240px",
             content: (
                 <Form <IDaftarKelas>
-                    data={data}
+                    data={daftar_kelas}
                     title="Tambah Kelas"
                     headList={["Nama Kelas"]}
                     keyList={["nama"]}
@@ -77,25 +120,32 @@ export function DaftarKelas() {
         })
     }
 
-    const handleDelete = (data: IDaftarKelas) => {
-        const deleteClass = async (valid: boolean) => {
-            if(valid){
-                const url = `${baseUrl}${endpoints['delete'](data.id)}`;
-                const response = await axios.delete(url);
-                console.log("Delete Response: ", response);
+    const handleDelete = (kelas: IDaftarKelas) => {
+        Swal.fire({
+            title: "Menghapus Item",
+            text: "Apakah anda yakin ingin menghapus item ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak"
+        }).then(async result => {
+            if(result){
+                const url = `${baseUrl}${endpoints['delete'](kelas.id)}`;
+                axios.delete(url, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }).then(() => {
+                    fetchData();
+                }).catch(error => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Request Failed",
+                        text: `${(error as Error).message}`
+                    })
+                });
             }
-        }
-
-        openDialog({
-            width: "500px",
-            height: "240px",
-            content: (
-                <ValidationDialog  
-                    title={`Deleting ${data.nama}`}
-                    description="Are you sure you want to delete this data?"
-                    response={deleteClass}
-                />
-            )
         })
     }
 

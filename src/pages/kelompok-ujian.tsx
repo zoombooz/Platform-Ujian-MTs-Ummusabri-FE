@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "../components/table";
 import { defaultPaginationValue } from "../models/table.type";
 import { kelompokUjianList } from "../models/mockup.constant";
@@ -19,13 +19,12 @@ export interface IKelompokUjian {
     id: number
 }
 
-const kelompokUjian: IKelompokUjian[] = kelompokUjianList;
-const baseUrl = Environment.base_url;
-
 export function KelompokUjian() {
-
+    
     const {openDialog, closeDialog} = useDialog();
-    const [pagination, setPagination] = useState(defaultPaginationValue);
+    const [pagination] = useState(defaultPaginationValue);
+    const [kelompokUjian, setKelompokUjian] = useState<IKelompokUjian[]>([]);
+    const {base_url: baseUrl, id_sekolah} = Environment;
 
     const endpoints = {
         create: "admin/kelompok_ujian",
@@ -34,11 +33,46 @@ export function KelompokUjian() {
         delete: (id: string | number) => `admin/kelompok_ujian/${id}`
     }
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = () => {
+        const url = `${baseUrl}${endpoints['get']}`;
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }).then(response => {
+            setKelompokUjian(response.data.data);
+        }).catch(error => {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Request Failed",
+                text: `${(error as Error).message}`
+            })
+        })
+    }
+
     const handleAdd = () => {
-        const addKelompokUjian = async (body: Partial<IKelompokUjian>) => {
+        const addKelompokUjian = (body: Partial<IKelompokUjian>) => {
             const url = `${baseUrl}${endpoints['create']}`;
-            const response = await axios.post(url, body);
-            console.log("Response: ", response)
+            axios.post(url, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(() => {
+                fetchData();
+                closeDialog();
+            }).catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            });
         }
 
         openDialog({
@@ -46,12 +80,12 @@ export function KelompokUjian() {
             height: "460px",
             content: (
                 <Form <IKelompokUjian>
-                    title="Tambah Agama"
+                    title="Tambah Kelompok Ujian"
                     headList={["Nama Kelompok Ujian", "Sekolah", "Tanggal Dimulai", "Tanggal Berakhir"]}
                     keyList={["nama", "id_sekolah", "start_date", "end_date"]}
                     type={["text", "select", "date", "date"]}
                     selectList={{
-                        "id_sekolah": ['1', '2', '3']
+                        id_sekolah: [{key: id_sekolah, name: id_sekolah}]
                     }}
                     onSubmit={addKelompokUjian}
                     onCancel={closeDialog}
@@ -61,10 +95,24 @@ export function KelompokUjian() {
     }
 
     const handleEdit = (kelompok_ujian: IKelompokUjian) => {
+        console.log("Kelompok Ujian: ", kelompok_ujian)
         const addKelompokUjian = async (body: Partial<IKelompokUjian>) => {
             const url = `${baseUrl}${endpoints['edit'](kelompok_ujian.id)}`;
-            const response = await axios.post(url, body);
-            console.log("Response: ", response)
+            await axios.put(url, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(() => {
+                fetchData();
+                closeDialog();
+            }).catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            });
         }
 
         openDialog({
@@ -73,14 +121,14 @@ export function KelompokUjian() {
             content: (
                 <Form <IKelompokUjian>
                     data={kelompok_ujian}
-                    title="Tambah Agama"
+                    title="Edit Kelompok Ujian"
                     headList={["Nama Kelompok Ujian", "Sekolah", "Tanggal Dimulai", "Tanggal Berakhir"]}
                     keyList={["nama", "id_sekolah", "start_date", "end_date"]}
                     type={["text", "select", "date", "date"]}
                     selectList={{
-                        "id_sekolah": ['1', '2', '3']
+                        "id_sekolah": [{key: id_sekolah, name: id_sekolah}]
                     }}
-                    onSubmit={() => {}}
+                    onSubmit={addKelompokUjian}
                     onCancel={closeDialog}
                 />
             )
@@ -98,8 +146,20 @@ export function KelompokUjian() {
         }).then(async result => {
             if(result){
                 const url = `${baseUrl}${endpoints['delete'](kelompok_ujian.id)}`;
-                const response = await axios.delete(url);
-                console.log("Delete Jurusan Response: ", response);
+                axios.delete(url, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }).then(() => {
+                    fetchData();
+                }).catch(error => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Request Failed",
+                        text: `${(error as Error).message}`
+                    })
+                });
             }
         })
     }
@@ -124,6 +184,7 @@ export function KelompokUjian() {
                     </div>
                     )}
                     onEditAction={handleEdit}
+                    onDeleteAction={handleDelete}
                 />
             </div>
         </div>

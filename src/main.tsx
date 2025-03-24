@@ -16,11 +16,12 @@ import { Ujian } from './pages/ujian.tsx';
 import { Agama } from './pages/agama.tsx';
 import { Peserta } from './pages/peserta.tsx';
 import { Jurusan } from './pages/jurusan.tsx';
+import { UjianCMS } from './pages/ujian-cms.tsx';
 
 const ProtectedRoute = () => {
     const isAuthenticated = localStorage.getItem("authToken");
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login-admin" replace />
+    return isAuthenticated ? <Outlet /> : <Navigate to={"/login-admin"} replace />
 }
 
 createRoot(document.getElementById('root')!).render(
@@ -30,9 +31,10 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="login-admin" element={<Login type="login" role="admin" />} />
                 <Route path="register-admin" element={<Login type="register" role="admin" />} />
                 <Route path="login-student" element={<Login type="login" role="student" />} />
-                <Route path="ujian" element={<Ujian/>} />
                 
                 <Route element={<ProtectedRoute />}>
+                    <Route path="ujian" element={<Ujian/>} />
+
                     <Route element={<Layout/>}>
                         <Route path="" element={<DashboardPage/>} />
                         <Route path="admin">
@@ -46,6 +48,7 @@ createRoot(document.getElementById('root')!).render(
                             <Route path="agama" element={<Agama />} />
                             <Route path="peserta" element={<Peserta />} />
                             <Route path="jurusan" element={<Jurusan />} />
+                            <Route path="ujian" element={<UjianCMS />} />
                         </Route>
                         <Route path="daftar-ujian" element={
                             <div>

@@ -1,32 +1,39 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { defaultPaginationValue } from "../models/table.type";
+import { defaultPaginationValue, IPagination } from "../models/table.type";
 import { useDialog } from "../context/DialogContext";
+import { Form } from "../components/form";
 import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";
 import axios from "axios";
-import { Form } from "../components/form";
 import Swal from "sweetalert2";
 
-export interface IMataPelajaran {
+export interface IUjian {
+    id: number,
     nama: string,
+    kelompok_id: string,
+    mapel_id: string,
+    kelas_id: string,
+    id_sekolah: string | number,
+    start_date: string,
+    end_date: string,
+    status: string,
     updated_at: string,
-    created_at: string,
-    id: number
+    created_at: string
 }
 
-export function MataPelajaran() {
-    
-    const {openDialog, closeDialog} = useDialog();
-    const [pagination] = useState(defaultPaginationValue);
-    const [mataPelajaran, setMataPelajaran] = useState<IMataPelajaran[]>([]);
-    const baseUrl = Environment.base_url;
+const baseUrl = Environment.base_url;
 
+export function UjianCMS() {
+
+    const {openDialog, closeDialog} = useDialog();
+    const [pagination] = useState<IPagination>(defaultPaginationValue);
+    const [ujian, setUjian] = useState<IUjian[]>([]);
     const endpoints = {
-        create: `admin/mapel`,
-        get: `admin/mapel`,
-        edit: (id: number) => `admin/mapel/${id}`,
-        delete: (id: number) => `admin/mapel/${id}` 
+        create: `admin/ujian`,
+        get: `admin/ujian`,
+        edit: (id: number) => `admin/ujian/${id}`,
+        delete: (id: number) => `admin/ujian/${id}`,
     }
 
     useEffect(() => {
@@ -40,7 +47,7 @@ export function MataPelajaran() {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(response => {
-            setMataPelajaran(response.data.data);
+            setUjian(response.data.data);
         }).catch(error => {
             console.error(error);
             Swal.fire({
@@ -52,7 +59,11 @@ export function MataPelajaran() {
     }
 
     const handleAdd = () => {
-        const addJurusan = (body: Partial<IMataPelajaran>) => {
+        const addClass = (body: IUjian) => {
+            body = {
+                ...body,
+                id_sekolah: 1
+            }
             const url = `${baseUrl}${endpoints['create']}`;
             axios.post(url, body, {
                 headers: {
@@ -61,36 +72,29 @@ export function MataPelajaran() {
             }).then(() => {
                 fetchData();
                 closeDialog();
-            }).catch(error => {
-                console.error(error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Request Failed",
-                    text: `${(error as Error).message}`
-                })
             });
         }
 
         openDialog({
             width: "500px",
-            height: "240px",
+            height: "600px",
             content: (
-                <Form <IMataPelajaran>
-                    title="Tambah Mata Pelajaran"
-                    headList={["Nama Mata Pelajaran"]}
-                    keyList={["nama"]}
-                    type={["text"]}
-                    onSubmit={addJurusan}
+                <Form <IUjian>
+                    title="Tambah Kelas"
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
+                    type={["text", "text", "text", "text", "date", "date", "text"]}
+                    onSubmit={addClass}
                     onCancel={closeDialog}
                 />
             )
         })
     }
 
-    const handleEdit = (mapel: IMataPelajaran) => {
-        const editMapel = (body: Partial<IMataPelajaran>) => {
-            const url = `${baseUrl}${endpoints['edit'](mapel.id)}`;
-            axios.put(url, body, {
+    const handleEdit = (daftar_kelas: IUjian) => {
+        const editClass = (editedData: IUjian) => {
+            const url = `${baseUrl}${endpoints['edit'](daftar_kelas.id)}`;
+            axios.put(url, editedData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -109,22 +113,22 @@ export function MataPelajaran() {
 
         openDialog({
             width: "500px",
-            height: "240px",
+            height: "600px",
             content: (
-                <Form <IMataPelajaran>
-                    data={mapel}
-                    title="Ubah Mata Pelajaran"
-                    headList={["Nama Mata Pelajaran"]}
-                    keyList={["nama"]}
-                    type={["text"]}
-                    onSubmit={editMapel}
+                <Form <IUjian>
+                    data={daftar_kelas}
+                    title="Tambah Kelas"
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
+                    type={["text", "text", "text", "text", "date", "date", "text"]}
+                    onSubmit={editClass}
                     onCancel={closeDialog}
                 />
             )
         })
-    } 
+    }
 
-    const handleDelete = (mapel: IMataPelajaran) => {
+    const handleDelete = (kelas: IUjian) => {
         Swal.fire({
             title: "Menghapus Item",
             text: "Apakah anda yakin ingin menghapus item ini?",
@@ -134,7 +138,7 @@ export function MataPelajaran() {
             cancelButtonText: "Tidak"
         }).then(async result => {
             if(result){
-                const url = `${baseUrl}${endpoints['delete'](mapel.id)}`;
+                const url = `${baseUrl}${endpoints['delete'](kelas.id)}`;
                 axios.delete(url, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -155,28 +159,25 @@ export function MataPelajaran() {
 
     return (
         <div className="w-full bg-gray-100 p-4">
-            <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
-                <Table <IMataPelajaran>
-                    title="Mata Pelajaran"
-                    data={mataPelajaran}
-                    headList={['Mata Pelajaran']}
-                    keyList={['nama']}
+            <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
+                <Table <IUjian>
+                    title="Daftar Kelas"
+                    data={ujian}
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
                     pagination={pagination}
                     editAction={true}
                     deleteAction={true}
-                    additionalButton={(
-                        <div className="flex gap-1">
-                            <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
-                                <Icon name="heroicons:plus" shape="outline"/>
-                                <p>Tambah Mata Pelajaran</p>
-                            </button>
-                        </div>
-                    )}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    additionalButton={(
+                        <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                            <Icon name="heroicons:plus" shape="outline"/>
+                            <p>Tambah Ujian</p>
+                        </button>
+                    )}
                 />
             </div>
         </div>
     )
-
 }

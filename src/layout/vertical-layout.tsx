@@ -102,6 +102,7 @@ export function VerticalLayout() {
                     <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:user" title="Mata Pelajaran"/>
                     <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:user" title="Kelompok Ujian"/>
                     <SublistContainer href="/admin/daftar-kelas" icon="heroicons:user" title="Daftar Kelas"/>
+                    <SublistContainer href="/admin/ujian" icon="heroicons:user" title="Ujian"/>
                     {/* <SublistContainer href="/admin/biodata-siswa" icon="heroicons:user" title="Peserta"/> */}
                     {/* <SublistContainer href="/admin/data-guru" icon="heroicons:user" title="Data Guru"/> */}
                     {/* <SublistContainer href="/admin/data-panitia" icon="heroicons:user" title="Data Panitia"/> */}
@@ -109,7 +110,7 @@ export function VerticalLayout() {
                 </div>)
             }
 
-            <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Kelompok Ujian" />
+            {/* <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Kelompok Ujian" /> */}
 
             {/* <SublistHead name="pengaturanUjian" title="Pengaturan Ujian" icon="heroicons:cog-8-tooth" />
 

@@ -14,6 +14,10 @@ interface RegisterForm extends LoginForm {
     alamat: string,
 }
 
+interface LoginSiswaForm extends LoginForm {
+    nomor_peserta: string
+}
+
 export function Login({type, role}: {type: 'login' | 'register', role: 'admin' | 'student'}) {
 
     const navigate = useNavigate();
@@ -28,16 +32,22 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
         nama: '',
         alamat: ''
     });
+    const [loginSiswaForm, setLoginSiswaForm] = useState<LoginSiswaForm>({
+        username: '',
+        password: '',
+        nomor_peserta: ''
+    })
     const [showPassword, setShowPassword] = useState(false);
 
     const getTitle = (): string => {
-        switch(type){
-            case "login":
-                return "Log In";
-            case "register":
-                return "Register";
-            default:
-                return "";
+        if(type === 'login' && role === 'admin'){
+            return "Log In"
+        }else if(type === 'login' && role === 'student'){
+            return "Log In Student"
+        }else if(type === 'register' && role === 'admin'){
+            return "Register"
+        }else {
+            return ""
         }
     }
 
@@ -49,8 +59,11 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {id, value} = e.target;
-        if(type === 'login'){
+        if(type === 'login' && role === 'admin'){
             setLoginForm(prevData => ({...prevData, [id]: value}));
+        }
+        if(type === 'login' && role === 'student'){
+            setLoginSiswaForm(prevData => ({...prevData, [id]: value}))
         }
         if(type === 'register'){
             setRegisterForm(prevData => ({...prevData, [id]: value}));
@@ -59,15 +72,27 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log(type === 'login' ? loginForm : registerForm)
+        const body = type === 'login' ? role === 'admin' ? loginForm : loginSiswaForm : registerForm;
+        console.log(body)
         const endpoint = type === 'login' ? role === 'admin' ? endpoints['login_admin'] : endpoints['login_student'] : endpoints['register_admin'];
         const url = `${Environment.base_url}${endpoint}`;
 
-        // const response = await axios.post(url, (type === 'login' ? loginForm : registerForm));
-        // console.log(`Response ${type}: `, response);
+        try {
+            const response = await axios.post(url, body);
+            console.log(`Response ${type}: `, response);
+            const token = response.data.token;
+            if(!response.data['guru']){
+                localStorage.setItem("authToken", token);
+                navigate("/ujian")
+            }else {
+                localStorage.setItem("authToken", token);
+                navigate("/");
+            }
+        } catch (error) {
+            console.error(error)
+        }
 
-        localStorage.setItem("authToken", 'Test');
-        navigate("/");
+
     }
 
     const style = {
@@ -88,13 +113,37 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
 
                     <div id="header" className="flex flex-col gap-4 w-full">
                         <h1 className="text-3xl text-gray-600 font-light">{getTitle()}</h1>
-                        {type === 'login' 
-                        ? <p className="text-gray-400 font-normal">Belum punya akun? <Link to="/register-admin" className={style.text_button}>Daftar</Link></p>
-                        : <p className="text-gray-400 font-normal">Sudah punya akun? <Link to="/login-admin" className={style.text_button}>Masuk</Link></p>
-                        }
+                        {(type === 'login' && role === 'admin') && (
+                            <p className="text-gray-400 font-normal">Belum punya akun? <Link to="/register-admin" className={style.text_button}>Daftar</Link></p>
+                        )}
+
+                        {(type === 'register' && role === 'admin') && (
+                            <p className="text-gray-400 font-normal">Sudah punya akun? <Link to="/login-admin" className={style.text_button}>Masuk</Link></p>
+                        )} 
+                        
                     </div>
 
                     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
+
+                        {(type === 'login' && role === 'student') &&
+                            <div className={style.input_container}>
+                                <label htmlFor="nomor_peserta" className="text-sm">Nomor Peserta</label>
+                                <div className="flex items-center border border-gray-300 w-fit rounded-md">
+                                    <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
+                                        <Icon name="heroicons:user" shape="outline"/>
+                                    </div>
+                                    <input 
+                                        required
+                                        id="nomor_peserta" 
+                                        type="text" 
+                                        placeholder="P1918xxx atau U1918xxx" 
+                                        className={style.input}
+                                        value={loginSiswaForm.nomor_peserta}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+                        }
 
                         <div className={style.input_container}>
                             <label htmlFor="username" className="text-sm">Username</label>
@@ -108,7 +157,7 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                                     type="text" 
                                     placeholder="P1918xxx atau U1918xxx" 
                                     className={style.input}
-                                    value={type === 'login' ? loginForm.username : registerForm.username}
+                                    value={type === 'login' ? role === 'admin' ? loginForm.username : loginSiswaForm.username : registerForm.username}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -126,7 +175,7 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Password" 
                                     className={style.input}
-                                    value={type === 'login' ? loginForm.password : registerForm.password}
+                                    value={type === 'login' ? role === 'admin' ? loginForm.password : loginSiswaForm.password : registerForm.password}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -173,6 +222,11 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                         <button className={`bg-blue-500 mt-8 ${style.button}`}>{type === 'login' ? 'Sign In' : 'Sign Up'}</button>
 
                     </form>
+                    {role === 'student'
+                    ? <Link to="/login-admin" className="text-blue-500 hover:text-blue-600 hover:underline">Masuk sebagai admin</Link>
+                    : <Link to="/login-student" className="text-blue-500 hover:text-blue-600 hover:underline">Masuk sebagai murid</Link>
+                    }
+                    
                 </div>
             </div>
 

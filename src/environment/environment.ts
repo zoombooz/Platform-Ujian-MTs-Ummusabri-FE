@@ -1,3 +1,4 @@
 export const Environment = {
-    base_url: 'http://127.0.0.1:8000/'
+    base_url: 'https://tester.advozatech.com/api/',
+    id_sekolah: "A123456"
 }

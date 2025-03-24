@@ -4,6 +4,9 @@ import { Countdown } from "../components/countdown";
 import { soalBIList } from "../models/soal.constant";
 import { useDialog } from "../context/DialogContext";
 import { ValidationDialog } from "../components/validation-dialog";
+import { TextEditor } from "../components/text-editor";
+import ReactQuill from "react-quill";
+import RichTextEditor from "../components/RichTextEditor";
 
 export interface IQuestion {
     ujian_id: number,
@@ -40,6 +43,8 @@ export function Ujian() {
             }
         })
     )
+
+    // const data = "<!DOCTYPE html>\n<html>\n<head>\n<\/head>\n<body>\nWhat is the last digit of the result of the multiplying 9 &times; 8 &times; 7 &times; 6 &times; 5 &times; 4 &times; 3 &times; 2 &times; 1&hellip;<br \/><br \/>\n<p style=\"margin: 0pt 0pt 0pt 28.35pt; padding-left: 3.3pt; page-break-after: avoid; page-break-inside: avoid; text-align: justify; text-indent: -21.3pt;\"><span style=\"font-family: &#96;Times New Roman&#96;; font-size: 14pt;\"><img src=\"\/UNBK\/Assets\/Images\/optionA1.png\" border=\"0\" alt=\"option a\" onclick=\"changeOnClick(this);\" id=\"optionA\" style=\"vertical-align: middle; cursor: hand;\" \/> <span style=\"font-size: 12pt;\">0<\/span><br \/><\/span><\/p>\n<p style=\"margin: 0pt 0pt 0pt 28.35pt; padding-left: 3.3pt; page-break-after: avoid; page-break-inside: avoid; text-align: justify; text-indent: -21.3pt;\"><span style=\"font-family: &#96;Times New Roman&#96;; font-size: 14pt;\"><img src=\"\/UNBK\/Assets\/Images\/optionB1.png\" border=\"0\" alt=\"option b\" onclick=\"changeOnClick(this);\" id=\"optionB\" style=\"vertical-align: middle; cursor: hand;\" \/><\/span> 2<\/p>\n<p style=\"margin: 0pt 0pt 0pt 28.35pt; padding-left: 3.3pt; page-break-after: avoid; page-break-inside: avoid; text-align: justify; text-indent: -21.3pt;\"><span style=\"font-family: &#96;Times New Roman&#96;; font-size: 14pt;\"><img src=\"\/UNBK\/Assets\/Images\/optionC1.png\" border=\"0\" alt=\"option c\" onclick=\"changeOnClick(this);\" id=\"optionC\" style=\"vertical-align: middle; cursor: hand;\" \/><\/span> 4<\/p>\n<p style=\"margin: 0pt 0pt 0pt 28.35pt; padding-left: 3.3pt; page-break-after: avoid; page-break-inside: avoid; text-align: justify; text-indent: -21.3pt;\"><span style=\"font-family: &#96;Times New Roman&#96;; font-size: 14pt;\"><img src=\"\/UNBK\/Assets\/Images\/optionD1.png\" border=\"0\" alt=\"option d\" onclick=\"changeOnClick(this);\" id=\"optionD\" style=\"vertical-align: middle; cursor: hand;\" \/><\/span> 6<\/p>\n<p style=\"margin: 0pt 0pt 0pt 28.35pt; padding-left: 3.3pt; page-break-after: avoid; page-break-inside: avoid; text-align: justify; text-indent: -21.3pt;\"><span style=\"font-family: &#96;Times New Roman&#96;; font-size: 14pt;\"><img src=\"\/UNBK\/Assets\/Images\/optionE1.png\" border=\"0\" alt=\"option e\" onclick=\"changeOnClick(this);\" id=\"optionE\" style=\"vertical-align: middle; cursor: hand;\" \/><\/span> 8<\/p>\n<p style=\"margin: 0pt 0pt 0pt 28.35pt; padding-left: 3.3pt; page-break-after: avoid; page-break-inside: avoid; text-align: justify; text-indent: -21.3pt;\"><\/p>\n<\/body>\n<\/html>"
 
     // useEffect(() => {
     //     // console.log("Banyak Soal: ", questions.length)
@@ -116,6 +121,8 @@ export function Ujian() {
         doubt_button: `w-16 rounded-md py-1.5 text-white`
     }
 
+    
+
     return (
         <div className="flex w-screen h-screen overflow-hidden">
             <div id="sidebar" className={`${extendSidebar ? "w-[20%] px-2" : "w-0"} relative h-full bg-green-600 shadow-md transition-all duration-300`}>
@@ -182,6 +189,9 @@ export function Ujian() {
                         ))}
 
                     </div>
+                    
+                    {/* <TextEditor /> */}
+                    <RichTextEditor value="string" onChange={() => {}}/>
 
                     <div id="control" className="flex justify-center gap-2 h-[10%]">
                         <button 
@@ -200,9 +210,8 @@ export function Ujian() {
                             className={`${style.control_button} ${currentNumber < questions.length ? style.control_button_active : style.submit_button}`} 
                             onClick={() => currentNumber < questions.length ? changeSoal('next') : handleSubmit(false)}
                         >{currentNumber < questions.length ? 'Next' : 'Complete'}</button>
-
-                        
                     </div>
+
                 </div>
             </div>
         </div>

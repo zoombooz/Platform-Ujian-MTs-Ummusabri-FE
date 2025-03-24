@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Icon } from "../components/icon"
 import { Table } from "../components/table"
 import { defaultPaginationValue } from "../models/table.type"
@@ -16,14 +16,15 @@ export interface IJurusan {
     updated_at: string
 }
 
-const jurusan: IJurusan[] = jurusanList;
-const baseUrl = Environment.base_url;
 
 export function Jurusan() {
-
+    
+    const baseUrl = Environment.base_url;
     const {openDialog, closeDialog} = useDialog();
     const [pagination] = useState(defaultPaginationValue);
+    const [jurusan, setJurusan] = useState<IJurusan[]>([]);
 
+    
     const endpoints = {
         create: `admin/jurusan`,
         get: `admin/jurusan`,
@@ -31,11 +32,41 @@ export function Jurusan() {
         delete: (id: string) => `admin/jurusan/${id}`
     }
 
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+    const fetchData = () => {
+        const url = `${baseUrl}${endpoints['get']}`;
+        axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }).then(result => {
+            setJurusan(result.data.data);
+        }).catch(err => {
+            console.error(err);
+        })
+    }
+
     const handleAdd = () => {
         const addJurusan = async (body: Partial<IJurusan>) => {
             const url = `${baseUrl}${endpoints['create']}`;
-            const response = await axios.post(url, body);
-            console.log("Response: ", response)
+            axios.post(url, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(response => {
+                fetchData();
+                closeDialog();
+            }).catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            });
         }
 
         openDialog({
@@ -57,8 +88,21 @@ export function Jurusan() {
     const handleEdit = (jurusan: IJurusan) => {
         const editJurusan = async (body: Partial<IJurusan>) => {
             const url = `${baseUrl}${endpoints['edit'](jurusan.id)}`;
-            const response = await axios.post(url, body);
-            console.log("Response: ", response)
+            await axios.put(url, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(response => {
+                fetchData();
+                closeDialog();
+            }).catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            });
         }
 
         openDialog({
@@ -86,11 +130,23 @@ export function Jurusan() {
             showCancelButton: true,
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
-        }).then(async result => {
+        }).then(result => {
             if(result){
                 const url = `${baseUrl}${endpoints['delete'](jurusan.id)}`;
-                const response = await axios.delete(url);
-                console.log("Delete Jurusan Response: ", response);
+                axios.delete(url, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }).then(response => {
+                    fetchData();
+                }).catch(error => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Request Failed",
+                        text: `${(error as Error).message}`
+                    })
+                });
             }
         })
     }

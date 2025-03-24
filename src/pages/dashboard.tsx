@@ -12,12 +12,12 @@ export function DashboardPage() {
 
             <h1 className="text-2xl font-extralight">Dashboard</h1>
 
-            <div className="w-full grid grid-cols-4 gap-6">
+            {/* <div className="w-full grid grid-cols-4 gap-6">
                 <Card/>
                 <Card/>
                 <Card/>
                 <Card/>
-            </div>
+            </div> */}
 
             <div className="w-full h-fit flex flex-col md:flex-row gap-4 mb-12">
                 <div className="flex flex-col justify-between w-1/4 h-fit border border-gray-200 shadow-md rounded-md bg-white">

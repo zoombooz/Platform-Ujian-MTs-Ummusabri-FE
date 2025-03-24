@@ -7,7 +7,6 @@ import { useDialog } from "../context/DialogContext";
 import { Form } from "../components/form";
 import { Environment } from "../environment/environment";
 import axios from "axios";
-import { ValidationDialog } from "../components/validation-dialog";
 import Swal from "sweetalert2";
 
 export interface IAgama {
@@ -17,13 +16,13 @@ export interface IAgama {
     updated_at: string
 }
 
-const agama: IAgama[] = agamaList;
-const baseUrl = Environment.base_url;
 
 export function Agama() {
     
+    const baseUrl = Environment.base_url;
     const {openDialog, closeDialog} = useDialog();
     const [pagination] = useState(defaultPaginationValue);
+    const [agama, setAgama] = useState<IAgama[]>([]);
     const endpoints = {
         get: `admin/agama`,
         add: `admin/agama`,
@@ -32,14 +31,38 @@ export function Agama() {
     }
 
     useEffect(() => {
-        
+        fetchData();
     }, [])
+
+    const fetchData = async () => {
+        const url = `${baseUrl}${endpoints['get']}`;
+        const response = await axios.get(url, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+            }
+        })
+        setAgama(response.data.data);
+    }
 
     const handleAdd = () => {
         const addAgama = async (body: Partial<IAgama>) => {
             const url = `${baseUrl}${endpoints['add']}`;
-            const response = await axios.post(url, body);
-            console.log("Add Agama Response: ", response);
+            try {
+                await axios.post(url, body, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                closeDialog();
+                fetchData();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            }
         }
 
 
@@ -61,9 +84,23 @@ export function Agama() {
 
     const handleEdit = (agama: IAgama) => {
         const editAgama = async (editedAgama: IAgama) => {
-            const url = `${baseUrl}${endpoints['edit'](editedAgama.id)}`;
-            const response = await axios.put(url, editedAgama);
-            console.log("Edit Agama Response: ", response);
+            const url = `${baseUrl}${endpoints['edit'](agama.id)}`;
+            try {
+                const response = await axios.put(url, editedAgama, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                closeDialog();
+                fetchData();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            }
         }
 
         openDialog({
@@ -94,8 +131,12 @@ export function Agama() {
         }).then(async result => {
             if(result){
                 const url = `${baseUrl}${endpoints['delete'](agama.id)}`;
-                const response = await axios.delete(url);
-                console.log("Delete Agama Response: ", response);
+                const response = await axios.delete(url, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                fetchData();
             }
         })
     }
@@ -106,9 +147,10 @@ export function Agama() {
                 <Table <IAgama>
                     title="Daftar Agama"
                     data={agama}
-                    headList={['Nama']}
-                    keyList={['nama']}
+                    headList={['ID', 'Nama']}
+                    keyList={['id', 'nama']}
                     pagination={pagination}
+                    numberRow={false}
                     editAction={true}
                     deleteAction={true}
                     onEditAction={handleEdit}

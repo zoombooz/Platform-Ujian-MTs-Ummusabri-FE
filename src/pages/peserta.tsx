@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDialog } from "../context/DialogContext";
 import { defaultPaginationValue, IPagination } from "../models/table.type";
 import { Table } from "../components/table";
@@ -8,6 +8,7 @@ import { Environment } from "../environment/environment";
 import { Form } from "../components/form";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { IAgama } from "./agama";
 
 export interface IPeserta {
     nama: string,
@@ -27,19 +28,77 @@ const baseUrl = Environment.base_url;
 export function Peserta() {
 
     const {openDialog, closeDialog} = useDialog();
+    const [peserta, setPeserta] = useState<IPeserta[]>([]);
+    const [agama, setAgama] = useState<{name: string, key: string}[]>([]);
     const [pagination] = useState<IPagination>(defaultPaginationValue);
     const endpoints = {
         get: `admin/peserta`,
         add: `admin/peserta`,
-        edit: (id: number) => `admin/peserta${id}`,
+        edit: (id: number) => `admin/peserta/${id}`,
         delete: (id: number) => `admin/peserta/${id}`,
+        get_agama: 'admin/agama'
+    }
+
+    useEffect(() => {
+        fetchData();
+        fetchAgama();
+    }, [])
+
+    const fetchData = async () => {
+        try {
+            const url = `${baseUrl}${endpoints['get']}`;
+            const response = await axios.get(url, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+                }
+            })
+            setPeserta(response.data.data);
+            console.log("Peserta: ", response)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const fetchAgama = async () => {
+        try {
+            const url = `${baseUrl}${endpoints['get_agama']}`;
+            const response = await axios.get(url, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+                }
+            })
+            const agamaList = response.data.data.map((el: IAgama) => {
+                return {
+                    name: el.nama,
+                    key: el.id
+                }
+            })
+            setAgama(agamaList);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const handleAdd = () => {
         const addPeserta = async (body: Partial<IPeserta>) => {
             const url = `${baseUrl}${endpoints['add']}`;
-            const response = await axios.post(url, body);
-            console.log("Add Agama Response: ", response);
+            try {
+                const response = await axios.post(url, body, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                console.log("Add Agama Response: ", response);
+                closeDialog();
+                fetchData();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            }
         }
 
         openDialog({
@@ -52,9 +111,9 @@ export function Peserta() {
                     keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id", "nomor_peserta"]}
                     type={["text", "password", "select", "select", "select", "text"]}
                     selectList={{
-                        jurusan_id: ["1", "2", "3"],
-                        agama_id: ["4", "5", "6"],
-                        kelas_id: ["7", "8", "9"]
+                        jurusan_id: agama,
+                        agama_id: agama,
+                        kelas_id: agama
                     }}
                     onSubmit={addPeserta}
                     onCancel={closeDialog}
@@ -65,9 +124,24 @@ export function Peserta() {
 
     const handleEdit = (peserta: IPeserta) => {
         const editPeserta = async (body: Partial<IPeserta>) => {
-            const url = `${baseUrl}${endpoints['edit']}`;
-            const response = await axios.put(url, body);
-            console.log("Edit Agama Response: ", response);
+            const url = `${baseUrl}${endpoints['edit'](peserta.id)}`;
+            try {
+                const response = await axios.put(url, body, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                console.log("Edit Agama Response: ", response);
+                closeDialog();
+                fetchData();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: `${(error as Error).message}`
+                })
+            }
         }
 
         openDialog({
@@ -81,11 +155,11 @@ export function Peserta() {
                     keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id", "nomor_peserta"]}
                     type={["text", "password", "select", "select", "select", "text"]}
                     selectList={{
-                        jurusan_id: ["1", "2", "3"],
-                        agama_id: ["4", "5", "6"],
-                        kelas_id: ["7", "8", "9"]
+                        jurusan_id: agama,
+                        agama_id: agama,
+                        kelas_id: agama
                     }}
-                    onSubmit={() => {}}
+                    onSubmit={editPeserta}
                     onCancel={closeDialog}
                 />
             )
@@ -103,8 +177,12 @@ export function Peserta() {
         }).then(async result => {
             if(result){
                 const url = `${baseUrl}${endpoints['delete'](peserta.id)}`;
-                const response = await axios.delete(url);
-                console.log("Delete Peserta Response: ", response);
+                const response = await axios.delete(url, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                fetchData();
             }
         })
     }
@@ -115,8 +193,8 @@ export function Peserta() {
                 <Table <IPeserta>
                     title="Daftar Peserta"
                     data={peserta}
-                    headList={['Nama', 'Password', 'Jurusan', 'Agama', 'Kelas']}
-                    keyList={['nama', 'password', 'jurusan_id', 'agama_id', 'kelas_id']}
+                    headList={['Nama', 'Jurusan', 'Agama', 'Kelas']}
+                    keyList={['nama', 'jurusan_id', 'agama_id', 'kelas_id']}
                     pagination={pagination}
                     editAction={true}
                     deleteAction={true}
