@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { defaultPaginationValue } from "../models/table.type";
-import { kelompokUjianList } from "../models/mockup.constant";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { useDialog } from "../context/DialogContext";
 import { Icon } from "../components/icon";
 import { Form } from "../components/form";
@@ -22,7 +21,7 @@ export interface IKelompokUjian {
 export function KelompokUjian() {
     
     const {openDialog, closeDialog} = useDialog();
-    const [pagination] = useState(defaultPaginationValue);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [kelompokUjian, setKelompokUjian] = useState<IKelompokUjian[]>([]);
     const {base_url: baseUrl, id_sekolah} = Environment;
 
@@ -37,14 +36,18 @@ export function KelompokUjian() {
         fetchData();
     }, []);
 
-    const fetchData = () => {
-        const url = `${baseUrl}${endpoints['get']}`;
+    const fetchData = (URL?: string) => {
+        const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(response => {
-            setKelompokUjian(response.data.data);
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(response.data)
+            setKelompokUjian(data);
+            setPagination(pagination);
         }).catch(error => {
             console.error(error);
             Swal.fire({
@@ -185,6 +188,7 @@ export function KelompokUjian() {
                     )}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onChangePage={fetchData}
                 />
             </div>
         </div>

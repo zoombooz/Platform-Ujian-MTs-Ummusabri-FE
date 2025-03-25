@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { defaultPaginationValue, IPagination } from "../models/table.type";
+import { defaultPaginationValue, defaultPaginationValueNew, IPagination, IPaginationNew } from "../models/table.type";
 import { useDialog } from "../context/DialogContext";
 import { Form } from "../components/form";
 import { Icon } from "../components/icon";
@@ -21,7 +21,7 @@ const baseUrl = Environment.base_url;
 export function DaftarKelas() {
 
     const {openDialog, closeDialog} = useDialog();
-    const [pagination] = useState<IPagination>(defaultPaginationValue);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [daftarKelas, setDaftarKelas] = useState<IDaftarKelas[]>([]);
     const endpoints = {
         create: `admin/daftar_kelas`,
@@ -34,14 +34,18 @@ export function DaftarKelas() {
         fetchData();
     }, [])
 
-    const fetchData = () => {
-        const url = `${baseUrl}${endpoints['get']}`;
+    const fetchData = (URL?: string) => {
+        const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(response => {
-            setDaftarKelas(response.data.data);
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(response.data)
+            setDaftarKelas(data);
+            setPagination(pagination)
         }).catch(error => {
             console.error(error);
             Swal.fire({
@@ -162,6 +166,7 @@ export function DaftarKelas() {
                     deleteAction={true}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onChangePage={fetchData}
                     additionalButton={(
                         <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
                             <Icon name="heroicons:plus" shape="outline"/>

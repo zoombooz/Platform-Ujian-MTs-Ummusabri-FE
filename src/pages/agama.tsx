@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { agamaList } from "../models/mockup.constant";
-import { defaultPaginationValue } from "../models/table.type";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { Icon } from "../components/icon";
 import { useDialog } from "../context/DialogContext";
 import { Form } from "../components/form";
@@ -21,7 +20,7 @@ export function Agama() {
     
     const baseUrl = Environment.base_url;
     const {openDialog, closeDialog} = useDialog();
-    const [pagination] = useState(defaultPaginationValue);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [agama, setAgama] = useState<IAgama[]>([]);
     const endpoints = {
         get: `admin/agama`,
@@ -34,14 +33,27 @@ export function Agama() {
         fetchData();
     }, [])
 
-    const fetchData = async () => {
-        const url = `${baseUrl}${endpoints['get']}`;
-        const response = await axios.get(url, {
+    const fetchData = (URL?: string) => {
+        const url = URL ?? `${baseUrl}${endpoints['get']}`;
+        axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('authToken')}`
             }
+        }).then(response => {
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(response.data)
+
+            setAgama(data);
+            setPagination(pagination);
+        }).catch(error => {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Request Failed",
+                text: `${(error as Error).message}`
+            })
         })
-        setAgama(response.data.data);
     }
 
     const handleAdd = () => {
@@ -83,24 +95,23 @@ export function Agama() {
     }
 
     const handleEdit = (agama: IAgama) => {
-        const editAgama = async (editedAgama: IAgama) => {
+        const editAgama = (editedAgama: IAgama) => {
             const url = `${baseUrl}${endpoints['edit'](agama.id)}`;
-            try {
-                const response = await axios.put(url, editedAgama, {
+                axios.put(url, editedAgama, {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
+                }).then(() => {
+                    closeDialog();
+                    fetchData();
+                }).catch ((error) => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Request Failed",
+                        text: `${(error as Error).message}`
+                    })
                 });
-                closeDialog();
-                fetchData();
-            } catch (error) {
-                console.error(error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Request Failed",
-                    text: `${(error as Error).message}`
-                })
-            }
         }
 
         openDialog({
@@ -128,15 +139,23 @@ export function Agama() {
             showCancelButton: true,
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
-        }).then(async result => {
+        }).then(result => {
             if(result){
                 const url = `${baseUrl}${endpoints['delete'](agama.id)}`;
-                const response = await axios.delete(url, {
+                axios.delete(url, {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
+                }).then(() => {
+                    fetchData();
+                }).catch ((error) => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Request Failed",
+                        text: `${(error as Error).message}`
+                    })
                 });
-                fetchData();
             }
         })
     }
@@ -155,6 +174,7 @@ export function Agama() {
                     deleteAction={true}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onChangePage={fetchData}
                     additionalButton={(
                         <div className="flex gap-1">
                             <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">

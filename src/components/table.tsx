@@ -3,7 +3,7 @@ import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 import { Icon } from "./icon";
 
-export function Table<T extends Record<string, any>>({title, data, headList, keyList, pagination, classCustom, infoAction = false, editAction = false, deleteAction = false, numberRow = true, onInfoAction, onEditAction, onDeleteAction, additionalButton}: ITable<T>) {
+export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, editAction = false, deleteAction = false, numberRow = true, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage}: ITable<T>) {
     
     const style = {
         head_column: `px-6 py-3 border border-gray-300 text-md`,
@@ -92,7 +92,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row: T, rowIndex) => {
+                    {data.map((data: T, rowIndex) => {
                         return (
                             <tr key={rowIndex} className="bg-white border-b border-gray-200 hover:bg-gray-100">
                                 {numberRow && (
@@ -101,20 +101,28 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                                     </td>
                                 )}
                                 {keyList.map((key) => {
+                                    if(selectList && selectList[key] && data){
+                                    const selectedData = selectList[key]?.find((el) => el.key === data[key]);
                                     return (
                                         <td key={String(key)} className="px-6 py-4 border-r border-gray-300">
-                                            {row[key]}    
+                                            {selectedData ? selectedData.name : data[key]}
+                                        </td>
+                                    )
+                                    }
+                                    return (
+                                        <td key={String(key)} className="px-6 py-4 border-r border-gray-300">
+                                            {data[key]}    
                                         </td>
                                     )
                                 })}
-                                <Action data={row}/>
+                                <Action data={data}/>
                             </tr>
                         )
                     })}
                 </tbody>
             </table>
 
-            <Pagination pagination={pagination} customClass="mt-4"/>
+            <Pagination pagination={pagination} customClass="mt-4" onChangePage={onChangePage}/>
 
         </div>
 

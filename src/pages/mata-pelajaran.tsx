@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { defaultPaginationValue } from "../models/table.type";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { useDialog } from "../context/DialogContext";
 import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";
@@ -18,7 +18,7 @@ export interface IMataPelajaran {
 export function MataPelajaran() {
     
     const {openDialog, closeDialog} = useDialog();
-    const [pagination] = useState(defaultPaginationValue);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [mataPelajaran, setMataPelajaran] = useState<IMataPelajaran[]>([]);
     const baseUrl = Environment.base_url;
 
@@ -33,14 +33,18 @@ export function MataPelajaran() {
         fetchData();
     }, [])
 
-    const fetchData = () => {
-        const url = `${baseUrl}${endpoints['get']}`;
+    const fetchData = (URL?: string) => {
+        const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(response => {
-            setMataPelajaran(response.data.data);
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(response.data);
+            setMataPelajaran(data);
+            setPagination(pagination)
         }).catch(error => {
             console.error(error);
             Swal.fire({
@@ -159,8 +163,9 @@ export function MataPelajaran() {
                 <Table <IMataPelajaran>
                     title="Mata Pelajaran"
                     data={mataPelajaran}
-                    headList={['Mata Pelajaran']}
-                    keyList={['nama']}
+                    headList={['ID', 'Mata Pelajaran']}
+                    keyList={['id', 'nama']}
+                    numberRow={false}
                     pagination={pagination}
                     editAction={true}
                     deleteAction={true}
@@ -174,6 +179,7 @@ export function MataPelajaran() {
                     )}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onChangePage={fetchData}
                 />
             </div>
         </div>

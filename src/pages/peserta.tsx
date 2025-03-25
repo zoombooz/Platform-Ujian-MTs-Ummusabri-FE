@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDialog } from "../context/DialogContext";
-import { defaultPaginationValue, IPagination } from "../models/table.type";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { Table } from "../components/table";
-import { pesertaList } from "../models/mockup.constant";
 import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";
 import { Form } from "../components/form";
@@ -22,61 +21,84 @@ export interface IPeserta {
     id: number,
 }
 
-const peserta: IPeserta[] = pesertaList;
 const baseUrl = Environment.base_url;
 
 export function Peserta() {
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Properties
+    // -----------------------------------------------------------------------------------------------------
+
     const {openDialog, closeDialog} = useDialog();
     const [peserta, setPeserta] = useState<IPeserta[]>([]);
-    const [agama, setAgama] = useState<{name: string, key: string}[]>([]);
-    const [pagination] = useState<IPagination>(defaultPaginationValue);
+    const [agamaList, setAgamaList] = useState<{name: string, key: string}[]>([]);
+    const [jurusanList, setJurusanList] = useState<{name: string, key: string}[]>([]);
+    const [kelasList, setKelasList] = useState<{name: string, key: string}[]>([]);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const endpoints = {
         get: `admin/peserta`,
         add: `admin/peserta`,
         edit: (id: number) => `admin/peserta/${id}`,
         delete: (id: number) => `admin/peserta/${id}`,
-        get_agama: 'admin/agama'
+        get_agama: 'admin/agama',
+        get_jurusan: 'admin/jurusan',
+        get_kelas: 'admin/daftar_kelas'
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle Hooks
+    // -----------------------------------------------------------------------------------------------------
 
     useEffect(() => {
         fetchData();
-        fetchAgama();
+        fetchAdditionalData(endpoints['get_agama'], setAgamaList);
+        fetchAdditionalData(endpoints['get_jurusan'], setJurusanList);
+        fetchAdditionalData(endpoints['get_kelas'], setKelasList);
     }, [])
 
-    const fetchData = async () => {
-        try {
-            const url = `${baseUrl}${endpoints['get']}`;
-            const response = await axios.get(url, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-                }
-            })
-            setPeserta(response.data.data);
-            console.log("Peserta: ", response)
-        } catch (error) {
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public Methods
+    // -----------------------------------------------------------------------------------------------------
+
+    const fetchData = (URL?: string) => {
+        const url = URL ?? `${baseUrl}${endpoints['get']}`;
+        axios.get(url, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }).then(response => {
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(response.data)
+            setPeserta(data);
+            setPagination(pagination);
+        }).catch(error => {
             console.error(error);
-        }
+            Swal.fire({
+                icon: "error",
+                title: "Request Failed",
+                text: `${(error as Error).message}`
+            })
+        })
     }
 
-    const fetchAgama = async () => {
-        try {
-            const url = `${baseUrl}${endpoints['get_agama']}`;
-            const response = await axios.get(url, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-                }
-            })
-            const agamaList = response.data.data.map((el: IAgama) => {
+    const fetchAdditionalData = (endpoint: string, setList: React.Dispatch<React.SetStateAction<{name: string;key: string;}[]>>) => {
+        const url = `${baseUrl}${endpoint}`;
+        axios.get(url, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+            }
+        }).then(response => {
+            const list = response.data.data.map((el: any) => {
                 return {
                     name: el.nama,
                     key: el.id
                 }
             })
-            setAgama(agamaList);
-        } catch (error) {
-            console.error(error);
-        }
+            setList(list);
+        }).catch(error => {
+            console.error(error)
+        })
     }
 
     const handleAdd = () => {
@@ -107,13 +129,13 @@ export function Peserta() {
             content: (
                 <Form <IPeserta>
                     title="Tambah Peserta"
-                    headList={["Nama Peserta", "Password", "Jurusan", "Agama", "Kelas", "Nomor Peserta"]}
-                    keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id", "nomor_peserta"]}
-                    type={["text", "password", "select", "select", "select", "text"]}
+                    headList={["Nama Peserta", "Password", "Jurusan", "Agama", "Kelas"]}
+                    keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
+                    type={["text", "password", "select", "select", "select"]}
                     selectList={{
-                        jurusan_id: agama,
-                        agama_id: agama,
-                        kelas_id: agama
+                        jurusan_id: jurusanList,
+                        agama_id: agamaList,
+                        kelas_id: kelasList
                     }}
                     onSubmit={addPeserta}
                     onCancel={closeDialog}
@@ -151,13 +173,13 @@ export function Peserta() {
                 <Form <IPeserta>
                     data={peserta}
                     title="Tambah Peserta"
-                    headList={["Nama Peserta", "Password", "Jurusan", "Agama", "Kelas", "Nomor Peserta"]}
-                    keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id", "nomor_peserta"]}
-                    type={["text", "password", "select", "select", "select", "text"]}
+                    headList={["Nama Peserta", "Password", "Jurusan", "Agama", "Kelas"]}
+                    keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
+                    type={["text", "password", "select", "select", "select"]}
                     selectList={{
-                        jurusan_id: agama,
-                        agama_id: agama,
-                        kelas_id: agama
+                        jurusan_id: agamaList,
+                        agama_id: agamaList,
+                        kelas_id: agamaList
                     }}
                     onSubmit={editPeserta}
                     onCancel={closeDialog}
@@ -177,7 +199,7 @@ export function Peserta() {
         }).then(async result => {
             if(result){
                 const url = `${baseUrl}${endpoints['delete'](peserta.id)}`;
-                const response = await axios.delete(url, {
+                await axios.delete(url, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
@@ -186,6 +208,10 @@ export function Peserta() {
             }
         })
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ HTML Element
+    // -----------------------------------------------------------------------------------------------------
 
     return (
         <div className="w-full bg-gray-100 p-4">
@@ -206,6 +232,7 @@ export function Peserta() {
                     )}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onChangePage={fetchData}
                 />
             </div>
         </div>
