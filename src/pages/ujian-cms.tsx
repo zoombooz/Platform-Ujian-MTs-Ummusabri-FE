@@ -7,6 +7,8 @@ import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
+import { ISoal } from "./SoalPage";
 
 export interface IUjian {
     id: number,
@@ -26,6 +28,7 @@ const baseUrl = Environment.base_url;
 
 export function UjianCMS() {
 
+    const navigate = useNavigate();
     const {openDialog, closeDialog} = useDialog();
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [ujian, setUjian] = useState<IUjian[]>([]);
@@ -72,7 +75,7 @@ export function UjianCMS() {
     }
 
     const fetchAdditionalData = (endpoint: string, setList: React.Dispatch<React.SetStateAction<{name: string;key: string;}[]>>) => {
-        const url = `${baseUrl}${endpoint}`;
+        const url = `${baseUrl}${endpoint}?limit=100`;
         axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('authToken')}`
@@ -199,6 +202,10 @@ export function UjianCMS() {
         })
     }
 
+    const openInfo = (ujian: IUjian) => {
+        navigate(`/admin/soal/${ujian.id}`)
+    }
+
     return (
         <div className="w-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
@@ -213,10 +220,12 @@ export function UjianCMS() {
                         kelas_id: daftarKelasList
                     }}
                     pagination={pagination}
+                    infoAction={true}
                     editAction={true}
                     deleteAction={true}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onInfoAction={openInfo}
                     onChangePage={fetchData}
                     additionalButton={(
                         <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">

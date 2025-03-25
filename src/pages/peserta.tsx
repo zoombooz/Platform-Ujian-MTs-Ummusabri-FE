@@ -177,9 +177,9 @@ export function Peserta() {
                     keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
                     type={["text", "password", "select", "select", "select"]}
                     selectList={{
-                        jurusan_id: agamaList,
+                        jurusan_id: jurusanList,
                         agama_id: agamaList,
-                        kelas_id: agamaList
+                        kelas_id: kelasList
                     }}
                     onSubmit={editPeserta}
                     onCancel={closeDialog}
@@ -221,6 +221,11 @@ export function Peserta() {
                     data={peserta}
                     headList={['Nama', 'Jurusan', 'Agama', 'Kelas']}
                     keyList={['nama', 'jurusan_id', 'agama_id', 'kelas_id']}
+                    selectList={{
+                        jurusan_id: jurusanList,
+                        agama_id: agamaList,
+                        kelas_id: kelasList
+                    }}
                     pagination={pagination}
                     editAction={true}
                     deleteAction={true}

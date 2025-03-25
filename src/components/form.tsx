@@ -45,7 +45,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                 <h1 className="text-white">{title}</h1>
             </div>
 
-            <form className="flex flex-col gap-2 h-full px-4 py-3">
+            <form className="flex flex-col gap-2 h-full px-4 py-3 bg-white overflow-y-auto">
                 {keyList.map((item, index) => (
                     <div key={index} className="flex flex-col gap-1">
                         <label htmlFor={item}>{headList[index]}</label>

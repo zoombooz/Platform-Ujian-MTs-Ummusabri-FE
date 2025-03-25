@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Icon } from "../components/icon"
 import { Table } from "../components/table"
-import { defaultPaginationValue } from "../models/table.type"
+import { defaultPaginationValue, defaultPaginationValueNew, IPaginationNew } from "../models/table.type"
 import { jurusanList } from "../models/mockup.constant"
 import { useDialog } from "../context/DialogContext"
 import { Form } from "../components/form"
@@ -21,7 +21,7 @@ export function Jurusan() {
     
     const baseUrl = Environment.base_url;
     const {openDialog, closeDialog} = useDialog();
-    const [pagination] = useState(defaultPaginationValue);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [jurusan, setJurusan] = useState<IJurusan[]>([]);
 
     
@@ -36,14 +36,18 @@ export function Jurusan() {
         fetchData();
     }, [])
 
-    const fetchData = () => {
-        const url = `${baseUrl}${endpoints['get']}`;
+    const fetchData = (URL?: string) => {
+        const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(result => {
-            setJurusan(result.data.data);
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(result.data)
+            setJurusan(data);
+            setPagination(pagination);
         }).catch(err => {
             console.error(err);
         })
@@ -111,7 +115,7 @@ export function Jurusan() {
             content: (
                 <Form <IJurusan>
                     data={jurusan}
-                    title="Tambah Jurusan"
+                    title="Edit Jurusan"
                     headList={["Nama Jurusan"]}
                     keyList={["nama"]}
                     type={["text"]}
@@ -173,6 +177,7 @@ export function Jurusan() {
                     )}
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
+                    onChangePage={fetchData}
                 />
             </div>
         </div>

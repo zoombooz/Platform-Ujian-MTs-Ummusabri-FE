@@ -17,6 +17,7 @@ import { Agama } from './pages/agama.tsx';
 import { Peserta } from './pages/peserta.tsx';
 import { Jurusan } from './pages/jurusan.tsx';
 import { UjianCMS } from './pages/ujian-cms.tsx';
+import { SoalPage } from './pages/SoalPage.tsx';
 
 const ProtectedRoute = () => {
     const isAuthenticated = localStorage.getItem("authToken");
@@ -49,6 +50,7 @@ createRoot(document.getElementById('root')!).render(
                             <Route path="peserta" element={<Peserta />} />
                             <Route path="jurusan" element={<Jurusan />} />
                             <Route path="ujian" element={<UjianCMS />} />
+                            <Route path="soal/:ujian_id" element={<SoalPage />} />
                         </Route>
                         <Route path="daftar-ujian" element={
                             <div>
