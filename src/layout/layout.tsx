@@ -15,7 +15,7 @@ export function Layout() {
                     <HorizontalLayout/>
                     <div className="flex h-full overflow-y-hidden">
                         <VerticalLayout/>
-                        <div className="flex flex-col w-full h-full overflow-y-auto">
+                        <div className="relative flex flex-col w-full h-full overflow-y-auto">
                             <Breadcrump />
                             <Outlet/>
                             <Footer/>

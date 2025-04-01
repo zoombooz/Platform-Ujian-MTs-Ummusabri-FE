@@ -1,4 +1,5 @@
 import { useState } from "react"
+import WysiwygArea from "./WysiwygArea";
 
 interface IForm <T> {
     data?: T,
@@ -59,7 +60,17 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                             </select>
                         )}
 
-                        {type[index] !== 'select' && (
+                        {type[index] === 'text-editor' && (
+                            <div>
+                                <WysiwygArea content={formData[item]} onChange={val => {
+                                    const content = val.replace(/ /g, "&nbsp;").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+                                    console.log({item, content})
+                                    setFormData((prevData) => ({...prevData, [item]: content}))
+                                }} />
+                            </div>
+                        )}
+
+                        {type[index] !== 'select' && type[index] !== 'text-editor' && (
                             <input
                                 id={item} 
                                 type={type[index]} 

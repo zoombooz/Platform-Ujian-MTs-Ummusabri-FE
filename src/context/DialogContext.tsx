@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 
-interface DialogOptions {
+interface IDialogOptions {
     content: ReactNode;
     width?: string;
     height?: string;
@@ -8,7 +8,7 @@ interface DialogOptions {
 }
 
 interface DialogContextType {
-    openDialog: (options: DialogOptions) => void;
+    openDialog: (options: IDialogOptions) => void;
     closeDialog: () => void;
 }
 
@@ -16,9 +16,9 @@ const DialogContext = createContext<DialogContextType|undefined>(undefined);
 
 export function DialogProvider({children}: {children: ReactNode}) {
 
-    const [dialogOptions, setDialogOptions] = useState<DialogOptions|null>(null);
+    const [dialogOptions, setDialogOptions] = useState<IDialogOptions|null>(null);
 
-    const openDialog = (options: DialogOptions) => {
+    const openDialog = (options: IDialogOptions) => {
         setDialogOptions(options)
     }
 

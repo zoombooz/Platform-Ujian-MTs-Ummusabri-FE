@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import RichTextEditor from './RichTextEditor';
 
-type WysiwygAreaProps = Partial<{
-  [key:string]:any;
-}>
+interface WysiwygAreaProps {
+    content?: string,
+    onChange?: (value: string) => void,
+}
 
 
-const WysiwygArea = ({content}:WysiwygAreaProps) => {
-  const [description, setDescription] = useState<string>(content);
+export default function WysiwygArea({content, onChange}: WysiwygAreaProps) {
+    const [description, setDescription] = useState<string>(content || '');
 
-  const handleContentChange = (value: string) => {
-    setDescription(value);
-  };
+    const handleContentChange = (value: string) => {
+        setDescription(value);
+        if(onChange) onChange(value);
+    };
 
-  return (
-    <div>
-      <RichTextEditor value={description} onChange={handleContentChange} />
-      <input type="hidden" name="description" value={description} />
-    </div>
-  );
+    return (
+        <div>
+            <RichTextEditor key="quill-editor" value={description} onChange={handleContentChange} />
+            <input type="hidden" name="description" value={description} />
+        </div>
+    );
 };
-
-export default WysiwygArea;
