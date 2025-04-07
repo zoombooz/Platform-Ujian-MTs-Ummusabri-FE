@@ -8,6 +8,7 @@ import { Form } from "../components/form"
 import { Environment } from "../environment/environment"
 import axios from "axios"
 import Swal from "sweetalert2"
+import { useDrawer } from "../context/DrawerContext"
 
 export interface IJurusan {
     id: string,
@@ -20,7 +21,8 @@ export interface IJurusan {
 export function Jurusan() {
     
     const baseUrl = Environment.base_url;
-    const {openDialog, closeDialog} = useDialog();
+    const [loading, setLoading] = useState<boolean>(false);
+    const {openDrawer, closeDrawer} = useDrawer();
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [jurusan, setJurusan] = useState<IJurusan[]>([]);
 
@@ -37,6 +39,7 @@ export function Jurusan() {
     }, [])
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -50,6 +53,8 @@ export function Jurusan() {
             setPagination(pagination);
         }).catch(err => {
             console.error(err);
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -62,7 +67,7 @@ export function Jurusan() {
                 }
             }).then(response => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -73,7 +78,7 @@ export function Jurusan() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "240px",
             content: (
@@ -83,7 +88,7 @@ export function Jurusan() {
                     keyList={["nama"]}
                     type={["text"]}
                     onSubmit={addJurusan}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -98,7 +103,7 @@ export function Jurusan() {
                 }
             }).then(response => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -109,7 +114,7 @@ export function Jurusan() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "240px",
             content: (
@@ -120,7 +125,7 @@ export function Jurusan() {
                     keyList={["nama"]}
                     type={["text"]}
                     onSubmit={editJurusan}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -156,7 +161,7 @@ export function Jurusan() {
     }
 
     return (
-        <div className="w-full bg-gray-100 p-4">
+        <div className="w-full h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
                 <Table <IJurusan>
                     title="Jurusan"
@@ -178,6 +183,7 @@ export function Jurusan() {
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
                     onChangePage={fetchData}
+                    loading={loading}
                 />
             </div>
         </div>

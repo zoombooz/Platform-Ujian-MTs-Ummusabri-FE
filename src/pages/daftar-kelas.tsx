@@ -1,26 +1,20 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { defaultPaginationValue, defaultPaginationValueNew, IPagination, IPaginationNew } from "../models/table.type";
-import { useDialog } from "../context/DialogContext";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { Form } from "../components/form";
 import { Icon } from "../components/icon";
-import { daftarKelasList } from "../models/mockup.constant";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import Swal from "sweetalert2";
-
-export interface IDaftarKelas {
-    id: number,
-    nama: string,
-    updated_at: string,
-    created_at: string
-}
+import { IDaftarKelas } from "../models/kelas.type";
+import { useDrawer } from "../context/DrawerContext";
 
 const baseUrl = Environment.base_url;
 
 export function DaftarKelas() {
 
-    const {openDialog, closeDialog} = useDialog();
+    const {openDrawer, closeDrawer} = useDrawer();
+    const [loading, setLoading] = useState<boolean>(false);
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [daftarKelas, setDaftarKelas] = useState<IDaftarKelas[]>([]);
     const endpoints = {
@@ -35,6 +29,7 @@ export function DaftarKelas() {
     }, [])
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -53,6 +48,8 @@ export function DaftarKelas() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -65,11 +62,11 @@ export function DaftarKelas() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "240px",
             content: (
@@ -80,7 +77,7 @@ export function DaftarKelas() {
                     type={["text"]}
                     hint={["Contoh: kimia, matematika, dll."]}
                     onSubmit={addClass}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -95,7 +92,7 @@ export function DaftarKelas() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -106,7 +103,7 @@ export function DaftarKelas() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "240px",
             content: (
@@ -118,7 +115,7 @@ export function DaftarKelas() {
                     type={["text"]}
                     hint={["Contoh: kimia, matematika, dll."]}
                     onSubmit={editClass}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -154,7 +151,7 @@ export function DaftarKelas() {
     }
 
     return (
-        <div className="w-full bg-gray-100 p-4">
+        <div className="w-full h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
                 <Table <IDaftarKelas>
                     title="Daftar Kelas"
@@ -173,6 +170,7 @@ export function DaftarKelas() {
                             <p>Tambah Kelas</p>
                         </button>
                     )}
+                    loading={loading}
                 />
             </div>
         </div>

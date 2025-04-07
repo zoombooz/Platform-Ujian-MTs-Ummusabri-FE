@@ -6,6 +6,7 @@ interface IForm <T> {
     title: string,
     headList: string[],
     keyList: string[],
+    disabled?: string[],
     type: string[],
     hint?: string[],
     selectList?: {
@@ -16,7 +17,7 @@ interface IForm <T> {
     onCancel: () => void,
 }
 
-export function Form<T extends Record<string, any>>({data, title, headList, keyList, type, hint, selectList, classCustom, onSubmit, onCancel}: IForm<T>) {
+export function Form<T extends Record<string, any>>({data, title, headList, keyList, type, disabled = [], hint, selectList, classCustom, onSubmit, onCancel}: IForm<T>) {
 
     const [formData, setFormData] = useState<T>(() => {
         if(!data){
@@ -25,7 +26,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
         return keyList.reduce((acc, key) => ({...acc, [key]: data[key]}), {} as T)
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {id, value} = e.target;
         setFormData((prevData) => ({...prevData, [id]: value}))
     }
@@ -36,23 +37,35 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
         console.log("Form: ", formData);
     }
 
+    const isDisabled = (property: string) => {
+        return disabled.includes(property);
+    }
+
     const style = {
         button: 'transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer'
     }
 
     return (
-        <div className={`${classCustom} flex flex-col h-full text-black rounded-md`}>
+        <div className={`${classCustom} flex flex-col h-full text-black rounded-md shadow-lg`}>
             <div className="h-16 bg-green-600 py-4 px-4 flex rounded-t-md">
                 <h1 className="text-white">{title}</h1>
             </div>
 
-            <form className="flex flex-col gap-2 h-full px-4 py-3 bg-white overflow-y-auto">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2 h-full px-4 py-3 bg-white overflow-y-auto">
                 {keyList.map((item, index) => (
                     <div key={index} className="flex flex-col gap-1">
-                        <label htmlFor={item}>{headList[index]}</label>
+                        <div className="flex justify-between">
+                            <label htmlFor={item}>{headList[index]}</label>
+                        </div>
 
                         {(type[index] === 'select' && selectList && selectList[item]) && (
-                            <select id={item} value={formData[item]} onChange={handleChange} className="bg-white border border-black rounded-sm px-2 py-1.5 text-black">
+                            <select 
+                                disabled={isDisabled(item)} 
+                                id={item} 
+                                value={formData[item]} 
+                                onChange={handleChange} 
+                                className={`bg-white border ${isDisabled(item) ? "border-gray-400 text-gray-500" : "border-black text-black"} rounded-sm px-2 py-1.5`}
+                            >
                                 <option value="" disabled>Pilih Item</option>
                                 {selectList[item].map(item => (
                                     <option key={item.key} value={item.key}>{item.name}</option>
@@ -62,11 +75,17 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
 
                         {type[index] === 'text-editor' && (
                             <div>
-                                <WysiwygArea content={formData[item]} onChange={val => {
+                                {/* <WysiwygArea content={formData[item]} onChange={val => {
                                     const content = val.replace(/ /g, "&nbsp;").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
                                     console.log({item, content})
                                     setFormData((prevData) => ({...prevData, [item]: content}))
-                                }} />
+                                }} /> */}
+                                <textarea 
+                                    id={item} 
+                                    value={formData[item]}
+                                    onChange={handleChange}
+                                    className="bg-white border border-black rounded-sm px-2 py-1.5 text-black w-full"
+                                ></textarea>
                             </div>
                         )}
 
@@ -90,7 +109,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
             <div className="h-16 bg-green-600 rounded-b-md">
                 <div className="flex h-full gap-2 py-4 justify-center items-center">
                     <button 
-                        type="button"
+                        type="submit"
                         onClick={handleSubmit}
                         className={"bg-blue-400 hover:bg-blue-500 " + style.button}
                     >UPDATE</button>

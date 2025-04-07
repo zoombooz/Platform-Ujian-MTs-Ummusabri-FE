@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import { defaultPaginationValue, defaultPaginationValueNew, IPagination, IPaginationNew } from "../models/table.type";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { useDialog } from "../context/DialogContext";
 import { Form } from "../components/form";
 import { Icon } from "../components/icon";
@@ -8,28 +8,16 @@ import { Environment } from "../environment/environment";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
-import { ISoal } from "./SoalPage";
-
-export interface IUjian {
-    id: number,
-    nama: string,
-    kelompok_id: string,
-    mapel_id: string,
-    kelas_id: string,
-    id_sekolah: string | number,
-    start_date: string,
-    end_date: string,
-    status: string,
-    updated_at: string,
-    created_at: string
-}
+import { IUjian } from "../models/ujian.type";
+import { useDrawer } from "../context/DrawerContext";
 
 const baseUrl = Environment.base_url;
 
 export function UjianCMS() {
 
     const navigate = useNavigate();
-    const {openDialog, closeDialog} = useDialog();
+    const [loading, setLoading] = useState<boolean>(false);
+    const {openDrawer, closeDrawer} = useDrawer();
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [ujian, setUjian] = useState<IUjian[]>([]);
     const [kelompokUjianList, setKelompokUjianList] = useState<{name: string, key: string}[]>([]);
@@ -53,6 +41,7 @@ export function UjianCMS() {
     }, [])
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -71,6 +60,8 @@ export function UjianCMS() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -106,11 +97,11 @@ export function UjianCMS() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "600px",
             content: (
@@ -125,7 +116,7 @@ export function UjianCMS() {
                         kelas_id: daftarKelasList
                     }}
                     onSubmit={addClass}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -140,7 +131,7 @@ export function UjianCMS() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -151,7 +142,7 @@ export function UjianCMS() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "600px",
             content: (
@@ -167,7 +158,7 @@ export function UjianCMS() {
                         kelas_id: daftarKelasList
                     }}
                     onSubmit={editClass}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -207,7 +198,7 @@ export function UjianCMS() {
     }
 
     return (
-        <div className="w-full bg-gray-100 p-4">
+        <div className="w-full h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
                 <Table <IUjian>
                     title="Daftar Ujian"
@@ -233,6 +224,7 @@ export function UjianCMS() {
                             <p>Tambah Ujian</p>
                         </button>
                     )}
+                    loading={loading}
                 />
             </div>
         </div>

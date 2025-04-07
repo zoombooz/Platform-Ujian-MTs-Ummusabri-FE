@@ -35,7 +35,7 @@ export function DialogProvider({children}: {children: ReactNode}) {
                     onClick={closeDialog}
                 >
                     <div 
-                        className="bg-white rounded-md dialog-animation"
+                        className="bg-white dialog-animation rounded-md"
                         style={{
                             width: dialogOptions.width || "500px",
                             height: dialogOptions.height || "300px",

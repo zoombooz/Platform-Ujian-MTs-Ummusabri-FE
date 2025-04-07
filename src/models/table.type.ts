@@ -10,10 +10,13 @@ export interface ITable <T> {
     editAction?: boolean;
     deleteAction?: boolean;
     numberRow?: boolean;
+    loading?: boolean;
+    customActionButton?: React.ReactNode;
     onInfoAction?: (data: T) => void;
     onEditAction?: (data: T) => void;
     onDeleteAction?: (data: T) => void;
     onChangePage: (url: string) => void;
+
 
     additionalButton?: React.ReactNode;
 }

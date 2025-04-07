@@ -15,13 +15,15 @@ import { Peserta } from "./pages/peserta";
 import { Jurusan } from "./pages/jurusan";
 import { UjianCMS } from "./pages/ujian-cms";
 import { SoalPage } from "./pages/SoalPage";
+import { UjianLanding } from "./pages/UjianLanding";
+import { isTokenExpired } from "./utils/jwt";
 
 export function RouteLinks() {
 
     const ProtectedRoute = () => {
         const isAuthenticated = localStorage.getItem("authToken");
-    
-        return isAuthenticated ? <Outlet /> : <Navigate to={"/login-admin"} replace />
+
+        return (isAuthenticated && !isTokenExpired()) ? <Outlet /> : <Navigate to={"/login-admin"} replace />
     }
 
     return (
@@ -32,7 +34,7 @@ export function RouteLinks() {
                 <Route path="login-student" element={<Login type="login" role="student" />} />
                 
                 <Route element={<ProtectedRoute />}>
-                    <Route path="ujian" element={<Ujian/>} />
+                    <Route path="ujian" element={<UjianLanding/>} />
 
                     <Route element={<Layout/>}>
                         <Route path="" element={<DashboardPage/>} />

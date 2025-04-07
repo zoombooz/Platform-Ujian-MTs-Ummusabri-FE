@@ -27,6 +27,26 @@ ul {
     display: none;
 }
 
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #c7bebd;
+    border-bottom-color: green;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
+
 @keyframes slideFromAbove {
     from {
         transform: scale(0.85);
@@ -54,9 +74,15 @@ ul {
     animation: backgroundColorChange 0.3s forwards;
 }
 
-/* .background-students {
-    background-image: url("./assets/students.JPG");
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-} */
+@keyframes drawerAnimation {
+    from {
+        transform: translateX(600px);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.drawer-animation {
+    animation: drawerAnimation 0.5s ease-out;
+}

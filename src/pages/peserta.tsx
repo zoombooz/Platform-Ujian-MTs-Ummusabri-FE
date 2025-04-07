@@ -7,19 +7,8 @@ import { Environment } from "../environment/environment";
 import { Form } from "../components/form";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { IAgama } from "./agama";
-
-export interface IPeserta {
-    nama: string,
-    password: string,
-    jurusan_id: string,
-    agama_id: string,
-    kelas_id: string,
-    nomor_peserta: string,
-    updated_at: string,
-    created_at: string,
-    id: number,
-}
+import { IPeserta } from "../models/peserta.type";
+import { useDrawer } from "../context/DrawerContext";
 
 const baseUrl = Environment.base_url;
 
@@ -29,8 +18,10 @@ export function Peserta() {
     // @ Properties
     // -----------------------------------------------------------------------------------------------------
 
-    const {openDialog, closeDialog} = useDialog();
+    // const {openDialog, closeDialog} = useDialog();
+    const {openDrawer, closeDrawer} = useDrawer();
     const [peserta, setPeserta] = useState<IPeserta[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const [agamaList, setAgamaList] = useState<{name: string, key: string}[]>([]);
     const [jurusanList, setJurusanList] = useState<{name: string, key: string}[]>([]);
     const [kelasList, setKelasList] = useState<{name: string, key: string}[]>([]);
@@ -61,6 +52,7 @@ export function Peserta() {
     // -----------------------------------------------------------------------------------------------------
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -79,6 +71,8 @@ export function Peserta() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -111,7 +105,7 @@ export function Peserta() {
                     }
                 });
                 console.log("Add Agama Response: ", response);
-                closeDialog();
+                closeDrawer();
                 fetchData();
             } catch (error) {
                 console.error(error);
@@ -123,7 +117,7 @@ export function Peserta() {
             }
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "540px",
             content: (
@@ -138,7 +132,7 @@ export function Peserta() {
                         kelas_id: kelasList
                     }}
                     onSubmit={addPeserta}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -154,7 +148,7 @@ export function Peserta() {
                     }
                 });
                 console.log("Edit Agama Response: ", response);
-                closeDialog();
+                closeDrawer();
                 fetchData();
             } catch (error) {
                 console.error(error);
@@ -166,7 +160,7 @@ export function Peserta() {
             }
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "540px",
             content: (
@@ -182,7 +176,7 @@ export function Peserta() {
                         kelas_id: kelasList
                     }}
                     onSubmit={editPeserta}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -214,13 +208,13 @@ export function Peserta() {
     // -----------------------------------------------------------------------------------------------------
 
     return (
-        <div className="w-full bg-gray-100 p-4">
+        <div className="w-full h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
                 <Table <IPeserta>
                     title="Daftar Peserta"
                     data={peserta}
-                    headList={['Nama', 'Jurusan', 'Agama', 'Kelas']}
-                    keyList={['nama', 'jurusan_id', 'agama_id', 'kelas_id']}
+                    headList={['Nama', 'Jurusan', 'Agama', 'Kelas', 'Nomor Peserta']}
+                    keyList={['nama', 'jurusan_id', 'agama_id', 'kelas_id', 'nomor_peserta']}
                     selectList={{
                         jurusan_id: jurusanList,
                         agama_id: agamaList,
@@ -229,6 +223,7 @@ export function Peserta() {
                     pagination={pagination}
                     editAction={true}
                     deleteAction={true}
+                    loading={loading}
                     additionalButton={(
                         <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleAdd}>
                             <Icon name="heroicons:plus" shape="outline"/>

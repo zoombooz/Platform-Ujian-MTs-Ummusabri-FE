@@ -14,8 +14,9 @@ interface RegisterForm extends LoginForm {
     alamat: string,
 }
 
-interface LoginSiswaForm extends LoginForm {
-    nomor_peserta: string
+interface LoginSiswaForm {
+    nomor_peserta: string,
+    password: string
 }
 
 export function Login({type, role}: {type: 'login' | 'register', role: 'admin' | 'student'}) {
@@ -33,7 +34,6 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
         alamat: ''
     });
     const [loginSiswaForm, setLoginSiswaForm] = useState<LoginSiswaForm>({
-        username: '',
         password: '',
         nomor_peserta: ''
     })
@@ -145,23 +145,27 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                             </div>
                         }
 
-                        <div className={style.input_container}>
-                            <label htmlFor="username" className="text-sm">Username</label>
-                            <div className="flex items-center border border-gray-300 w-fit rounded-md">
-                                <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
-                                    <Icon name="heroicons:user" shape="outline"/>
+                        {(role === 'admin') && 
+                            <div className={style.input_container}>
+                                <label htmlFor="username" className="text-sm">Username</label>
+                                <div className="flex items-center border border-gray-300 w-fit rounded-md">
+                                    <div className="flex justify-center items-center p-1 bg-gray-200 h-full w-10">
+                                        <Icon name="heroicons:user" shape="outline"/>
+                                    </div>
+                                    <input 
+                                        required
+                                        id="username" 
+                                        type="text" 
+                                        placeholder="P1918xxx atau U1918xxx" 
+                                        className={style.input}
+                                        value={type === 'login' ? role === 'admin' ? loginForm.username : '' : registerForm.username}
+                                        onChange={handleChange}
+                                    />
                                 </div>
-                                <input 
-                                    required
-                                    id="username" 
-                                    type="text" 
-                                    placeholder="P1918xxx atau U1918xxx" 
-                                    className={style.input}
-                                    value={type === 'login' ? role === 'admin' ? loginForm.username : loginSiswaForm.username : registerForm.username}
-                                    onChange={handleChange}
-                                />
                             </div>
-                        </div>
+                        }
+
+                        
 
                         <div className={style.input_container}>
                             <label htmlFor="password" className="text-sm">Password</label>

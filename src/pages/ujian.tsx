@@ -7,6 +7,7 @@ import { ValidationDialog } from "../components/validation-dialog";
 import { TextEditor } from "../components/text-editor";
 import ReactQuill from "react-quill";
 import RichTextEditor from "../components/RichTextEditor";
+import { jwtDecode } from "../utils/jwt";
 
 export interface IQuestion {
     ujian_id: number,
@@ -43,13 +44,14 @@ export function Ujian() {
             }
         })
     )
-
-    // useEffect(() => {
-    //     // console.log("Banyak Soal: ", questions.length)
-    //     console.log("Answer Form: ", answers)
-    // }, [answers])
-
     const timeLimit = new Date().getTime() + (1000 * 30);
+
+    useEffect(() => {
+        // console.log("Banyak Soal: ", questions.length)
+        console.log("Answer Form: ", answers)
+        console.log(localStorage.getItem('authToken'))
+        console.log(jwtDecode(localStorage.getItem('authToken')))
+    }, [answers])
     
     const range = (start: number, end: number, step = 1): number[] => {
         return Array.from({ length: Math.floor((end - start) / step) }, (_, i) => start + i * step);

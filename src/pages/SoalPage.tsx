@@ -10,6 +10,8 @@ import { Icon } from "../components/icon";
 import { useParams } from "react-router";
 import WysiwygArea from "../components/WysiwygArea";
 import DOMPurify from "dompurify";
+import { useDrawer } from "../context/DrawerContext";
+import { Loader } from "../components/loader";
 
 export interface ISoal {
     id: number,
@@ -38,10 +40,10 @@ export function SoalPage() {
     const [ujianList, setUjianList] = useState<{name: string, key: string}[]>([]);
     const [soal, setSoal] = useState<ISoal[]>([]);
     const [selectedSoal, setSelectedSoal] = useState<ISoal>();
-    // const [editorContent, setEditorContent] = useState<string>('');
 
     const {ujian_id} = useParams();
-    const {openDialog, closeDialog} = useDialog();
+    const {openDrawer, closeDrawer} = useDrawer();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const baseUrl = Environment.base_url;
     const tipe_soal = [
@@ -75,6 +77,7 @@ export function SoalPage() {
     }
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get'](ujian_id)}`;
         axios.get(url, {
             headers: {
@@ -93,6 +96,8 @@ export function SoalPage() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -115,7 +120,7 @@ export function SoalPage() {
         })
     }
 
-    const handleAdd = () => {
+    const handleAdd = (options: 'pilihan_ganda' | 'essai') => {
         const addSoal = async (body: Partial<ISoal>) => {
             const url = `${baseUrl}${endpoints['add']}`;
             try {
@@ -124,7 +129,7 @@ export function SoalPage() {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
                 });
-                closeDialog();
+                closeDrawer();
                 fetchData();
             } catch (error) {
                 console.error(error);
@@ -136,25 +141,32 @@ export function SoalPage() {
             }
         }
 
+        const headList = options === 'pilihan_ganda'
+            ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+            : ["Ujian", "Tipe Soal", "Soal"]
 
-        openDialog({
-            width: "800px",
-            height: "500px",
+        const keyList = options === 'pilihan_ganda'
+            ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+            : ["ujian_id", "tipe_soal", "soal"]
+
+        openDrawer({
             content: (
                 <Form <Partial<ISoal>>
                     data={{
-                        ujian_id
+                        ujian_id,
+                        tipe_soal: options
                     }}
                     title="Tambah Soal"
-                    headList={["Ujian", "Soal", "Tipe Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]}
-                    keyList={["ujian_id", "soal", "tipe_soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]}
-                    type={["select", "text-editor", "select"]}
+                    headList={headList}
+                    keyList={keyList}
+                    type={["select", "select", "text-editor"]}
                     selectList={{
                         ujian_id: ujianList,
                         tipe_soal: tipe_soal
                     }}
+                    disabled={['ujian_id', 'tipe_soal']}
                     onSubmit={addSoal}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -168,7 +180,7 @@ export function SoalPage() {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
                 }).then(() => {
-                    closeDialog();
+                    closeDrawer();
                     fetchData();
                 }).catch ((error) => {
                     console.error(error);
@@ -180,24 +192,29 @@ export function SoalPage() {
                 });
         }
 
-        console.log(soal)
+        const headList = soal.tipe_soal === 'pilihan_ganda'
+            ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+            : ["Ujian", "Tipe Soal", "Soal"]
 
-        openDialog({
-            width: "500px",
-            height: "500px",
+        const keyList = soal.tipe_soal === 'pilihan_ganda'
+            ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+            : ["ujian_id", "tipe_soal", "soal"]
+
+        openDrawer({
             content: (
                 <Form <ISoal>
                     data={soal}
                     title="Edit Soal"
-                    headList={["Ujian", "Soal", "Tipe Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]}
-                    keyList={["ujian_id", "soal", "tipe_soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]}
-                    type={["select", "text-editor", "select"]}
+                    headList={headList}
+                    keyList={keyList}
+                    type={["select", "select", "text-editor"]}
                     selectList={{
                         ujian_id: ujianList,
                         tipe_soal: tipe_soal
                     }}
+                    disabled={['ujian_id', 'tipe_soal']}
                     onSubmit={editAgama}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -212,7 +229,7 @@ export function SoalPage() {
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
         }).then(result => {
-            if(result){
+            if(result.isConfirmed){
                 const url = `${baseUrl}${endpoints['delete'](soal.id)}`;
                 axios.delete(url, {
                     headers: {
@@ -237,7 +254,7 @@ export function SoalPage() {
     // -----------------------------------------------------------------------------------------------------
 
     return (
-        <div className="relative flex flex-col w-full bg-gray-100 p-4 h-full">
+        <div className="relative flex flex-col w-full h-full bg-gray-100 p-4">
             <div className="flex flex-col gap-4 bg-white rounded-lg w-full min-h-full p-6 shadow-md">
                 <div className="flex justify-between gap-4">
                     <div className="flex flex-wrap gap-2">
@@ -252,16 +269,27 @@ export function SoalPage() {
                         ))}
                     </div>
                     <div className="flex gap-2">
-                        <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                        <button onClick={() => handleAdd('pilihan_ganda')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
                             <Icon name="heroicons:plus" shape="outline"/>
-                            <p>Tambah Soal</p>
+                            <p>Tambah Pilihan Ganda</p>
+                        </button>
+
+                        <button onClick={() => handleAdd('essai')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                            <Icon name="heroicons:plus" shape="outline"/>
+                            <p>Tambah Essay</p>
                         </button>
 
                         {selectedSoal && (
-                        <button onClick={() => selectedSoal ? handleEdit(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-yellow-500 rounded-md cursor-pointer text-white hover:bg-yellow-600 transition-all">
-                            <Icon name="heroicons:pencil-square" shape="outline"/>
-                            <p>Edit Soal</p>
-                        </button>
+                        <>
+                            <button onClick={() => selectedSoal ? handleEdit(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-yellow-500 rounded-md cursor-pointer text-white hover:bg-yellow-600 transition-all">
+                                <Icon name="heroicons:pencil-square" shape="outline"/>
+                                <p>Edit Soal</p>
+                            </button>
+                            <button onClick={() => selectedSoal ? handleDelete(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-red-500 rounded-md cursor-pointer text-white hover:bg-red-600 transition-all">
+                                <Icon name="heroicons:pencil-square" shape="outline"/>
+                                <p>Hapus Soal</p>
+                            </button>
+                        </>
                         )}
                     </div>
                 </div>
@@ -270,57 +298,30 @@ export function SoalPage() {
                 (
                     <div>
                         <p>{selectedSoal.soal}</p>
+                        {
+                        selectedSoal.tipe_soal === 'pilihan_ganda' && (
+                        <>
                         <p>a. {selectedSoal.pilihan_a}</p>
                         <p>b. {selectedSoal.pilihan_b}</p>
                         <p>c. {selectedSoal.pilihan_c}</p>
                         <p>d. {selectedSoal.pilihan_d}</p>
                         <p>e. {selectedSoal.pilihan_e}</p>
+                        </>
+                        )
+                        }
                     </div>
                 )
                 :
                 (
                     <div className="flex justify-center w-full h-full items-center py-4">
-                        <p>Please select a question</p>
+                        {loading 
+                        ? <Loader/>
+                        : <p>Please select a question</p>
+                        }
+                        
                     </div>
                 )
                 }
-
-                {/* <RichTextEditor value="" onChange={() => {}}/> */}
-                {/* <WysiwygArea content={editorContent} onChange={(val) => {
-                    const content = val.replace(/ /g, "&nbsp;").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-                    setEditorContent(content);
-                }}/> */}
-                {/* <button className="w-20 p-2 text-white rounded-md bg-green-500 cursor-pointer"
-                    onClick={() => {console.log("Content: ", editorContent)}}
-                >
-                    Submit
-                </button>
-
-                <div className="p-4 border border-gray-300 bg-white">
-                    <div className="text-base leading-relaxed list-disc list-inside" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(editorContent)}}></div>
-                </div> */}
-
-                {/* <Table <ISoal>
-                    title="Daftar Soal"
-                    data={soal}
-                    headList={['ID', 'Soal']}
-                    keyList={['id', 'soal']}
-                    pagination={pagination}
-                    numberRow={false}
-                    editAction={true}
-                    deleteAction={true}
-                    onEditAction={handleEdit}
-                    onDeleteAction={handleDelete}
-                    onChangePage={fetchData}
-                    additionalButton={(
-                        <div className="flex gap-1">
-                            <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
-                                <Icon name="heroicons:plus" shape="outline"/>
-                                <p>Tambah Soal</p>
-                            </button>
-                        </div>
-                    )}
-                /> */}
             </div>
         </div>
     )

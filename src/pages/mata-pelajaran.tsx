@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
-import { useDialog } from "../context/DialogContext";
 import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import { Form } from "../components/form";
 import Swal from "sweetalert2";
+import { IMataPelajaran } from "../models/mapel.type";
+import { useDrawer } from "../context/DrawerContext";
 
-export interface IMataPelajaran {
-    nama: string,
-    updated_at: string,
-    created_at: string,
-    id: number
-}
+
 
 export function MataPelajaran() {
     
-    const {openDialog, closeDialog} = useDialog();
+    const {openDrawer, closeDrawer} = useDrawer();
+    const [loading, setLoading] = useState<boolean>(false);
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [mataPelajaran, setMataPelajaran] = useState<IMataPelajaran[]>([]);
     const baseUrl = Environment.base_url;
@@ -34,6 +31,7 @@ export function MataPelajaran() {
     }, [])
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -52,6 +50,8 @@ export function MataPelajaran() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -64,7 +64,7 @@ export function MataPelajaran() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -75,7 +75,7 @@ export function MataPelajaran() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "240px",
             content: (
@@ -85,7 +85,7 @@ export function MataPelajaran() {
                     keyList={["nama"]}
                     type={["text"]}
                     onSubmit={addJurusan}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -100,7 +100,7 @@ export function MataPelajaran() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -111,7 +111,7 @@ export function MataPelajaran() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "240px",
             content: (
@@ -122,7 +122,7 @@ export function MataPelajaran() {
                     keyList={["nama"]}
                     type={["text"]}
                     onSubmit={editMapel}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -158,8 +158,8 @@ export function MataPelajaran() {
     }
 
     return (
-        <div className="w-full bg-gray-100 p-4">
-            <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
+        <div className="w-full h-full bg-gray-100 p-4">
+            <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
                 <Table <IMataPelajaran>
                     title="Mata Pelajaran"
                     data={mataPelajaran}
@@ -180,6 +180,7 @@ export function MataPelajaran() {
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
                     onChangePage={fetchData}
+                    loading={loading}
                 />
             </div>
         </div>

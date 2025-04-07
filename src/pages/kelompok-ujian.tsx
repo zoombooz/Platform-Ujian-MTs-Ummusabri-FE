@@ -1,26 +1,20 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
-import { useDialog } from "../context/DialogContext";
 import { Icon } from "../components/icon";
 import { Form } from "../components/form";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { IKelompokUjian } from "../models/ujian.type";
+import { useDrawer } from "../context/DrawerContext";
 
-export interface IKelompokUjian {
-    nama: string,
-    id_sekolah: string,
-    start_date: string,
-    end_date: string,
-    updated_at: string,
-    created_at: string,
-    id: number
-}
+
 
 export function KelompokUjian() {
     
-    const {openDialog, closeDialog} = useDialog();
+    const {openDrawer, closeDrawer} = useDrawer();
+    const [loading, setLoading] = useState<boolean>(false);
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [kelompokUjian, setKelompokUjian] = useState<IKelompokUjian[]>([]);
     const {base_url: baseUrl, id_sekolah} = Environment;
@@ -37,6 +31,7 @@ export function KelompokUjian() {
     }, []);
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -55,11 +50,18 @@ export function KelompokUjian() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
     const handleAdd = () => {
         const addKelompokUjian = (body: Partial<IKelompokUjian>) => {
+            body = {
+                ...body,
+                id_sekolah
+            }
+
             const url = `${baseUrl}${endpoints['create']}`;
             axios.post(url, body, {
                 headers: {
@@ -67,7 +69,7 @@ export function KelompokUjian() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -78,20 +80,17 @@ export function KelompokUjian() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "460px",
             content: (
                 <Form <IKelompokUjian>
                     title="Tambah Kelompok Ujian"
-                    headList={["Nama Kelompok Ujian", "Sekolah", "Tanggal Dimulai", "Tanggal Berakhir"]}
-                    keyList={["nama", "id_sekolah", "start_date", "end_date"]}
-                    type={["text", "select", "date", "date"]}
-                    selectList={{
-                        id_sekolah: [{key: id_sekolah, name: id_sekolah}]
-                    }}
+                    headList={["Nama Kelompok Ujian", "Tanggal Dimulai", "Tanggal Berakhir"]}
+                    keyList={["nama", "start_date", "end_date"]}
+                    type={["text", "date", "date"]}
                     onSubmit={addKelompokUjian}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -107,7 +106,7 @@ export function KelompokUjian() {
                 }
             }).then(() => {
                 fetchData();
-                closeDialog();
+                closeDrawer();
             }).catch(error => {
                 console.error(error);
                 Swal.fire({
@@ -118,21 +117,18 @@ export function KelompokUjian() {
             });
         }
 
-        openDialog({
+        openDrawer({
             width: "500px",
             height: "460px",
             content: (
                 <Form <IKelompokUjian>
                     data={kelompok_ujian}
                     title="Edit Kelompok Ujian"
-                    headList={["Nama Kelompok Ujian", "Sekolah", "Tanggal Dimulai", "Tanggal Berakhir"]}
-                    keyList={["nama", "id_sekolah", "start_date", "end_date"]}
-                    type={["text", "select", "date", "date"]}
-                    selectList={{
-                        "id_sekolah": [{key: id_sekolah, name: id_sekolah}]
-                    }}
+                    headList={["Nama Kelompok Ujian", "Tanggal Dimulai", "Tanggal Berakhir"]}
+                    keyList={["nama", "start_date", "end_date"]}
+                    type={["text", "date", "date"]}
                     onSubmit={addKelompokUjian}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -168,13 +164,13 @@ export function KelompokUjian() {
     }
 
     return (
-        <div className="w-full bg-gray-100 p-4">
+        <div className="w-full h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
                 <Table <IKelompokUjian>
                     title="Kelompok Ujian"
                     data={kelompokUjian}
-                    headList={['Id Kelompok Ujian', 'Nama Kelompok Ujian', 'Id Sekolah', "Tanggal Dimulai", "Tanggal Berakhir"]}
-                    keyList={['id', 'nama', 'sekolah_id', "start_date", "end_date"]}
+                    headList={['ID', 'Nama Kelompok Ujian', "Tanggal Dimulai", "Tanggal Berakhir"]}
+                    keyList={['id', 'nama', "start_date", "end_date"]}
                     pagination={pagination}
                     editAction={true}
                     deleteAction={true}
@@ -189,6 +185,8 @@ export function KelompokUjian() {
                     onEditAction={handleEdit}
                     onDeleteAction={handleDelete}
                     onChangePage={fetchData}
+                    numberRow={false}
+                    loading={loading}
                 />
             </div>
         </div>

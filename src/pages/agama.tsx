@@ -7,6 +7,7 @@ import { Form } from "../components/form";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useDrawer } from "../context/DrawerContext";
 
 export interface IAgama {
     id: number,
@@ -19,8 +20,10 @@ export interface IAgama {
 export function Agama() {
     
     const baseUrl = Environment.base_url;
-    const {openDialog, closeDialog} = useDialog();
+    // const {openDialog, closeDialog} = useDialog();
+    const {openDrawer, closeDrawer} = useDrawer();
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
+    const [loading, setLoading] = useState<boolean>(false);
     const [agama, setAgama] = useState<IAgama[]>([]);
     const endpoints = {
         get: `admin/agama`,
@@ -34,6 +37,7 @@ export function Agama() {
     }, [])
 
     const fetchData = (URL?: string) => {
+        setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get']}`;
         axios.get(url, {
             headers: {
@@ -53,6 +57,8 @@ export function Agama() {
                 title: "Request Failed",
                 text: `${(error as Error).message}`
             })
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -65,7 +71,7 @@ export function Agama() {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
                 });
-                closeDialog();
+                closeDrawer();
                 fetchData();
             } catch (error) {
                 console.error(error);
@@ -78,17 +84,15 @@ export function Agama() {
         }
 
 
-        openDialog({
-            width: "500px",
-            height: "240px",
+        openDrawer({
             content: (
                 <Form <Partial<IAgama>>
                     title="Tambah Agama"
-                    headList={["Agama"]}
+                    headList={["Nama Agama"]}
                     keyList={["nama"]}
                     type={["text"]}
                     onSubmit={addAgama}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -102,7 +106,7 @@ export function Agama() {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
                 }).then(() => {
-                    closeDialog();
+                    closeDrawer();
                     fetchData();
                 }).catch ((error) => {
                     console.error(error);
@@ -114,18 +118,16 @@ export function Agama() {
                 });
         }
 
-        openDialog({
-            width: "500px",
-            height: "240px",
+        openDrawer({
             content: (
                 <Form <IAgama>
                     data={agama}
-                    title="Tambah Agama"
-                    headList={["Agama"]}
+                    title="Edit Agama"
+                    headList={["Nama Agama"]}
                     keyList={["nama"]}
                     type={["text"]}
                     onSubmit={editAgama}
-                    onCancel={closeDialog}
+                    onCancel={closeDrawer}
                 />
             )
         })
@@ -161,7 +163,7 @@ export function Agama() {
     }
 
     return (
-        <div className="w-full bg-gray-100 p-4">
+        <div className="w-full h-full bg-gray-100 p-4">
             <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
                 <Table <IAgama>
                     title="Daftar Agama"
@@ -169,6 +171,7 @@ export function Agama() {
                     headList={['ID', 'Nama']}
                     keyList={['id', 'nama']}
                     pagination={pagination}
+                    loading={loading}
                     numberRow={false}
                     editAction={true}
                     deleteAction={true}
