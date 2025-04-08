@@ -4,17 +4,22 @@ import { useEffect, useState } from "react";
 import { ISesiUjian, IUjian } from "../models/ujian.type";
 import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
-import { getTokenPayload } from "../utils/jwt";
+import { Ujian } from "./ujian";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 export function UjianLanding() {
 
+    const navigate = useNavigate();
     const [pagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [ujianList, setUjianList] = useState<ISesiUjian[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const endpoints = {
         get_ujian: 'siswa/ujian',
         get_kelompok_ujian: 'siswa/kelompok_ujian',
-        sesi_soal: 'siswa/sesi_soal'
+        sesi_soal: 'siswa/sesi_soal',
+        start_ujian: (ujian_id: number) => `siswa/soal?ujian_id=${ujian_id}`
     }
     const baseUrl = Environment.base_url;
 
@@ -31,23 +36,11 @@ export function UjianLanding() {
     }
 
     useEffect(() => {
-        // getKelompokUjian();
         getUjian();
-        startUjian(1)
     }, [])
 
-    const getKelompokUjian = () => {
-        const url = `${baseUrl}${endpoints['get_kelompok_ujian']}`;
-        axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('authToken')}`
-            }
-        }).then(res => {
-            console.log("Kelompok Ujian: ", res);
-        })
-    }
-
     const getUjian = () => {
+        setLoading(true);
         const url = `${baseUrl}${endpoints['get_ujian']}`;
         axios.get(url, {
             headers: {
@@ -56,40 +49,47 @@ export function UjianLanding() {
         }).then(res => {
             console.log("Ujian: ", res);
             setUjianList(res.data.data);
+        }).catch(err => {
+            console.error(err);
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
     const startUjian = (ujian_id: number) => {
-        const tokenPayload = getTokenPayload();
-        console.log(tokenPayload)
-        const url = `${baseUrl}${endpoints['sesi_soal']}?nomor_peserta=${tokenPayload.nomor_peserta}&ujian_id=${ujian_id}`
-        console.log(url)
-        axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+
+        Swal.fire({
+            title: "Memulai Ujian",
+            text: "Apakah anda yakin ingin memulai ujian sekarang?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak"
+        }).then(result => {
+            if(result.isConfirmed){
+                navigate(`/ujian/${ujian_id}`)
             }
-        }).then(res => {
-            console.log("Start Ujian: ", res)
         })
+        
     }
 
     return (
-        <div className="flex w-screen h-screen overflow-hidden">
+        <div className="relative flex w-screen h-screen overflow-hidden">
+            
+            
             <div className="flex justify-center w-full h-full bg-gray-100 p-6">
                 <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
-                    {/* <h1>Pilih Ujian</h1> */}
                     <Table <IUjian>
-                        title="Ujian List"
+                        title="Daftar Ujian"
                         headList={['Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran']}
                         keyList={['nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name']}
                         pagination={pagination}
                         data={getUjianList()}
                         onChangePage={() => {}}
-                        customActionButton={(
-                            <button onClick={() => {}} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-30">
-                                <p>Mulai Ujian</p>
-                            </button>
-                        )}
+                        infoAction={true}
+                        onInfoAction={res => startUjian(res.id)}
+                        infoButtonText="Mulai Ujian"
+                        loading={loading}
                     />
                 </div>
             </div>

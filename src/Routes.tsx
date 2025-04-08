@@ -34,7 +34,8 @@ export function RouteLinks() {
                 <Route path="login-student" element={<Login type="login" role="student" />} />
                 
                 <Route element={<ProtectedRoute />}>
-                    <Route path="ujian" element={<UjianLanding/>} />
+                    <Route path="daftar-ujian" element={<UjianLanding/>} />
+                    <Route path="ujian/:ujian_id" element={<Ujian/>} />
 
                     <Route element={<Layout/>}>
                         <Route path="" element={<DashboardPage/>} />
@@ -50,12 +51,12 @@ export function RouteLinks() {
                             <Route path="peserta" element={<Peserta />} />
                             <Route path="jurusan" element={<Jurusan />} />
                             <Route path="ujian" element={<UjianCMS />} />
-                            <Route path="soal/:ujian_id" element={<SoalPage />} />
+                            <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
                         </Route>
                     </Route>
                 </Route>
 
-                <Route path="*" element={<Navigate to="/" />} />
+                {/* <Route path="*" element={<Navigate to="/" />} /> */}
             </Routes>
         </BrowserRouter>
     )

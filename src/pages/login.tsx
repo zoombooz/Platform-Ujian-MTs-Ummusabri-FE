@@ -3,6 +3,7 @@ import { Icon } from "../components/icon";
 import axios from "axios";
 import { Environment } from "../environment/environment";
 import { Link, useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 interface LoginForm {
     username: string,
@@ -70,27 +71,44 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
         }
     }
     
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         const body = type === 'login' ? role === 'admin' ? loginForm : loginSiswaForm : registerForm;
         console.log(body)
         const endpoint = type === 'login' ? role === 'admin' ? endpoints['login_admin'] : endpoints['login_student'] : endpoints['register_admin'];
         const url = `${Environment.base_url}${endpoint}`;
 
-        try {
-            const response = await axios.post(url, body);
-            console.log(`Response ${type}: `, response);
-            const token = response.data.token;
-            if(!response.data['guru']){
-                localStorage.setItem("authToken", token);
-                navigate("/ujian")
+        axios.post(url, body)
+        .then(res => {
+            if(type === 'register'){
+                Swal.fire({
+                    title: "Account Created!",
+                    text: "Please login to enter!",
+                    icon: "success"
+                }).then(() => {
+                    navigate('/login-admin');
+                });
             }else {
-                localStorage.setItem("authToken", token);
-                navigate("/");
+                const token = res.data.token;
+                console.log("Token: ", res)
+                if(!res.data['guru']){
+                    console.log("Peserta")
+                    localStorage.setItem("authToken", token);
+                    navigate("/daftar-ujian")
+                }else {
+                    console.log("Guru")
+                    localStorage.setItem("authToken", token);
+                    navigate("/");
+                }
             }
-        } catch (error) {
-            console.error(error)
-        }
+        }).catch(err => {
+            console.error(err);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.error,
+            });
+        })
 
 
     }

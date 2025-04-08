@@ -194,7 +194,7 @@ export function UjianCMS() {
     }
 
     const openInfo = (ujian: IUjian) => {
-        navigate(`/admin/soal/${ujian.id}`)
+        navigate(`/admin/soal/${ujian.id}/${ujian.nama}`)
     }
 
     return (

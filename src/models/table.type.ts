@@ -7,10 +7,13 @@ export interface ITable <T> {
     pagination: IPaginationNew,
     classCustom?: string;
     infoAction?: boolean;
+    infoButtonText?: string;
     editAction?: boolean;
     deleteAction?: boolean;
     numberRow?: boolean;
     loading?: boolean;
+    showSearch?: boolean;
+    showItemPerPage?: boolean;
     customActionButton?: React.ReactNode;
     onInfoAction?: (data: T) => void;
     onEditAction?: (data: T) => void;

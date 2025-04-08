@@ -103,60 +103,13 @@ export function VerticalLayout() {
                     <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:user" title="Kelompok Ujian"/>
                     <SublistContainer href="/admin/daftar-kelas" icon="heroicons:user" title="Daftar Kelas"/>
                     <SublistContainer href="/admin/ujian" icon="heroicons:user" title="Ujian"/>
-                    {/* <SublistContainer href="/admin/biodata-siswa" icon="heroicons:user" title="Peserta"/> */}
-                    {/* <SublistContainer href="/admin/data-guru" icon="heroicons:user" title="Data Guru"/> */}
-                    {/* <SublistContainer href="/admin/data-panitia" icon="heroicons:user" title="Data Panitia"/> */}
-                    {/* <SublistContainer href="/admin/identitas" icon="heroicons:user" title="Identitas"/> */}
                 </div>)
             }
-
-            {/* <ListContainer href="/daftar-ujian" icon="heroicons:book-open" title="Kelompok Ujian" /> */}
-
-            {/* <SublistHead name="pengaturanUjian" title="Pengaturan Ujian" icon="heroicons:cog-8-tooth" />
-
-            { (subList['pengaturanUjian'] && isExpanded) && 
-                (<div className="transition-all">
-                    <SublistContainer href="/pengaturan/server-client" icon="heroicons:user" title="Server dan Client"/>
-                    <SublistContainer href="/pengaturan/sesi" icon="heroicons:user" title="Pengaturan Sesi"/>
-                    <SublistContainer href="/pengaturan/paket-soal" icon="heroicons:user" title="Generate Paket Soal"/>
-                    <SublistContainer href="/pengaturan/soal-siswa" icon="heroicons:user" title="Generate Soal Siswa"/>
-                    <SublistContainer href="/pengaturan/kartu" icon="heroicons:user" title="Cetak Kartu"/>
-                    <SublistContainer href="/pengaturan/daftar-hadir" icon="heroicons:user" title="Cetak Daftar Hadir"/>
-                    <SublistContainer href="/pengaturan/berita-acara" icon="heroicons:user" title="Cetak Berita Acara"/>
-                </div>)
-            } */}
-
-            {/* <SublistHead name="ujianOnline" title="Ujian Online" icon="heroicons:globe-asia-australia" />
-
-            { (subList['ujianOnline'] && isExpanded) && 
-                (<div className="transition-all">
-                    <SublistContainer href="/ujian-online/kontrol" icon="heroicons:user" title="Kontrol Ujian"/>
-                    <SublistContainer href="/ujian-online/perangkat" icon="heroicons:user" title="Kelola Perangkat"/>
-                    <SublistContainer href="/ujian-online/status-peserta" icon="heroicons:user" title="Status Peserta"/>
-                </div>)
-            }
-
-            <SublistHead name="hasilUjian" title="Ujian Online" icon="heroicons:pencil-square" />
-
-            { (subList['hasilUjian'] && isExpanded) && 
-                (<div className="transition-all">
-                    <SublistContainer href="/hasil-ujian/hasil" icon="heroicons:user" title="Hasil Siswa"/>
-                    <SublistContainer href="/hasil-ujian/cetak-hasil" icon="heroicons:user" title="Cetak Hasil Ujian"/>
-                    <SublistContainer href="/hasil-ujian/analisis-hasil" icon="heroicons:user" title="Analisis Hasil Ujian"/>
-                    <SublistContainer href="/hasil-ujian/analisis-butir-soal" icon="heroicons:user" title="Analisis Butir Soal"/>
-                </div>)
-            } */}
-
-            {/* <ListContainer href="/pesanan" icon="heroicons:shopping-cart" title="Pesanan" /> */}
-
-            {/* <ListContainer href="/login-admin" icon="heroicons:arrow-left-start-on-rectangle" title="Logout"/> */}
 
             <button className={`${style.option}`} onClick={logout}>
                 <Icon name={"heroicons:arrow-left-start-on-rectangle"} shape="outline"/>
                 {isExpanded && <p className={style.text}>{'Logout'}</p>}
             </button>
-
-            <ListContainer href="/ujian" icon="heroicons:arrow-left-start-on-rectangle" title="Ujian" />
         </div>
     )
 }

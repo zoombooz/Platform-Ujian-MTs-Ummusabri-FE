@@ -27,7 +27,7 @@ export function DrawerProvider({children}: {children: ReactNode}) {
         <DrawerContext.Provider value={{openDrawer, closeDrawer}}>
             {children}
             {drawerOptions && (
-                <div 
+            <div 
                 className="absolute w-full h-full flex bg-dialog-animation overflow-y-hidden"
                 onClick={closeDrawer}
             >

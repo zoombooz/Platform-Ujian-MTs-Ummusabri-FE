@@ -3,7 +3,7 @@ import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 import { Loader } from "./loader";
 
-export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton}: ITable<T>) {
+export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false}: ITable<T>) {
     
     const style = {
         head_column: `px-6 py-3 border border-gray-300 text-md`,
@@ -21,8 +21,8 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
             return (
                 <td className="flex gap-1 justify-center items-center py-2">
                     {infoAction && (
-                        <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
-                            <p>Info</p>
+                        <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
+                            <p>{infoButtonText ? infoButtonText : 'Info'}</p>
                         </button>
                     )}
                     {editAction && (
@@ -66,10 +66,13 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
             </div>
 
             <div className="flex justify-between w-full mb-4">
+                {showSearch &&
                 <div className="w-[40%]">
                     <p className="mb-2">Search your items</p>
                     <input type="text" placeholder="Enter keywords here..." className="w-full border border-gray-500 rounded-md px-2 py-1.5" />
                 </div>
+                }
+                {showItemPerPage &&
                 <div className="w-fit">
                     <p className="mb-2">Showing items</p>
                     <select className="w-full border border-gray-500 rounded-lg px-2 py-1.5">
@@ -78,6 +81,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                         ))}
                     </select>
                 </div>
+                }
             </div>
 
             {loading

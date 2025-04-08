@@ -20,7 +20,6 @@ export function Layout() {
                             <DrawerProvider>
                                 <Breadcrump />
                                 <Outlet/>
-                                {/* <Footer/> */}
                             </DrawerProvider>
                         </div>
                     </div>

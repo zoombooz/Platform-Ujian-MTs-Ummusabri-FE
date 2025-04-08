@@ -36,12 +36,11 @@ export function SoalPage() {
     // @ Variables
     // -----------------------------------------------------------------------------------------------------
 
-    const [pagination, setPagination] = useState(defaultPaginationValueNew);
     const [ujianList, setUjianList] = useState<{name: string, key: string}[]>([]);
     const [soal, setSoal] = useState<ISoal[]>([]);
-    const [selectedSoal, setSelectedSoal] = useState<ISoal>();
+    const [selectedSoal, setSelectedSoal] = useState<ISoal | null>(null);
 
-    const {ujian_id} = useParams();
+    const {ujian_id, nama_ujian} = useParams();
     const {openDrawer, closeDrawer} = useDrawer();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -78,7 +77,7 @@ export function SoalPage() {
 
     const fetchData = (URL?: string) => {
         setLoading(true);
-        const url = URL ?? `${baseUrl}${endpoints['get'](ujian_id)}`;
+        const url = URL ?? `${baseUrl}${endpoints['get'](ujian_id)}?limit=100`;
         axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('authToken')}`
@@ -87,7 +86,7 @@ export function SoalPage() {
             const {data, pagination} = (({data, ...pagination}) => {
                 return {data, pagination}
             })(response.data)
-            setPagination(pagination)
+            // setPagination(pagination)
             setSoal(data);
         }).catch(error => {
             console.error(error);
@@ -159,10 +158,17 @@ export function SoalPage() {
                     title="Tambah Soal"
                     headList={headList}
                     keyList={keyList}
-                    type={["select", "select", "text-editor"]}
+                    type={["select", "select", "text-editor", "text", "text", "text", "text", "text", "select"]}
                     selectList={{
                         ujian_id: ujianList,
-                        tipe_soal: tipe_soal
+                        tipe_soal: tipe_soal,
+                        jawaban: [
+                            {name: "A", key: 'A'},
+                            {name: "B", key: 'B'},
+                            {name: "C", key: 'C'},
+                            {name: "D", key: 'D'},
+                            {name: "E", key: 'E'}
+                        ]
                     }}
                     disabled={['ujian_id', 'tipe_soal']}
                     onSubmit={addSoal}
@@ -207,10 +213,17 @@ export function SoalPage() {
                     title="Edit Soal"
                     headList={headList}
                     keyList={keyList}
-                    type={["select", "select", "text-editor"]}
+                    type={["select", "select", "text-editor", "text", "text", "text", "text", "text", "select"]}
                     selectList={{
                         ujian_id: ujianList,
-                        tipe_soal: tipe_soal
+                        tipe_soal: tipe_soal,
+                        jawaban: [
+                            {name: "A", key: 'A'},
+                            {name: "B", key: 'B'},
+                            {name: "C", key: 'C'},
+                            {name: "D", key: 'D'},
+                            {name: "E", key: 'E'}
+                        ]
                     }}
                     disabled={['ujian_id', 'tipe_soal']}
                     onSubmit={editAgama}
@@ -237,6 +250,7 @@ export function SoalPage() {
                     }
                 }).then(() => {
                     fetchData();
+                    setSelectedSoal(null);
                 }).catch ((error) => {
                     console.error(error);
                     Swal.fire({
@@ -256,18 +270,8 @@ export function SoalPage() {
     return (
         <div className="relative flex flex-col w-full h-full bg-gray-100 p-4">
             <div className="flex flex-col gap-4 bg-white rounded-lg w-full min-h-full p-6 shadow-md">
-                <div className="flex justify-between gap-4">
-                    <div className="flex flex-wrap gap-2">
-                        {soal.map((el, index) => (
-                            <button 
-                                key={el.id}
-                                className={`${(selectedSoal && selectedSoal.id === el.id) ? 'bg-gray-400 text-white hover:bg-gray-500' : 'text-black hover:bg-gray-200'} flex justify-center border border-slate-900 w-fit px-2 py-1.5 min-w-8 transition-all cursor-pointer`}
-                                onClick={() => selectSoal(el)}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                    </div>
+                <div className="flex justify-between">
+                    <h1 className="font-semibold mb-5">{nama_ujian}</h1>
                     <div className="flex gap-2">
                         <button onClick={() => handleAdd('pilihan_ganda')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
                             <Icon name="heroicons:plus" shape="outline"/>
@@ -293,10 +297,25 @@ export function SoalPage() {
                         )}
                     </div>
                 </div>
+                <div className="flex justify-between gap-4">
+                    <div className="flex flex-wrap gap-2">
+                        {soal.map((el, index) => (
+                            <button 
+                                key={el.id}
+                                className={`${(selectedSoal && selectedSoal.id === el.id) ? 'bg-gray-400 text-white hover:bg-gray-500' : 'text-black hover:bg-gray-200'} flex justify-center border border-slate-900 w-fit px-2 py-1.5 min-w-8 transition-all cursor-pointer`}
+                                onClick={() => selectSoal(el)}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
+                    
+                </div>
                 
                 {selectedSoal ?
                 (
                     <div>
+                        <h3 className="font-semibold mb-4 capitalize">Tipe Soal: {selectedSoal.tipe_soal.replace('_', ' ')}</h3>
                         <p>{selectedSoal.soal}</p>
                         {
                         selectedSoal.tipe_soal === 'pilihan_ganda' && (
@@ -306,9 +325,11 @@ export function SoalPage() {
                         <p>c. {selectedSoal.pilihan_c}</p>
                         <p>d. {selectedSoal.pilihan_d}</p>
                         <p>e. {selectedSoal.pilihan_e}</p>
+                        <p className="font-semibold mt-4">Jawaban: {selectedSoal.jawaban}</p>
                         </>
                         )
                         }
+
                     </div>
                 )
                 :
@@ -316,7 +337,7 @@ export function SoalPage() {
                     <div className="flex justify-center w-full h-full items-center py-4">
                         {loading 
                         ? <Loader/>
-                        : <p>Please select a question</p>
+                        : (soal.length ? <p>Please select a question</p> : <p>Please add a question</p>)
                         }
                         
                     </div>
