@@ -1,26 +1,32 @@
 import { useEffect, useState } from "react"
-import { Icon } from "../components/icon";
 import { Countdown } from "../components/countdown";
-// import { soalBIList } from "../models/soal.constant";
-import { useDialog } from "../context/DialogContext";
-import { ValidationDialog } from "../components/validation-dialog";
-import { TextEditor } from "../components/text-editor";
-import ReactQuill from "react-quill";
-import RichTextEditor from "../components/RichTextEditor";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import { ISoal } from "./SoalPage";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getTokenPayload } from "../utils/jwt";
+import { Loader } from "../components/loader";
+import Swal from "sweetalert2";
+import { HorizontalLayout } from "../layout/horizontal-layout";
 
 interface IAnswerForm {
-    nomor: number,
+    soal_id: number,
     jawaban: string,
-    ragu: boolean
+    ragu: boolean,
+    ujian_id: number,
+    tipe_soal: string
+}
+
+interface IUploadAnswer {
+    jawaban: string,
+    nomor_peserta: number,
+    soal_id: number,
+    ujian_id: number
 }
 
 export function Ujian() {
 
+    const navigate = useNavigate();
     const {nomor_peserta} = getTokenPayload();
     const {ujian_id} = useParams();
     const [questions, setQuestions] = useState<ISoal[]>([]);
@@ -33,7 +39,10 @@ export function Ujian() {
     const endpoints = {
         start_ujian: (ujian_id: number | string) => `siswa/soal?ujian_id=${ujian_id}`,
         get_duration: (id: string) => `siswa/ujian/${id}`,
-        upload_jawaban: 'siswa/sesi_soal',
+        upload_jawaban: 'siswa/sesi_soal', // Untuk upload jawaban satu-satu
+        upload_jawaban_banyak: 'siswa/submit_ujian', // Untuk upload dalam array of jawaban
+        hasil_ujian_migrate:  'siswa/hasil_ujian/migrate',
+        hasil_ujian_reevaluate: 'siswa/hasil_ujian/reevaluate',
         get_sesi_soal: `siswa/sesi_soal`,
     }
     const baseUrl = Environment.base_url;
@@ -47,6 +56,7 @@ export function Ujian() {
     }, [])
 
     const getSesiSoal = () => {
+        setLoading(true);
         const url = `${baseUrl}${endpoints['get_sesi_soal']}`;
         axios.get(url, {
             headers: {
@@ -56,6 +66,8 @@ export function Ujian() {
             console.log("Get Sesi Soal", res)
         }).catch(err => {
             console.error(err);
+        }).finally(() => {
+            setLoading(false);
         })
     }
 
@@ -67,14 +79,26 @@ export function Ujian() {
             }
         }).then(res => {
             setQuestions(res.data.data);
-            setAnswers(
-                new Array(res.data.data.length).fill(0).map((_, i) => {
-                    return {
-                        nomor: i + 1,
+            setAnswers(() => {
+                const arr: IAnswerForm[] = [];
+                res.data.data.forEach((element: ISoal) => {
+                    arr.push({
+                        soal_id: element.id,
                         jawaban: '',
-                        ragu: false
-                    }
-                })
+                        ragu: false,
+                        ujian_id: Number(element.ujian_id),
+                        tipe_soal: element.tipe_soal
+                    })
+                });
+                return arr;
+                // return new Array(res.data.data.length).fill(0).map((_, i) => {
+                //     return {
+                //         soal_id: i + 1,
+                //         jawaban: '',
+                //         ragu: false
+                //     }
+                // })
+            }   
             )
         }).catch(err => {
             console.error(err);
@@ -88,14 +112,16 @@ export function Ujian() {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(res => {
-            const duration = res.data.duration * 60 * 1000;
-            setTimeLimit(new Date().getTime() + duration)
+            const deadline = new Date(res.data.end_date).getTime();
+            // const duration = res.data.duration * 60 * 1000;
+            setTimeLimit(deadline)
         }).catch(err => {
             console.error(err);
         })
     }
 
-    const uploadJawaban = (body: any) => {
+    const uploadJawaban = (body: IUploadAnswer) => {
+        setLoading(true)
         const url = `${baseUrl}${endpoints['upload_jawaban']}?limit=100`;
         axios.post(url, body, {
             headers: {
@@ -105,6 +131,8 @@ export function Ujian() {
             console.log(res)
         }).catch(err => {
             console.error(err);
+        }).finally(() => {
+            setLoading(false);
         })
     }
     
@@ -133,11 +161,11 @@ export function Ujian() {
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const body = {
+        const body: IUploadAnswer = {
             soal_id: currentSoal().id,
             jawaban: e.target.value,
             nomor_peserta,
-            ujian_id: currentSoal().ujian_id
+            ujian_id: Number(currentSoal().ujian_id)
         }
         uploadJawaban(body);
         console.log("Current Soal: ", currentSoal())
@@ -150,53 +178,127 @@ export function Ujian() {
     }
 
     const handleSubmit = (open_dialog: boolean) => {
-        const answer: {nomor: number, jawaban: string}[] = answers.map(el => {
-            return {nomor: el.nomor, jawaban: el.jawaban}
-        })
-        console.log("Answer: ", answer)
-    }
+        const upload = () => {
+            const answer: any[] = answers.map(el => {
+                return {
+                    soal_id: el.soal_id, 
+                    jawaban: el.jawaban, 
+                    ujian_id: el.ujian_id, 
+                    nomor_peserta: String(nomor_peserta),
+                    tipe_soal: el.tipe_soal
+                }
+            })
+            const url = `${baseUrl}${endpoints['upload_jawaban_banyak']}`;
+            axios.post(url, {data: answer}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            }).then(res => {
+                const url_migrate = `${baseUrl}${endpoints['hasil_ujian_migrate']}`;
+                axios.get(url_migrate, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }).then(res => {
+                    console.log("Response Migrate: ", res)
+                })
 
-    const onDone = () => {
-        alert("Ujian Selesai")
+                const url_reevaluate = `${baseUrl}${endpoints['hasil_ujian_reevaluate']}`;
+                axios.get(url_reevaluate, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }).then(res => {
+                    console.log("Response Reevaluate: ", res)
+                })
+
+                Swal.fire({
+                    title: "Exam submitted!",
+                    text: "You may leave now!",
+                    icon: "success"
+                }).then(() => {
+                    navigate('/daftar-ujian');
+                });
+            }).catch(err => {
+                console.error(err);
+            })
+        }
+
+        if(open_dialog){
+            Swal.fire({
+                title: "Submit Ujian",
+                text: "Apakah anda yakin ingin mengakhiri ujian?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iya",
+                cancelButtonText: "Tidak"
+            }).then(result => {
+                if(result.isConfirmed){
+                    upload();
+                }
+            })
+        }else {
+            upload();
+        }
     }
 
     const style = {
-        radio_button: `flex gap-2`,
-        control_button: `min-w-16 w-fit px-2 py-1.5 rounded-md text-white transition-all`,
+        radio_button: `flex gap-2 border-2 border-gray-300 px-3 py-2 rounded-xl w-fit min-w-80`,
+        control_button: `min-w-24 w-fit px-2 py-1.5 rounded-xl text-white font-semibold transition-all`,
         control_button_active: `bg-green-700 cursor-pointer hover:bg-green-800`,
         control_button_inactive: `bg-green-700/80`,
         submit_button: `bg-red-500 cursor-pointer hover:bg-red-600`,
-        doubt_button: `w-16 rounded-md py-1.5 text-white`
+        doubt_button: `w-24 rounded-xl py-1.5 text-white font-semibold`
     }
 
-    if(!questions.length && !answers.length) {
-        return <p>Hello</p>
+    console.log("Cek Bang: ", {questions, answers})
+
+    if(loading && !questions.length && !answers.length) {
+        return (
+            <div className="absolute flex justify-center items-center w-screen h-screen bg">
+                <Loader />
+            </div>
+        )
     }
 
-    console.log('omg', {q: questions, a: answers})
+    if(!questions.length && !answers.length){
+        return (
+            <p>No Soal</p>
+        )
+    }
 
-    return (
+    return (<>
         <div className="relative flex w-screen h-screen overflow-hidden">
+
+            {loading && 
+            <div className="absolute flex justify-center items-center w-full h-full">
+                <Loader />
+            </div>
+            }
             {drawerOpen &&
             <div 
                 className="absolute w-full h-full flex bg-dialog-animation overflow-y-hidden z-50"
                 onClick={() => {setDrawerOpen(false)}}
             >
                 <div 
-                    className="absolute right-0 w-full md:w-3/4 lg:w-1/4 h-full bg-white rounded-md drawer-animation border-l-2 border-slate-800"
+                    className="absolute right-0 w-full md:w-3/4 lg:w-1/4 h-full bg-gray-100 drawer-animation border-l-2 border-slate-500"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="p-4 h-full">
-                        <p className="text-black px-2 pt-2 text-center mb-5">Jawaban</p>
+                        <p className="text-black px-2 pt-2 mb-4 font-bold text-xl">Jawaban</p>
                         <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4 p-2`}>
                             {range(1, questions.length + 1).map((el) => (
                                 <button 
                                     key={el}
                                     onClick={() => setCurrentNumber(el)} 
-                                    className="group flex flex-col w-10 h-12 bg-white border-2 border-green-700 cursor-pointer transition-all"
+                                    className={`relative group flex flex-col justify-center items-center w-12 h-12 border-2 rounded-xl cursor-pointer transition-all ${answers[el-1].ragu ? 'bg-yellow-400 border-yellow-600' : 'bg-white border-green-400'}`}
                                 >
-                                    <p className="h-[40%] bg-green-500 border-b-2 border-green-700 text-xs">{answers[el-1].jawaban}</p>
-                                    <p className={`${answers[el-1].ragu ? 'bg-yellow-400' : 'bg-white'} h-[60%] transition-all`}>{el}</p>
+                                    {answers[el-1].jawaban &&
+                                    <p className={`flex justify-center items-center text-white font-semibold absolute -right-1 -top-1 h-4 w-4 rounded-full bg-green-400 text-xs ${answers[el-1].ragu ? 'bg-yellow-800' : 'bg-green-600'}`}>
+                                        {answers[el-1].tipe_soal === 'pilihan_ganda' ? answers[el-1].jawaban : (answers[el-1].jawaban ? '✓' : '')}
+                                    </p>
+                                    }
+                                    <p className="font-bold">{el}</p>
                                 </button>
                             ))}
                         </div>
@@ -208,22 +310,18 @@ export function Ujian() {
             <div className="flex justify-center w-full h-full bg-gray-100 p-6">
                 <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
                     <div id="header" className="flex justify-between h-[10%]">
-                        <p className="font-bold">NO &nbsp;<span className="bg-teal-800 text-white px-3 py-2">{currentNumber}</span></p>
+                        <p className="font-bold">NO &nbsp;<span className="bg-teal-800 text-white px-3 py-2 rounded-md">{currentNumber}</span></p>
                         <div className="flex gap-2">
-                            <button className="border-2 border-yellow-500 px-3 py-2 rounded-lg cursor-pointer hover:bg-yellow-500 hover:text-white transition-all" onClick={() => setDrawerOpen(true)}>Daftar Soal</button>
-                            <div className="flex items-center border border-slate-900 rounded-md px-2 py-1">
+                            <button className="font-semibold border-2 border-yellow-500 text-yellow-500 px-3 py-2 rounded-xl cursor-pointer hover:bg-yellow-500 hover:text-white transition-all" onClick={() => setDrawerOpen(true)}>Daftar Soal</button>
+                            <div className="flex items-center bg-slate-300 rounded-xl px-2 py-1 font-semibold">
                                 {timeLimit && 
-                                <Countdown deadline={timeLimit} onDone={() => onDone()}/>
+                                <Countdown deadline={timeLimit} onDone={() => {handleSubmit(false)}}/>
                                 }
                             </div>
                         </div>
                     </div>
 
                     <div id="content" className="flex flex-col gap-2 px-4 h-full">
-
-                        {/* {currentSoal().perintah && (
-                        <p>{currentSoal().perintah}</p>
-                        )} */}
 
                         {currentSoal().soal && (
                         <div className="">
@@ -233,10 +331,11 @@ export function Ujian() {
                         </div>
                         )}
 
-                        {/* <p>{currentSoal().pertanyaan}</p> */}
-
-                        {['a', 'b', 'c', 'd', 'e'].map((el) => (
-                            <div className={`${style.radio_button}`} key={el}>
+                        {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd', 'e'].map((el) => (
+                            <div 
+                                className={`${style.radio_button} ${answers[currentNumber - 1].jawaban === el.toUpperCase() ? 'bg-gray-300' : ''} transition-all`} 
+                                key={el}
+                            >
                                 <input 
                                     type="radio" 
                                     id={el} 
@@ -249,13 +348,23 @@ export function Ujian() {
                             </div>
                         ))}
 
+                        {currentSoal().tipe_soal === 'essai' && (
+                            <>
+                            <label htmlFor=""></label>
+                            <textarea 
+                                value={answers[currentNumber-1].jawaban} 
+                                onChange={handleChange} 
+                                className="border-2 border-gray-300 rounded-lg p-2"
+                                placeholder="Tulis Jawaban Anda di sini..."
+                                rows={4}
+                            ></textarea>
+                            </>
+
+                            // <RichTextEditor value="string" onChange={() => {}}/>
+                        )}
+
                     </div>
                     
-                    {!currentSoal().pilihan_a && (
-                        <textarea onChange={handleChange}></textarea>
-
-                        // <RichTextEditor value="string" onChange={() => {}}/>
-                    )}
 
                     <div id="control" className="flex justify-center gap-2 h-[10%]">
                         <button 
@@ -272,12 +381,13 @@ export function Ujian() {
                         <button 
                             // disabled={!(currentNumber < questions.length)} 
                             className={`${style.control_button} ${currentNumber < questions.length ? style.control_button_active : style.submit_button}`} 
-                            onClick={() => currentNumber < questions.length ? changeSoal('next') : handleSubmit(false)}
+                            onClick={() => currentNumber < questions.length ? changeSoal('next') : handleSubmit(true)}
                         >{currentNumber < questions.length ? 'Next' : 'Complete'}</button>
                     </div>
 
                 </div>
             </div>
         </div>
+        </>
     )
 }

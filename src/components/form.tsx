@@ -10,7 +10,7 @@ interface IForm <T> {
     type: string[],
     hint?: string[],
     selectList?: {
-        [key: string]: {key: string, name: string}[]
+        [key: string]: {key: string | number, name: string}[]
     }
     classCustom?: string,
     onSubmit: (data: T) => void,
@@ -23,7 +23,10 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
         if(!data){
             return keyList.reduce((acc, key) => ({...acc, [key]: ""}), {} as T)
         }
-        return keyList.reduce((acc, key) => ({...acc, [key]: data[key]}), {} as T)
+        return keyList.reduce((acc, key) => ({
+            ...acc, 
+            [key]: (data[key] && key !== 'password') ? data[key] : ""
+        }), {} as T)
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

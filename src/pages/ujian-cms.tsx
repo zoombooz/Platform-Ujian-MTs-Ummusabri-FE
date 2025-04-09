@@ -106,10 +106,10 @@ export function UjianCMS() {
             height: "600px",
             content: (
                 <Form <IUjian>
-                    title="Tambah Kelas"
-                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
-                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
-                    type={["text", "select", "select", "select", "date", "date", "text"]}
+                    title="Tambah Ujian"
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date']}
+                    type={["text", "select", "select", "select", "date", "date"]}
                     selectList={{
                         kelompok_id: kelompokUjianList,
                         mapel_id: mapelList,
@@ -148,10 +148,10 @@ export function UjianCMS() {
             content: (
                 <Form <IUjian>
                     data={daftar_kelas}
-                    title="Tambah Kelas"
-                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
-                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
-                    type={["text", "select", "select", "select", "date", "date", "text"]}
+                    title="Tambah Ujian"
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date']}
+                    type={["text", "select", "select", "select", "date", "date"]}
                     selectList={{
                         kelompok_id: kelompokUjianList,
                         mapel_id: mapelList,

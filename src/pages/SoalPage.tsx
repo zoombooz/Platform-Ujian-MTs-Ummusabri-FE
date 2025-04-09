@@ -15,7 +15,7 @@ import { Loader } from "../components/loader";
 
 export interface ISoal {
     id: number,
-    ujian_id: string,
+    ujian_id: string | number,
     soal: string,
     image: string | null,
     tipe_soal: string,
@@ -50,7 +50,7 @@ export function SoalPage() {
         {name: "Essay", key: "essai"}
     ]
     const endpoints = {
-        get: (ujian_id?: string) => `admin/soal${ujian_id ? `?ujian=${ujian_id}` : ''}`,
+        get: (ujian_id?: string) => `admin/soal${ujian_id ? `?ujian_id=${ujian_id}` : ''}`,
         add: `admin/soal`,
         edit: (id: number) => `admin/soal/${id}`,
         delete: (id: number) => `admin/soal/${id}`,
@@ -121,6 +121,10 @@ export function SoalPage() {
 
     const handleAdd = (options: 'pilihan_ganda' | 'essai') => {
         const addSoal = async (body: Partial<ISoal>) => {
+            body = {
+                ...body,
+                ujian_id: Number(ujian_id)
+            }
             const url = `${baseUrl}${endpoints['add']}`;
             try {
                 await axios.post(url, body, {

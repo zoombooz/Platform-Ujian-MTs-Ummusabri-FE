@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import { JSX, useEffect } from "react";
 import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 import { Loader } from "./loader";
@@ -8,6 +8,10 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
     const style = {
         head_column: `px-6 py-3 border border-gray-300 text-md`,
     }
+
+    useEffect(() => {
+        console.log("Checking dulu: ", selectList)
+    }, [])
 
     const actionExist = (): boolean => {
         if(customActionButton){
@@ -88,7 +92,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
             ? <div className="flex w-full h-80 justify-center items-center"><Loader/></div>
             : <>
                 <table className="w-full border border-gray-200">
-                    <thead className="text-xs bg-gray-100">
+                    <thead className="text-xs bg-slate-700 text-white">
                         <tr>
                             {numberRow && (
                                 <th scope="col" className={style.head_column}>
@@ -112,7 +116,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     <tbody>
                         {data.map((data: T, rowIndex) => {
                             return (
-                                <tr key={rowIndex} className="bg-white border-b border-gray-200 hover:bg-gray-100">
+                                <tr key={rowIndex} className={`${rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'} border-b border-gray-200 hover:bg-gray-100`}>
                                     {numberRow && (
                                         <td className="px-6 py-4 border-r border-gray-300">
                                             {rowIndex + 1}    

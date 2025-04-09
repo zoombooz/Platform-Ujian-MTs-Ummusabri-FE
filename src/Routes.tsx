@@ -56,7 +56,7 @@ export function RouteLinks() {
                     </Route>
                 </Route>
 
-                {/* <Route path="*" element={<Navigate to="/" />} /> */}
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </BrowserRouter>
     )

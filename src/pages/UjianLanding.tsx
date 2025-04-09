@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { ISesiUjian, IUjian } from "../models/ujian.type";
 import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
-import { Ujian } from "./ujian";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { HorizontalLayout } from "../layout/horizontal-layout";
 
 export function UjianLanding() {
 
@@ -70,7 +70,6 @@ export function UjianLanding() {
                 navigate(`/ujian/${ujian_id}`)
             }
         })
-        
     }
 
     return (
@@ -79,8 +78,10 @@ export function UjianLanding() {
             
             <div className="flex justify-center w-full h-full bg-gray-100 p-6">
                 <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
+                    <h1 className="font-bold">📝Daftar Ujian Tersedia</h1>
+                    <p className="text-gray-500 font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
                     <Table <IUjian>
-                        title="Daftar Ujian"
+                        title={''}
                         headList={['Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran']}
                         keyList={['nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name']}
                         pagination={pagination}

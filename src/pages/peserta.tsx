@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useDialog } from "../context/DialogContext";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { Table } from "../components/table";
 import { Icon } from "../components/icon";
@@ -22,9 +21,9 @@ export function Peserta() {
     const {openDrawer, closeDrawer} = useDrawer();
     const [peserta, setPeserta] = useState<IPeserta[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [agamaList, setAgamaList] = useState<{name: string, key: string}[]>([]);
-    const [jurusanList, setJurusanList] = useState<{name: string, key: string}[]>([]);
-    const [kelasList, setKelasList] = useState<{name: string, key: string}[]>([]);
+    const [agamaList, setAgamaList] = useState<{name: string, key: string | number}[]>([]);
+    const [jurusanList, setJurusanList] = useState<{name: string, key: string | number}[]>([]);
+    const [kelasList, setKelasList] = useState<{name: string, key: string | number}[]>([]);
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const endpoints = {
         get: `admin/peserta`,
@@ -76,7 +75,7 @@ export function Peserta() {
         })
     }
 
-    const fetchAdditionalData = (endpoint: string, setList: React.Dispatch<React.SetStateAction<{name: string;key: string;}[]>>) => {
+    const fetchAdditionalData = (endpoint: string, setList: React.Dispatch<React.SetStateAction<{name: string; key: string | number;}[]>>) => {
         const url = `${baseUrl}${endpoint}`;
         axios.get(url, {
             headers: {
@@ -89,7 +88,10 @@ export function Peserta() {
                     key: el.id
                 }
             })
-            setList(list);
+            setList(() => {
+                return [...list]
+            });
+            console.log("Check List: ", {agamaList, jurusanList, kelasList})
         }).catch(error => {
             console.error(error)
         })
@@ -166,10 +168,10 @@ export function Peserta() {
             content: (
                 <Form <IPeserta>
                     data={peserta}
-                    title="Tambah Peserta"
-                    headList={["Nama Peserta", "Password", "Jurusan", "Agama", "Kelas"]}
-                    keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
-                    type={["text", "password", "select", "select", "select"]}
+                    title="Edit Peserta"
+                    headList={["Nama Peserta", "Jurusan", "Agama", "Kelas"]}
+                    keyList={["nama", "jurusan_id", "agama_id", "kelas_id"]}
+                    type={["text", "select", "select", "select"]}
                     selectList={{
                         jurusan_id: jurusanList,
                         agama_id: agamaList,

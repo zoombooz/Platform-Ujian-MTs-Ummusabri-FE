@@ -1,7 +1,7 @@
 export interface IPeserta {
     nama: string,
     password: string,
-    jurusan_id: string,
+    jurusan_id: string | number,
     agama_id: string,
     kelas_id: string,
     nomor_peserta: string,

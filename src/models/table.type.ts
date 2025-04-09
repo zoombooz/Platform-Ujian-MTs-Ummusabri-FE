@@ -3,7 +3,7 @@ export interface ITable <T> {
     data: T[];
     headList: string[];
     keyList: string[];
-    selectList?: {[key: string]: {name: string, key: string}[]} 
+    selectList?: {[key: string]: {name: string, key: string | number}[]} 
     pagination: IPaginationNew,
     classCustom?: string;
     infoAction?: boolean;
