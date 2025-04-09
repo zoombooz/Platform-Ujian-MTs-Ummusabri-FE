@@ -140,7 +140,7 @@ export function Jurusan() {
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
         }).then(result => {
-            if(result){
+            if(result.isConfirmed){
                 const url = `${baseUrl}${endpoints['delete'](jurusan.id)}`;
                 axios.delete(url, {
                     headers: {

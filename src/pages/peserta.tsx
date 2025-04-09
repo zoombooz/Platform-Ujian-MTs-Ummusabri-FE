@@ -193,7 +193,7 @@ export function Peserta() {
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
         }).then(async result => {
-            if(result){
+            if(result.isConfirmed){
                 const url = `${baseUrl}${endpoints['delete'](peserta.id)}`;
                 await axios.delete(url, {
                     headers: {

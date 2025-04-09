@@ -129,8 +129,8 @@ export function DaftarKelas() {
             showCancelButton: true,
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
-        }).then(async result => {
-            if(result){
+        }).then(result => {
+            if(result.isConfirmed){
                 const url = `${baseUrl}${endpoints['delete'](kelas.id)}`;
                 axios.delete(url, {
                     headers: {

@@ -45,14 +45,14 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
     }
 
     const style = {
-        button: 'transition-all min-w-30 text-white px-2 py-2 rounded-sm cursor-pointer'
+        button: 'transition-all min-w-30 text-white px-2 py-2 rounded-lg cursor-pointer'
     }
 
     return (
         <div className={`${classCustom} flex flex-col h-full text-black rounded-md shadow-lg border-l-2 border-gray-400 p-4`}>
             <div className="h-16 py-4 px-4">
                 <h1 className="text-green-700 font-bold">{title}</h1>
-                <hr className="h-1 w-full bg-gray-300 mt-2" />
+                <div className="h-0.5 w-full bg-gray-200 mt-2 rounded-lg"></div>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 h-full px-4 py-3 bg-white overflow-y-auto">
@@ -68,7 +68,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                                 id={item} 
                                 value={formData[item]} 
                                 onChange={handleChange} 
-                                className={`bg-gray-50 border-2 ${isDisabled(item) ? "border-gray-400 text-gray-500" : "border-gray-300 text-black"} rounded-lg px-2 py-1.5`}
+                                className={`bg-gray-50 border-2 ${isDisabled(item) ? "border-gray-200 text-gray-400" : "border-gray-300 text-black"} rounded-lg px-2 py-1.5`}
                             >
                                 <option value="" disabled>Pilih Item</option>
                                 {selectList[item].map(item => (
@@ -111,16 +111,16 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
             </form>
 
             <div className="h-16 rounded-b-md">
-                <div className="flex h-full gap-2 py-4 justify-center items-center">
+                <div className="flex h-full gap-6 py-4 justify-center items-center">
                     <button 
                         type="submit"
                         onClick={handleSubmit}
-                        className={"bg-blue-400 hover:bg-blue-500 " + style.button}
+                        className={"bg-blue-400 hover:bg-blue-500 font-semibold " + style.button}
                     >UPDATE</button>
                     <button 
                         type="button"
                         onClick={onCancel}
-                        className={"bg-red-400 hover:bg-red-500 " + style.button}
+                        className={"bg-red-400 hover:bg-red-500 font-semibold " + style.button}
                     >BATAL</button>
                 </div>
             </div>

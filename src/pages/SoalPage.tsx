@@ -272,82 +272,81 @@ export function SoalPage() {
     // -----------------------------------------------------------------------------------------------------
 
     return (
-        <div className="relative flex flex-col w-full h-full bg-gray-100 p-4">
-            <div className="flex flex-col gap-4 bg-white rounded-lg w-full min-h-full p-6 shadow-md">
-                <div className="flex justify-between">
-                    <h1 className="font-semibold mb-5">{nama_ujian}</h1>
-                    <div className="flex gap-2">
-                        <button onClick={() => handleAdd('pilihan_ganda')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
-                            <Icon name="heroicons:plus" shape="outline"/>
-                            <p>Tambah Pilihan Ganda</p>
-                        </button>
+        <div className="relative flex flex-col gap-4 w-full h-full bg-gray-100 p-10 overflow-y-auto">
+            <div className="flex justify-between">
+                <h1 className="font-semibold mb-5">{nama_ujian}</h1>
+                <div className="flex gap-2">
+                    <button onClick={() => handleAdd('pilihan_ganda')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                        <Icon name="heroicons:plus" shape="outline"/>
+                        <p className="font-semibold">Tambah Pilihan Ganda</p>
+                    </button>
 
-                        <button onClick={() => handleAdd('essai')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
-                            <Icon name="heroicons:plus" shape="outline"/>
-                            <p>Tambah Essay</p>
-                        </button>
+                    <button onClick={() => handleAdd('essai')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                        <Icon name="heroicons:plus" shape="outline"/>
+                        <p className="font-semibold">Tambah Essay</p>
+                    </button>
 
-                        {selectedSoal && (
-                        <>
-                            <button onClick={() => selectedSoal ? handleEdit(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-yellow-500 rounded-md cursor-pointer text-white hover:bg-yellow-600 transition-all">
-                                <Icon name="heroicons:pencil-square" shape="outline"/>
-                                <p>Edit Soal</p>
-                            </button>
-                            <button onClick={() => selectedSoal ? handleDelete(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-red-500 rounded-md cursor-pointer text-white hover:bg-red-600 transition-all">
-                                <Icon name="heroicons:pencil-square" shape="outline"/>
-                                <p>Hapus Soal</p>
-                            </button>
-                        </>
-                        )}
-                    </div>
                 </div>
-                <div className="flex justify-between gap-4">
-                    <div className="flex flex-wrap gap-2">
-                        {soal.map((el, index) => (
-                            <button 
-                                key={el.id}
-                                className={`${(selectedSoal && selectedSoal.id === el.id) ? 'bg-gray-400 text-white hover:bg-gray-500' : 'text-black hover:bg-gray-200'} flex justify-center border border-slate-900 w-fit px-2 py-1.5 min-w-8 transition-all cursor-pointer`}
-                                onClick={() => selectSoal(el)}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                    </div>
-                    
+            </div>
+            <div className="flex justify-between gap-4">
+                <div className="flex flex-wrap gap-2">
+                    {soal.map((el, index) => (
+                        <button 
+                            key={el.id}
+                            className={`${(selectedSoal && selectedSoal.id === el.id) ? 'bg-green-500 text-white' : 'text-black hover:bg-green-500 hover:text-white'} flex justify-center items-center rounded-xl border-2 border-green-500 shadow-md px-2 py-1.5 w-12 h-12 transition-all cursor-pointer`}
+                            onClick={() => selectSoal(el)}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
                 </div>
                 
-                {selectedSoal ?
-                (
-                    <div>
-                        <h3 className="font-semibold mb-4 capitalize">Tipe Soal: {selectedSoal.tipe_soal.replace('_', ' ')}</h3>
-                        <p>{selectedSoal.soal}</p>
-                        {
-                        selectedSoal.tipe_soal === 'pilihan_ganda' && (
-                        <>
+            </div>
+            
+            {selectedSoal ?
+            (
+                <>
+                <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500">
+                    <h3 className="font-semibold mb-4 capitalize">Tipe Soal: {selectedSoal.tipe_soal.replace('_', ' ')}</h3>
+                    <p>{selectedSoal.soal}</p>
+                    {
+                    selectedSoal.tipe_soal === 'pilihan_ganda' && (
+                    <div className="flex flex-col gap-1">
                         <p>a. {selectedSoal.pilihan_a}</p>
                         <p>b. {selectedSoal.pilihan_b}</p>
                         <p>c. {selectedSoal.pilihan_c}</p>
                         <p>d. {selectedSoal.pilihan_d}</p>
                         <p>e. {selectedSoal.pilihan_e}</p>
-                        <p className="font-semibold mt-4">Jawaban: {selectedSoal.jawaban}</p>
-                        </>
-                        )
-                        }
+                        <p className="font-bold mt-4 text-green-700">Jawaban: {selectedSoal.jawaban}</p>
+                    </div>
+                    )
+                    }
 
-                    </div>
-                )
-                :
-                (
-                    <div className="flex justify-center w-full h-full items-center py-4">
-                        {loading 
-                        ? <Loader/>
-                        : (soal.length ? <p>Please select a question</p> : <p>Please add a question</p>)
-                        }
-                        
-                    </div>
-                )
-                }
-            </div>
+                </div>
+                <div className="flex gap-4">
+                    <button onClick={() => selectedSoal ? handleEdit(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-yellow-500 rounded-md cursor-pointer text-white hover:bg-yellow-600 transition-all">
+                        <p className="font-semibold">✏️ Edit Soal</p>
+                    </button>
+                    <button onClick={() => selectedSoal ? handleDelete(selectedSoal) : ''} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-red-500 rounded-md cursor-pointer text-white hover:bg-red-600 transition-all">
+                        <p className="font-semibold">🗑️ Hapus Soal</p>
+                    </button>
+                </div>
+                </>
+                
+            )
+            :
+            (
+                <div className="flex w-full items-center py-4">
+                    {loading 
+                    ? <Loader/>
+                    : (soal.length 
+                        ? <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500 w-120 font-semibold">Please select a question</div> 
+                        : <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500 w-120 font-semibold">Please add a question</div>)
+                    }
+                    
+                </div>
+            )
+            }
         </div>
     )
 }

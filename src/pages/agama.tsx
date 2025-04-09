@@ -142,7 +142,8 @@ export function Agama() {
             confirmButtonText: "Iya",
             cancelButtonText: "Tidak"
         }).then(result => {
-            if(result){
+            console.log(result)
+            if(result.isConfirmed){
                 const url = `${baseUrl}${endpoints['delete'](agama.id)}`;
                 axios.delete(url, {
                     headers: {
