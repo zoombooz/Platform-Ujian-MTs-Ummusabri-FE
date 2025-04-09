@@ -198,35 +198,33 @@ export function UjianCMS() {
     }
 
     return (
-        <div className="w-full h-full bg-gray-100 p-4">
-            <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
-                <Table <IUjian>
-                    title="Daftar Ujian"
-                    data={ujian}
-                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
-                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
-                    selectList={{
-                        kelompok_id: kelompokUjianList,
-                        mapel_id: mapelList,
-                        kelas_id: daftarKelasList
-                    }}
-                    pagination={pagination}
-                    infoAction={true}
-                    editAction={true}
-                    deleteAction={true}
-                    onEditAction={handleEdit}
-                    onDeleteAction={handleDelete}
-                    onInfoAction={openInfo}
-                    onChangePage={fetchData}
-                    additionalButton={(
-                        <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
-                            <Icon name="heroicons:plus" shape="outline"/>
-                            <p>Tambah Ujian</p>
-                        </button>
-                    )}
-                    loading={loading}
-                />
-            </div>
+        <div className="w-full h-full bg-gray-200 p-10 overflow-y-auto">
+            <Table <IUjian>
+                title="Daftar Ujian"
+                data={ujian}
+                headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
+                keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
+                selectList={{
+                    kelompok_id: kelompokUjianList,
+                    mapel_id: mapelList,
+                    kelas_id: daftarKelasList
+                }}
+                pagination={pagination}
+                infoAction={true}
+                editAction={true}
+                deleteAction={true}
+                onEditAction={handleEdit}
+                onDeleteAction={handleDelete}
+                onInfoAction={openInfo}
+                onChangePage={fetchData}
+                additionalButton={(
+                    <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                        <Icon name="heroicons:plus" shape="outline"/>
+                        <p>Tambah Ujian</p>
+                    </button>
+                )}
+                loading={loading}
+            />
         </div>
     )
 }

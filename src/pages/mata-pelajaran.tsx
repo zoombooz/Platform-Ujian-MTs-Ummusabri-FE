@@ -158,8 +158,7 @@ export function MataPelajaran() {
     }
 
     return (
-        <div className="w-full h-full bg-gray-100 p-4">
-            <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
+        <div className="w-full h-full bg-gray-200 p-10 overflow-y-auto">
                 <Table <IMataPelajaran>
                     title="Mata Pelajaran"
                     data={mataPelajaran}
@@ -182,7 +181,6 @@ export function MataPelajaran() {
                     onChangePage={fetchData}
                     loading={loading}
                 />
-            </div>
         </div>
     )
 

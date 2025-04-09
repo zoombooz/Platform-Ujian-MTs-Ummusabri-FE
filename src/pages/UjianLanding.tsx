@@ -89,7 +89,7 @@ export function UjianLanding() {
                         onChangePage={() => {}}
                         infoAction={true}
                         onInfoAction={res => startUjian(res.id)}
-                        infoButtonText="Mulai Ujian"
+                        infoButtonText="▶️ Mulai Ujian"
                         loading={loading}
                     />
                 </div>

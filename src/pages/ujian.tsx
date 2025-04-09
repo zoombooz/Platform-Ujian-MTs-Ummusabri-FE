@@ -286,7 +286,7 @@ export function Ujian() {
                 >
                     <div className="p-4 h-full">
                         <p className="text-black px-2 pt-2 mb-4 font-bold text-xl">Jawaban</p>
-                        <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4 p-2`}>
+                        <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 xl:gap-4 p-2`}>
                             {range(1, questions.length + 1).map((el) => (
                                 <button 
                                     key={el}

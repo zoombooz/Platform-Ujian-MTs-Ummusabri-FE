@@ -163,31 +163,29 @@ export function Agama() {
     }
 
     return (
-        <div className="w-full h-full bg-gray-100 p-4">
-            <div className="bg-white rounded-lg w-full min-h-full p-6 shadow-md">
-                <Table <IAgama>
-                    title="Daftar Agama"
-                    data={agama}
-                    headList={['ID', 'Nama']}
-                    keyList={['id', 'nama']}
-                    pagination={pagination}
-                    loading={loading}
-                    numberRow={false}
-                    editAction={true}
-                    deleteAction={true}
-                    onEditAction={handleEdit}
-                    onDeleteAction={handleDelete}
-                    onChangePage={fetchData}
-                    additionalButton={(
-                        <div className="flex gap-1">
-                            <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
-                                <Icon name="heroicons:plus" shape="outline"/>
-                                <p>Tambah Agama</p>
-                            </button>
-                        </div>
-                    )}
-                />
-            </div>
+        <div className="w-full h-full overflow-y-auto bg-gray-200 p-10">
+            <Table <IAgama>
+                title="Daftar Agama"
+                data={agama}
+                headList={['ID', 'Nama']}
+                keyList={['id', 'nama']}
+                pagination={pagination}
+                loading={loading}
+                numberRow={false}
+                editAction={true}
+                deleteAction={true}
+                onEditAction={handleEdit}
+                onDeleteAction={handleDelete}
+                onChangePage={fetchData}
+                additionalButton={(
+                    <div className="flex gap-1">
+                        <button onClick={handleAdd} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
+                            <Icon name="heroicons:plus" shape="outline"/>
+                            <p className="font-semibold">Tambah Agama</p>
+                        </button>
+                    </div>
+                )}
+            />
         </div>
     )
 

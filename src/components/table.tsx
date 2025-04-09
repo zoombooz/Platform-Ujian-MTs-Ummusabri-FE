@@ -2,11 +2,12 @@ import { JSX, useEffect } from "react";
 import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 import { Loader } from "./loader";
+import { Icon } from "./icon";
 
 export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false}: ITable<T>) {
     
     const style = {
-        head_column: `px-6 py-3 border border-gray-300 text-md`,
+        head_column: `px-6 py-3 text-md text-start`,
     }
 
     useEffect(() => {
@@ -23,20 +24,23 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
     const Action = ({data}: {data: T}): JSX.Element => {
         if(actionExist()) {
             return (
-                <td className="flex gap-1 justify-center items-center py-2">
+                <td className="flex gap-1 items-center py-2">
                     {infoAction && (
-                        <button onClick={() => onInfoAction && onInfoAction(data)} className="bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
-                            <p>{infoButtonText ? infoButtonText : 'Info'}</p>
+                        <button onClick={() => onInfoAction && onInfoAction(data)} className="flex gap-2 bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
+                            <Icon name="heroicons:information-circle" shape="outline"/>
+                            <p className="font-semibold">{infoButtonText ? infoButtonText : 'Info'}</p>
                         </button>
                     )}
                     {editAction && (
-                        <button onClick={() => onEditAction && onEditAction(data)} className="bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
-                            <p>Edit</p>
+                        <button onClick={() => onEditAction && onEditAction(data)} className="flex gap-2 bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
+                            <Icon name="heroicons:pencil-square" shape="outline"/>
+                            <p className="font-semibold">Edit</p>
                         </button>
                     )}
                     {deleteAction && (
-                        <button onClick={() => onDeleteAction && onDeleteAction(data)} className="bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer w-16">
-                            <p>Delete</p>
+                        <button onClick={() => onDeleteAction && onDeleteAction(data)} className="flex gap-2 bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
+                            <Icon name="heroicons:trash" shape="outline"/>
+                            <p className="font-semibold">Delete</p>
                         </button>
                     )}
                     {customActionButton}
@@ -91,7 +95,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
             {loading
             ? <div className="flex w-full h-80 justify-center items-center"><Loader/></div>
             : <>
-                <table className="w-full border border-gray-200">
+                <table className="w-full rounded-lg overflow-hidden shadow-md">
                     <thead className="text-xs bg-slate-700 text-white">
                         <tr>
                             {numberRow && (
@@ -116,9 +120,9 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     <tbody>
                         {data.map((data: T, rowIndex) => {
                             return (
-                                <tr key={rowIndex} className={`${rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'} border-b border-gray-200 hover:bg-gray-100`}>
+                                <tr key={rowIndex} className={`${rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'} hover:bg-blue-200`}>
                                     {numberRow && (
-                                        <td className="px-6 py-4 border-r border-gray-300">
+                                        <td className="px-6 py-4">
                                             {rowIndex + 1}    
                                         </td>
                                     )}
@@ -126,13 +130,13 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                                         if(selectList && selectList[key] && data){
                                         const selectedData = selectList[key]?.find((el) => el.key === data[key]);
                                         return (
-                                            <td key={String(key)} className="px-6 py-4 border-r border-gray-300">
+                                            <td key={String(key)} className="px-6 py-4">
                                                 {selectedData ? selectedData.name : data[key]}
                                             </td>
                                         )
                                         }
                                         return (
-                                            <td key={String(key)} className="px-6 py-4 border-r border-gray-300">
+                                            <td key={String(key)} className="px-6 py-4">
                                                 {data[key]}    
                                             </td>
                                         )

@@ -210,33 +210,31 @@ export function Peserta() {
     // -----------------------------------------------------------------------------------------------------
 
     return (
-        <div className="w-full h-full bg-gray-100 p-4">
-            <div className="bg-white rounded-lg w-full h-full p-6 shadow-md">
-                <Table <IPeserta>
-                    title="Daftar Peserta"
-                    data={peserta}
-                    headList={['Nama', 'Jurusan', 'Agama', 'Kelas', 'Nomor Peserta']}
-                    keyList={['nama', 'jurusan_id', 'agama_id', 'kelas_id', 'nomor_peserta']}
-                    selectList={{
-                        jurusan_id: jurusanList,
-                        agama_id: agamaList,
-                        kelas_id: kelasList
-                    }}
-                    pagination={pagination}
-                    editAction={true}
-                    deleteAction={true}
-                    loading={loading}
-                    additionalButton={(
-                        <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleAdd}>
-                            <Icon name="heroicons:plus" shape="outline"/>
-                            <p>Tambah Peserta</p>
-                        </button>
-                    )}
-                    onEditAction={handleEdit}
-                    onDeleteAction={handleDelete}
-                    onChangePage={fetchData}
-                />
-            </div>
+        <div className="w-full h-full bg-gray-200 p-10 overflow-y-auto">
+            <Table <IPeserta>
+                title="Daftar Peserta"
+                data={peserta}
+                headList={['Nama', 'Jurusan', 'Agama', 'Kelas', 'Nomor Peserta']}
+                keyList={['nama', 'jurusan_id', 'agama_id', 'kelas_id', 'nomor_peserta']}
+                selectList={{
+                    jurusan_id: jurusanList,
+                    agama_id: agamaList,
+                    kelas_id: kelasList
+                }}
+                pagination={pagination}
+                editAction={true}
+                deleteAction={true}
+                loading={loading}
+                additionalButton={(
+                    <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleAdd}>
+                        <Icon name="heroicons:plus" shape="outline"/>
+                        <p>Tambah Peserta</p>
+                    </button>
+                )}
+                onEditAction={handleEdit}
+                onDeleteAction={handleDelete}
+                onChangePage={fetchData}
+            />
         </div>
     )
 

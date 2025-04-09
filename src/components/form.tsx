@@ -49,16 +49,17 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
     }
 
     return (
-        <div className={`${classCustom} flex flex-col h-full text-black rounded-md shadow-lg`}>
-            <div className="h-16 bg-green-600 py-4 px-4 flex rounded-t-md">
-                <h1 className="text-white">{title}</h1>
+        <div className={`${classCustom} flex flex-col h-full text-black rounded-md shadow-lg border-l-2 border-gray-400 p-4`}>
+            <div className="h-16 py-4 px-4">
+                <h1 className="text-green-700 font-bold">{title}</h1>
+                <hr className="h-1 w-full bg-gray-300 mt-2" />
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 h-full px-4 py-3 bg-white overflow-y-auto">
                 {keyList.map((item, index) => (
                     <div key={index} className="flex flex-col gap-1">
                         <div className="flex justify-between">
-                            <label htmlFor={item}>{headList[index]}</label>
+                            <label htmlFor={item} className="font-medium text-gray-600">{headList[index]}</label>
                         </div>
 
                         {(type[index] === 'select' && selectList && selectList[item]) && (
@@ -67,7 +68,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                                 id={item} 
                                 value={formData[item]} 
                                 onChange={handleChange} 
-                                className={`bg-white border ${isDisabled(item) ? "border-gray-400 text-gray-500" : "border-black text-black"} rounded-sm px-2 py-1.5`}
+                                className={`bg-gray-50 border-2 ${isDisabled(item) ? "border-gray-400 text-gray-500" : "border-gray-300 text-black"} rounded-lg px-2 py-1.5`}
                             >
                                 <option value="" disabled>Pilih Item</option>
                                 {selectList[item].map(item => (
@@ -87,7 +88,7 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                                     id={item} 
                                     value={formData[item]}
                                     onChange={handleChange}
-                                    className="bg-white border border-black rounded-sm px-2 py-1.5 text-black w-full"
+                                    className="bg-gray-50 border-2 border-gray-300 rounded-lg px-2 py-1.5 text-black w-full"
                                 ></textarea>
                             </div>
                         )}
@@ -98,18 +99,18 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                                 type={type[index]} 
                                 value={formData[item]}
                                 onChange={handleChange}
-                                className="bg-white border border-black rounded-sm px-2 py-1.5 text-black"
+                                className="bg-gray-50 border-2 border-gray-300 rounded-lg px-2 py-1.5 text-black"
                             />
                         )}
 
                         {hint?.[index] && (
-                            <p className="text-sm">{hint[index]}</p>
+                            <p className="text-sm font-medium text-gray-400">{hint[index]}</p>
                         )}
                     </div>
                 ))}
             </form>
 
-            <div className="h-16 bg-green-600 rounded-b-md">
+            <div className="h-16 rounded-b-md">
                 <div className="flex h-full gap-2 py-4 justify-center items-center">
                     <button 
                         type="submit"
