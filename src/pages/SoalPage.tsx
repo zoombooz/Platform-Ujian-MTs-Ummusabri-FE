@@ -77,7 +77,7 @@ export function SoalPage() {
 
     const fetchData = (URL?: string) => {
         setLoading(true);
-        const url = URL ?? `${baseUrl}${endpoints['get'](ujian_id)}?limit=100`;
+        const url = URL ?? `${baseUrl}${endpoints['get']('')}?limit=100`;
         axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('authToken')}`
@@ -274,7 +274,7 @@ export function SoalPage() {
     return (
         <div className="relative flex flex-col gap-4 w-full h-full bg-gray-100 p-10 overflow-y-auto">
             <div className="flex justify-between">
-                <h1 className="font-semibold mb-5">{nama_ujian}</h1>
+                <h1 className="font-bold mb-5 text-gray-700">{nama_ujian}</h1>
                 <div className="flex gap-2">
                     <button onClick={() => handleAdd('pilihan_ganda')} className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all">
                         <Icon name="heroicons:plus" shape="outline"/>
@@ -307,7 +307,7 @@ export function SoalPage() {
             (
                 <>
                 <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500">
-                    <h3 className="font-semibold mb-4 capitalize">Tipe Soal: {selectedSoal.tipe_soal.replace('_', ' ')}</h3>
+                    <h3 className="font-semibold mb-4 capitalize">Tipe Soal: <span className="font-normal">{selectedSoal.tipe_soal.replace('_', ' ')}</span></h3>
                     <p>{selectedSoal.soal}</p>
                     {
                     selectedSoal.tipe_soal === 'pilihan_ganda' && (
