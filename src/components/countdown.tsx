@@ -43,10 +43,10 @@ export function Countdown({deadline, onDone}: {deadline: number, onDone: () => v
         return `0${num}`
     }
 
-    console.log("Test: ", {
-        timeLeft,
-        format: formatTime(timeLeft)
-    })
+    // console.log("Test: ", {
+    //     timeLeft,
+    //     format: formatTime(timeLeft)
+    // })
 
     return (
         <span>{formatTime(timeLeft)}</span>

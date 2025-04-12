@@ -5,6 +5,7 @@ import { Environment } from "../environment/environment";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getTokenPayload } from "../utils/jwt";
+import AntiCheatGuard from "../components/AntiCheatGuard";
 
 interface LoginForm {
     username: string,
@@ -125,6 +126,11 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
 
     return (
         <div className="flex w-full h-screen">
+
+            <AntiCheatGuard 
+                maxViolations={5}
+                cooldownMs = {10000}
+            />
 
             <div className="relative flex justify-center items-center w-full bg-blue-100">
                 <img src="src/assets/students.JPG" alt="Students Studying" className="absolute w-full h-full object-fill"/>

@@ -17,6 +17,7 @@ import { UjianCMS } from "./pages/ujian-cms";
 import { SoalPage } from "./pages/SoalPage";
 import { UjianLanding } from "./pages/UjianLanding";
 import { getTokenPayload, isTokenExpired } from "./utils/jwt";
+import { Evaluasi } from "./pages/Evaluasi";
 
 export function RouteLinks() {
 
@@ -66,6 +67,7 @@ export function RouteLinks() {
                                 <Route path="peserta" element={<Peserta />} />
                                 <Route path="jurusan" element={<Jurusan />} />
                                 <Route path="ujian" element={<UjianCMS />} />
+                                <Route path="evaluasi" element={<Evaluasi />} />
                                 <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
                             </Route>
                         </Route>

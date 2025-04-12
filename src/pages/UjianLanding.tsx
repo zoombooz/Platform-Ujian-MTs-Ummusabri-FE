@@ -116,7 +116,7 @@ export function UjianLanding() {
                         infoButtonText="▶️ Mulai Ujian"
                         loading={loading}
                         numberRow={false}
-                        isRowDisabled={(data) => (data.isTrue !== null)}
+                        // isRowDisabled={(data) => (data.isTrue !== null)}
                         iconOnActionButton={false}
                         colValueWithBackground={['status_ujian']}
                         colBackgroundColor={{

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
-import { useDialog } from "../context/DialogContext";
 import { Form } from "../components/form";
 import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";

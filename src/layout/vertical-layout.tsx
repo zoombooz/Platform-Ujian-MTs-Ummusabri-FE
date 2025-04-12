@@ -110,13 +110,14 @@ export function VerticalLayout() {
 
             { (subList['admin'] && isExpanded) && 
                 (<div className="transition-all">
-                    <SublistContainer href="/admin/agama" icon="heroicons:user" title="Agama"/>
+                    <SublistContainer href="/admin/agama" icon="heroicons:moon" title="Agama"/>
                     <SublistContainer href="/admin/peserta" icon="heroicons:user" title="Peserta"/>
-                    <SublistContainer href="/admin/jurusan" icon="heroicons:user" title="Jurusan"/>
-                    <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:user" title="Mata Pelajaran"/>
-                    <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:user" title="Kelompok Ujian"/>
-                    <SublistContainer href="/admin/daftar-kelas" icon="heroicons:user" title="Daftar Kelas"/>
-                    <SublistContainer href="/admin/ujian" icon="heroicons:user" title="Ujian"/>
+                    <SublistContainer href="/admin/jurusan" icon="heroicons:academic-cap" title="Jurusan"/>
+                    <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:bars-3-bottom-left" title="Mata Pelajaran"/>
+                    <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:tag" title="Kelompok Ujian"/>
+                    <SublistContainer href="/admin/daftar-kelas" icon="heroicons:users" title="Daftar Kelas"/>
+                    <SublistContainer href="/admin/ujian" icon="heroicons:document-text" title="Ujian"/>
+                    <SublistContainer href="/admin/evaluasi" icon="heroicons:document-check" title="Evaluasi Jawaban"/>
                 </div>)
             }
 

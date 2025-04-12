@@ -86,3 +86,9 @@ ul {
 .drawer-animation {
     animation: drawerAnimation 0.5s ease-out;
 }
+
+.no-select {
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* IE 10+ */
+}

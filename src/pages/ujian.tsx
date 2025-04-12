@@ -8,6 +8,7 @@ import { getTokenPayload } from "../utils/jwt";
 import { Loader } from "../components/loader";
 import Swal from "sweetalert2";
 import { HorizontalLayout } from "../layout/horizontal-layout";
+import AntiCheatGuard from "../components/AntiCheatGuard";
 
 interface IAnswerForm {
     soal_id: number,
@@ -25,6 +26,8 @@ interface IUploadAnswer {
 }
 
 export function Ujian() {
+
+    const [tabSwitches, setTabSwitches] = useState<number>(0);
 
     const navigate = useNavigate();
     const {nomor_peserta} = getTokenPayload();
@@ -284,6 +287,12 @@ export function Ujian() {
     return (<>
         <div className="relative flex w-screen h-screen overflow-hidden">
 
+            <AntiCheatGuard 
+                maxViolations={5}
+                onViolationLimitReached={() => {handleSubmit(false)}}
+                logViolation={res => console.log("Response Anti Cheat Guard: ", res)}
+            />
+
             {loading && 
             <div className="absolute flex justify-center items-center w-full h-full">
                 <Loader />
@@ -345,7 +354,7 @@ export function Ujian() {
 
                         {currentSoal().soal && (
                         <div className="">
-                            <p>
+                            <p className="no-select">
                                 {currentSoal().soal}
                             </p>
                         </div>
