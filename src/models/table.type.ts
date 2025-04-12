@@ -23,6 +23,12 @@ export interface ITable <T> {
 
     additionalButton?: React.ReactNode;
     isRowDisabled?: (row: T) => boolean;
+
+    colValueWithBackground?: string[];
+    colBackgroundColor?: {
+        [key: string]: string,
+        default: string
+    }
 }
 
 export interface IPaginationNew {

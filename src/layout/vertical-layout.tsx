@@ -4,6 +4,7 @@ import { JSX, useState } from "react";
 import { useLayout } from "../context/LayoutContext";
 import logoPesri from '@assets/logo-pesri.png';
 import logoCambridge from '@assets/logo-cambridge.png';
+import Swal from "sweetalert2";
 
 export function VerticalLayout() {
 
@@ -18,8 +19,19 @@ export function VerticalLayout() {
     })
 
     const logout = (): void => {
-        localStorage.removeItem("authToken");
-        navigate("/login-admin")
+        Swal.fire({
+            title: "Log Out",
+            text: "Apakah anda yakin ingin keluar?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak"
+        }).then(result => {
+            if(result.isConfirmed){
+                localStorage.removeItem("authToken");
+                navigate("/login-admin")
+            }
+        })
     }
 
     const style = {

@@ -42,7 +42,7 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
 
     const getTitle = (): string => {
         if(type === 'login' && role === 'admin'){
-            return "Log In"
+            return "Log In Admin"
         }else if(type === 'login' && role === 'student'){
             return "Log In Student"
         }else if(type === 'register' && role === 'admin'){
@@ -131,13 +131,13 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
 
                     <div id="header" className="flex flex-col gap-4 w-full">
                         <h1 className="text-3xl text-gray-600 font-light">{getTitle()}</h1>
-                        {(type === 'login' && role === 'admin') && (
+                        {/* {(type === 'login' && role === 'admin') && (
                             <p className="text-gray-400 font-normal">Belum punya akun? <Link to="/register-admin" className={style.text_button}>Daftar</Link></p>
                         )}
 
                         {(type === 'register' && role === 'admin') && (
                             <p className="text-gray-400 font-normal">Sudah punya akun? <Link to="/login-admin" className={style.text_button}>Masuk</Link></p>
-                        )} 
+                        )}  */}
                         
                     </div>
 

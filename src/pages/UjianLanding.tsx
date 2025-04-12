@@ -28,7 +28,8 @@ export function UjianLanding() {
                 ...el,
                 kelompok_ujian_name: el.kelompok_ujian.nama,
                 kelas_name: el.kelas.nama,
-                mapel_name: el.mapel.nama
+                mapel_name: el.mapel.nama,
+                status_ujian: (el.isTrue !== null ? 'Finished' : 'Available')
             }
         });
         return ujian_list;
@@ -71,18 +72,42 @@ export function UjianLanding() {
         })
     }
 
+    const logOut = () => {
+        Swal.fire({
+            title: "Log Out",
+            text: "Apakah anda yakin ingin keluar?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak"
+        }).then(result => {
+            if(result.isConfirmed){
+                localStorage.removeItem("authToken");
+                navigate("/login-student")
+            }
+        })
+    }
+
     return (
         <div className="relative flex w-screen h-screen overflow-hidden">
             
             
             <div className="flex justify-center w-full h-full bg-gray-200 p-6">
                 <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
-                    <h1 className="font-bold">📝Daftar Ujian Tersedia</h1>
-                    <p className="text-gray-500 font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
+                    <div className="flex justify-between pb-2">
+                        <div>
+                            <h1 className="font-bold">📝Daftar Ujian Tersedia</h1>
+                            <p className="text-gray-500 font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
+                        </div>
+                        <button 
+                            className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 w-32 rounded-xl text-white cursor-pointer" 
+                            onClick={() => logOut()}
+                        >Log Out</button>
+                    </div>
                     <Table <IUjian>
                         title={''}
-                        headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran']}
-                        keyList={['id', 'nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name']}
+                        headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran', 'Status']}
+                        keyList={['id', 'nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name', 'status_ujian']}
                         pagination={pagination}
                         data={getUjianList()}
                         onChangePage={() => {}}
@@ -93,6 +118,12 @@ export function UjianLanding() {
                         numberRow={false}
                         // isRowDisabled={(data) => (data.isTrue !== null)}
                         iconOnActionButton={false}
+                        colValueWithBackground={['status_ujian']}
+                        colBackgroundColor={{
+                            'Available': 'bg-green-500 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
+                            'Finished': 'bg-red-500/80 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
+                            'default': 'bg-gray-500 px-3 py-2 rounded-lg'
+                        }}
                     />
                 </div>
             </div>

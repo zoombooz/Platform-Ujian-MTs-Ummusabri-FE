@@ -4,11 +4,11 @@ import { Pagination } from "./pagination";
 import { Loader } from "./loader";
 import { Icon } from "./icon";
 
-export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false, isRowDisabled, iconOnActionButton = true}: ITable<T>) {
+export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false, isRowDisabled, iconOnActionButton = true, colValueWithBackground, colBackgroundColor}: ITable<T>) {
     
     const style = {
         head_column: `px-6 py-3 text-md text-start`,
-        action_button: "flex gap-2 py-1.5 px-2 rounded-md text-white min-w-16"
+        action_button: "flex gap-2 py-2 px-3 rounded-md text-white min-w-16"
     }
 
     useEffect(() => {
@@ -146,13 +146,17 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                                         const selectedData = selectList[key]?.find((el) => el.key === data[key]);
                                         return (
                                             <td key={String(key)} className="px-6 py-4">
-                                                {selectedData ? selectedData.name : data[key]}
+                                                <p className={`${colValueWithBackground?.includes(key) ? (colBackgroundColor?.[data[key]] ? colBackgroundColor[data[key]] : colBackgroundColor?.['default']) : ''}`}>
+                                                    {selectedData ? selectedData.name : data[key]}
+                                                </p>
                                             </td>
                                         )
                                         }
                                         return (
                                             <td key={String(key)} className="px-6 py-4">
-                                                {data[key]}    
+                                                <p className={`${colValueWithBackground?.includes(key) ? (colBackgroundColor?.[data[key]] ? colBackgroundColor[data[key]] : colBackgroundColor?.['default']) : ''}`}>
+                                                    {data[key]}    
+                                                </p>
                                             </td>
                                         )
                                     })}

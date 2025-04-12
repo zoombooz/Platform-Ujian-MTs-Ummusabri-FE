@@ -1,28 +1,51 @@
-import { Card } from "../components/card";
+import { Link } from "react-router";
 import { Icon } from "../components/icon";
+import logoPesri from "@assets/logo-pesri.png"
 
 export function DashboardPage() {
+
+    const fiturList: {title: string, description: string, link: string}[] = [
+        {title: "Peserta", description: "Mengatur akun peserta yang akan mengikuti ujian", link: "/admin/peserta"},
+        {title: "Ujian", description: "Membuat dan mengatur ujian yang akan diikuti peserta", link: "/admin/ujian"},
+        {title: "Kelompok Ujian", description: "Membuat pengelompokkan dari ujian", link: "/admin/kelompok-ujian"},
+        {title: "Mata Pelajaran", description: "Atur daftar pelajaran para peserta", link: "/admin/mata-pelajaran"},
+        {title: "Daftar Kelas", description: "Buat dan atur daftar kelas para peserta", link: "/admindaftar-kelas"},
+        {title: "Jurusan", description: "Buat dan atur daftar jurusan para peserta", link: "/admin/jurusan"},
+        {title: "Agama", description: "Buat dan atur daftar agama para peserta", link: "/admin/agama"}
+    ]
 
     const style = {
         button_list: 'flex items-center gap-2 text-gray-400 border-t border-gray-200 py-2 px-4 hover:bg-gray-100 transition-all cursor-pointer'
     }
 
     return (
-        <div className="flex flex-col gap-8 p-8 w-full bg-gray-100">
+        <div className="flex flex-col items-center gap-6 p-8 w-full bg-gray-100 overflow-y-auto pb-16">
 
-            <h1 className="text-2xl font-extralight">Dashboard</h1>
+            {/* <h1 className="text-2xl font-extralight">Dashboard</h1> */}
+            
+            <div className="flex flex-col gap-4 items-center">
+                <img src={logoPesri} alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-2 w-60 h-60"/>
+                <p className="text-gray-500 text-xl font-medium">Dashboard CMS Ujian MTS UMMUSABRI</p>
+                <p className="text-blue-400 text-lg font-semibold">ADMIN SEKOLAH</p>
+            </div>
 
-            {/* <div className="w-full grid grid-cols-4 gap-6">
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-            </div> */}
+            <div className="flex flex-col w-full max-w-240 px-20">
+                <p className="font-semibold text-lg text-gray-700">Halaman</p>
+                <div className="w-full h-1 bg-gray-300 my-4"></div>
+                <div className="grid grid-cols-3 gap-8">
+                    {fiturList.map(el => (
+                    <div className="flex flex-col gap-2">
+                        <Link to={el.link} className="w-fit font-semibold text-xl text-gray-600 hover:text-gray-800 hover:underline transition-all">{el.title}</Link>
+                        <p className="text-sm">{el.description}</p>
+                    </div>
+                    ))}
+                </div>
+            </div>
 
-            <div className="w-full h-fit flex flex-col md:flex-row gap-4 mb-12">
+            {/* <div className="w-full h-fit flex flex-col md:flex-row gap-4 mb-12">
                 <div className="flex flex-col justify-between w-1/4 h-fit border border-gray-200 shadow-md rounded-md bg-white">
                     <div className="flex flex-col items-center p-6">
-                        <img src="src/assets/logo-pesri.png" alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-4 w-60 h-60"/>
+                        <img src={logoPesri} alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-4 w-60 h-60"/>
                         <p className="text-gray-500 text-xl font-medium">MTS UMMUSABRI</p>
                         <p className="text-blue-400 text-sm font-semibold">ADMIN SEKOLAH</p>
                     </div>
@@ -69,7 +92,7 @@ export function DashboardPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

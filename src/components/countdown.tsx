@@ -23,10 +23,17 @@ export function Countdown({deadline, onDone}: {deadline: number, onDone: () => v
     }, [])
 
     const formatTime = (time: number): string => {
+        const days = Math.floor((time / 1000 / 60 / 60 / 24));
         const hours = Math.floor((time / 1000 / 60 / 60) % 24);
         const minutes = Math.floor((time / 1000 / 60) % 60);
         const seconds = Math.floor((time / 1000) % 60);
-        return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+        if(days){
+            return `${padZero(days)}:${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+        }
+        if(hours) { 
+            return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+        }
+        return `${padZero(minutes)}:${padZero(seconds)}`;
     }
 
     const padZero = (num: number): string => {
@@ -35,6 +42,11 @@ export function Countdown({deadline, onDone}: {deadline: number, onDone: () => v
         }
         return `0${num}`
     }
+
+    console.log("Test: ", {
+        timeLeft,
+        format: formatTime(timeLeft)
+    })
 
     return (
         <span>{formatTime(timeLeft)}</span>

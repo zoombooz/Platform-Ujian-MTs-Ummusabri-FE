@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router"
 
-export function Breadcrump() {
+export function Breadcrump({input}: {input: string[]}) {
 
     const [path, setPath] = useState<string[]>([]);
     const { pathname } = useLocation();
@@ -17,9 +17,7 @@ export function Breadcrump() {
                 Dashboard
             </Link>
 
-            {/* {path.length > 0 && <span className="text-gray-300">•</span>} */}
-
-            {path.length > 0 ? <span className="text-gray-300">•</span> : ""}
+            {/* {path.length > 0 ? <span className="text-gray-300">•</span> : ""}
 
             {path.map((segment, index) => {
                 const to = "/" + path.slice(0, index + 1).join("/");
@@ -35,7 +33,7 @@ export function Breadcrump() {
                         )}
                     </div>
                 )
-            })}
+            })} */}
         </div>
     )
 

@@ -30,7 +30,7 @@ export function RouteLinks() {
         <BrowserRouter>
             <Routes>
                 <Route path="login-admin" element={<Login type="login" role="admin" />} />
-                <Route path="register-admin" element={<Login type="register" role="admin" />} />
+                {/* <Route path="register-admin" element={<Login type="register" role="admin" />} /> */}
                 <Route path="login-student" element={<Login type="login" role="student" />} />
                 
                 <Route element={<ProtectedRoute />}>

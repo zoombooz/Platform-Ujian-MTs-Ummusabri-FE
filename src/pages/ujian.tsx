@@ -114,7 +114,6 @@ export function Ujian() {
             }
         }).then(res => {
             const deadline = new Date(res.data.end_date).getTime();
-            // const duration = res.data.duration * 60 * 1000;
             setTimeLimit(deadline)
         }).catch(err => {
             console.error(err);
@@ -168,6 +167,7 @@ export function Ujian() {
             nomor_peserta,
             ujian_id: Number(currentSoal().ujian_id)
         }
+
         uploadJawaban(body);
         setAnswers(prevAnswers => {
             return prevAnswers.map((answer, index) => 
@@ -268,7 +268,16 @@ export function Ujian() {
 
     if(!questions.length && !answers.length){
         return (
-            <p>No Soal</p>
+            <div className="bg-slate-200 flex w-screen h-screen justify-center items-center">
+                <div className="bg-white shadow-xl w-160 h-80 rounded-xl flex flex-col gap-4 justify-center items-center">
+                    <p className="font-semibold text-3xl">📄 Tidak ada soal ❌</p>
+                    <p>Ujian ini belum memiliki soal. Mungkin guru lupa menambahkannya.</p>
+                    <button 
+                        className="bg-green-500 hover:bg-green-600 active:bg-green-700 transition-all px-3 py-2 rounded-xl text-white font-semibold cursor-pointer"
+                        onClick={() => navigate('/daftar-ujian')}
+                    >Kembali ke Daftar Ujian</button>
+                </div>
+            </div>
         )
     }
 
@@ -289,24 +298,30 @@ export function Ujian() {
                     className="absolute right-0 w-full md:w-3/4 lg:w-1/4 h-full bg-gray-100 drawer-animation border-l-2 border-slate-500"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="p-4 h-full">
-                        <p className="text-black px-2 pt-2 mb-4 font-bold text-xl">Jawaban</p>
-                        <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 xl:gap-4 p-2`}>
-                            {range(1, questions.length + 1).map((el) => (
-                                <button 
-                                    key={el}
-                                    onClick={() => setCurrentNumber(el)} 
-                                    className={`relative group flex flex-col justify-center items-center w-12 h-12 border-2 rounded-xl cursor-pointer transition-all ${answers[el-1].ragu ? 'bg-yellow-400 border-yellow-600' : 'bg-white border-green-400'}`}
-                                >
-                                    {answers[el-1].jawaban &&
-                                    <p className={`flex justify-center items-center text-white font-semibold absolute -right-1 -top-1 h-4 w-4 rounded-full bg-green-400 text-xs ${answers[el-1].ragu ? 'bg-yellow-800' : 'bg-green-600'}`}>
-                                        {answers[el-1].tipe_soal === 'pilihan_ganda' ? answers[el-1].jawaban : (answers[el-1].jawaban ? '✓' : '')}
-                                    </p>
-                                    }
-                                    <p className="font-bold">{el}</p>
-                                </button>
-                            ))}
+                    <div className="flex flex-col justify-between p-4 h-full">
+                        <div>
+                            <p className="text-black px-2 pt-2 mb-4 font-bold text-xl">Jawaban</p>
+                            <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 xl:gap-4 p-2`}>
+                                {range(1, questions.length + 1).map((el) => (
+                                    <button 
+                                        key={el}
+                                        onClick={() => setCurrentNumber(el)} 
+                                        className={`relative group flex flex-col justify-center items-center w-12 h-12 border-2 rounded-xl cursor-pointer transition-all ${answers[el-1].ragu ? 'bg-yellow-400 border-yellow-600' : 'bg-white border-green-400'}`}
+                                    >
+                                        {answers[el-1].jawaban &&
+                                        <p className={`flex justify-center items-center text-white font-semibold absolute -right-1 -top-1 h-4 w-4 rounded-full bg-green-400 text-xs ${answers[el-1].ragu ? 'bg-yellow-800' : 'bg-green-600'}`}>
+                                            {answers[el-1].tipe_soal === 'pilihan_ganda' ? answers[el-1].jawaban : (answers[el-1].jawaban ? '✓' : '')}
+                                        </p>
+                                        }
+                                        <p className="font-bold">{el}</p>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
+                        <button 
+                            className="bg-red-500 hover:bg-red-600 active:bg-red-700 transition-all w-32 py-2 px-3 rounded-lg text-white self-center cursor-pointer" 
+                            onClick={() => handleSubmit(true)}
+                        >Finish Exam</button>
                     </div>
                 </div>
             </div>
