@@ -12,7 +12,8 @@ export interface IUjian {
     end_date: string,
     status: string,
     updated_at: string,
-    created_at: string
+    created_at: string,
+    isTrue: any
 }
 
 export interface IKelompokUjian {

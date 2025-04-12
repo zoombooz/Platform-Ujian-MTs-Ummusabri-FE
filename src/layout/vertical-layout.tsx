@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from "react-router";
 import { Icon } from "../components/icon";
 import { JSX, useState } from "react";
 import { useLayout } from "../context/LayoutContext";
+import logoPesri from '@assets/logo-pesri.png';
+import logoCambridge from '@assets/logo-cambridge.png';
 
 export function VerticalLayout() {
 
@@ -86,8 +88,8 @@ export function VerticalLayout() {
         <div className={`h-full ${isExpanded ? 'w-60' : 'w-16'} bg-green-900 flex flex-col text-white overflow-y-hidden hide-scrollbar transition-all duration-300`}>
 
             <div className={`flex ${isExpanded ? 'flex-row' : 'flex-col'} justify-center py-4 px-2`}>
-                <img src="src/assets/logo-pesri.png" alt="Logo Pesri" className={isExpanded ? style.logo : style.logo_sm}/>
-                <img src="src/assets/logo-cambridge.png" alt="Logo Cambridge" className={`${isExpanded ? style.logo : style.logo_sm} translate-y-2`}/>
+                <img src={logoPesri} alt="Logo Pesri" className={isExpanded ? style.logo : style.logo_sm}/>
+                <img src={logoCambridge} alt="Logo Cambridge" className={`${isExpanded ? style.logo : style.logo_sm} translate-y-2`}/>
             </div>
 
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />

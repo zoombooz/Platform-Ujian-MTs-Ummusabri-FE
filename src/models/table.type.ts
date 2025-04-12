@@ -15,13 +15,14 @@ export interface ITable <T> {
     showSearch?: boolean;
     showItemPerPage?: boolean;
     customActionButton?: React.ReactNode;
+    iconOnActionButton?: boolean;
     onInfoAction?: (data: T) => void;
     onEditAction?: (data: T) => void;
     onDeleteAction?: (data: T) => void;
     onChangePage: (url: string) => void;
 
-
     additionalButton?: React.ReactNode;
+    isRowDisabled?: (row: T) => boolean;
 }
 
 export interface IPaginationNew {

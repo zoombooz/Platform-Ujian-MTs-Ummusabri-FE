@@ -75,7 +75,6 @@ export function DaftarKelas() {
                     headList={["Nama Kelas"]}
                     keyList={["nama"]}
                     type={["text"]}
-                    hint={["Contoh: kimia, matematika, dll."]}
                     onSubmit={addClass}
                     onCancel={closeDrawer}
                 />
@@ -113,7 +112,6 @@ export function DaftarKelas() {
                     headList={["Nama Kelas"]}
                     keyList={["nama"]}
                     type={["text"]}
-                    hint={["Contoh: kimia, matematika, dll."]}
                     onSubmit={editClass}
                     onCancel={closeDrawer}
                 />

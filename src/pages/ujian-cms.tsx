@@ -98,6 +98,13 @@ export function UjianCMS() {
             }).then(() => {
                 fetchData();
                 closeDrawer();
+            }).catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: err.response.data.error,
+                });
             });
         }
 
@@ -107,9 +114,9 @@ export function UjianCMS() {
             content: (
                 <Form <IUjian>
                     title="Tambah Ujian"
-                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir']}
-                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date']}
-                    type={["text", "select", "select", "select", "date", "date"]}
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
+                    type={["text", "select", "select", "select", "date", "date", 'text']}
                     selectList={{
                         kelompok_id: kelompokUjianList,
                         mapel_id: mapelList,
@@ -132,13 +139,13 @@ export function UjianCMS() {
             }).then(() => {
                 fetchData();
                 closeDrawer();
-            }).catch(error => {
-                console.error(error);
+            }).catch(err => {
+                console.error(err);
                 Swal.fire({
                     icon: "error",
                     title: "Request Failed",
-                    text: `${(error as Error).message}`
-                })
+                    text: err.response.data.error,
+                });
             });
         }
 
@@ -149,9 +156,9 @@ export function UjianCMS() {
                 <Form <IUjian>
                     data={daftar_kelas}
                     title="Tambah Ujian"
-                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir']}
-                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date']}
-                    type={["text", "select", "select", "select", "date", "date"]}
+                    headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
+                    keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
+                    type={["text", "select", "select", "select", "date", "date", "text"]}
                     selectList={{
                         kelompok_id: kelompokUjianList,
                         mapel_id: mapelList,

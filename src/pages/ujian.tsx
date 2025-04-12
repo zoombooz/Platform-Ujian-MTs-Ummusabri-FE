@@ -44,6 +44,7 @@ export function Ujian() {
         hasil_ujian_migrate:  'siswa/hasil_ujian/migrate',
         hasil_ujian_reevaluate: 'siswa/hasil_ujian/reevaluate',
         get_sesi_soal: `siswa/sesi_soal`,
+        post_sesi_ujian: `siswa/sesi_ujian`,
     }
     const baseUrl = Environment.base_url;
 
@@ -168,8 +169,6 @@ export function Ujian() {
             ujian_id: Number(currentSoal().ujian_id)
         }
         uploadJawaban(body);
-        console.log("Current Soal: ", currentSoal())
-        console.log("Value: ", e.target.value);
         setAnswers(prevAnswers => {
             return prevAnswers.map((answer, index) => 
                 index === currentNumber - 1 ? {...answer, jawaban: e.target.value} : answer
@@ -188,40 +187,48 @@ export function Ujian() {
                     tipe_soal: el.tipe_soal
                 }
             })
+            const headers = { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+
             const url = `${baseUrl}${endpoints['upload_jawaban_banyak']}`;
-            axios.post(url, {data: answer}, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                }
-            }).then(res => {
-                const url_migrate = `${baseUrl}${endpoints['hasil_ujian_migrate']}`;
-                axios.get(url_migrate, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                }).then(res => {
-                    console.log("Response Migrate: ", res)
-                })
 
-                const url_reevaluate = `${baseUrl}${endpoints['hasil_ujian_reevaluate']}`;
-                axios.get(url_reevaluate, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                }).then(res => {
-                    console.log("Response Reevaluate: ", res)
-                })
+            axios.post(url, {data: answer}, {headers}).then(() => {
+                const migratePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_migrate']}`, {headers});
+                const reevaluatePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_reevaluate']}`, {headers});
+                const sesiUjianPromise = axios.post(`${baseUrl}${endpoints['post_sesi_ujian']}`, {
+                    nomor_peserta,
+                    ujian_id,
+                    isTrue: 1
+                }, {headers});
 
-                Swal.fire({
-                    title: "Exam submitted!",
-                    text: "You may leave now!",
-                    icon: "success"
-                }).then(() => {
-                    navigate('/daftar-ujian');
-                });
+                Promise.all([migratePromise, reevaluatePromise, sesiUjianPromise])
+                    .then(([migrateRes, reevaluateRes, sesiUjianRes]) => {
+                        console.log("Response Migrate:", migrateRes);
+                        console.log("Response Reevaluate:", reevaluateRes);
+                        console.log("Response Sesi Ujian:", sesiUjianRes);
+
+                        Swal.fire({
+                            title: "Exam submitted!",
+                            text: "You may leave now!",
+                            icon: "success"
+                        }).then(() => {
+                            navigate('/daftar-ujian');
+                        });
+                    }).catch(err => {
+                        console.error(err);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Upload Failed",
+                            text: err?.response?.data?.error || "An error occurred while uploading answers.",
+                        });
+                    });
             }).catch(err => {
                 console.error(err);
-            })
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    text: err.response.data.error,
+                });
+            });
         }
 
         if(open_dialog){
@@ -250,8 +257,6 @@ export function Ujian() {
         submit_button: `bg-red-500 cursor-pointer hover:bg-red-600`,
         doubt_button: `w-24 rounded-xl py-1.5 text-white font-semibold`
     }
-
-    console.log("Cek Bang: ", {questions, answers})
 
     if(loading && !questions.length && !answers.length) {
         return (
@@ -307,7 +312,7 @@ export function Ujian() {
             </div>
             }
 
-            <div className="flex justify-center w-full h-full bg-gray-100 p-6">
+            <div className="flex justify-center w-full h-full bg-gray-200 p-6">
                 <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
                     <div id="header" className="flex justify-between h-[10%]">
                         <p className="font-bold">NO &nbsp;<span className="bg-teal-800 text-white px-3 py-2 rounded-md">{currentNumber}</span></p>
@@ -359,8 +364,6 @@ export function Ujian() {
                                 rows={4}
                             ></textarea>
                             </>
-
-                            // <RichTextEditor value="string" onChange={() => {}}/>
                         )}
 
                     </div>

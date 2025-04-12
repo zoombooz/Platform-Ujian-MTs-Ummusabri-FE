@@ -37,7 +37,7 @@ export function SoalPage() {
     // -----------------------------------------------------------------------------------------------------
 
     const [ujianList, setUjianList] = useState<{name: string, key: string}[]>([]);
-    const [soal, setSoal] = useState<ISoal[]>([]);
+    const [soalList, setSoalList] = useState<ISoal[]>([]);
     const [selectedSoal, setSelectedSoal] = useState<ISoal | null>(null);
 
     const {ujian_id, nama_ujian} = useParams();
@@ -75,9 +75,9 @@ export function SoalPage() {
         setSelectedSoal(soal);
     }
 
-    const fetchData = (URL?: string) => {
+    const fetchData = (URL?: string, soal_id?: number) => {
         setLoading(true);
-        const url = URL ?? `${baseUrl}${endpoints['get']('')}?limit=100`;
+        const url = URL ?? `${baseUrl}${endpoints['get'](ujian_id)}&?limit=100`;
         axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('authToken')}`
@@ -86,8 +86,16 @@ export function SoalPage() {
             const {data, pagination} = (({data, ...pagination}) => {
                 return {data, pagination}
             })(response.data)
-            // setPagination(pagination)
-            setSoal(data);
+            setSoalList(data);
+            if(soal_id){
+                setSelectedSoal(() => {
+                    const findSoal = data.find((el: ISoal) => el.id === soal_id);
+                    if(findSoal){
+                        return findSoal;
+                    }
+                    return null;
+                });
+            }
         }).catch(error => {
             console.error(error);
             Swal.fire({
@@ -191,7 +199,14 @@ export function SoalPage() {
                     }
                 }).then(() => {
                     closeDrawer();
-                    fetchData();
+                    fetchData(undefined, soal.id);
+                    // setSelectedSoal(() => {
+                    //     const findSoal = soalList.find(el => el.id === soal.id);
+                    //     if(findSoal){
+                    //         return findSoal;
+                    //     }
+                    //     return null;
+                    // });
                 }).catch ((error) => {
                     console.error(error);
                     Swal.fire({
@@ -290,7 +305,7 @@ export function SoalPage() {
             </div>
             <div className="flex justify-between gap-4">
                 <div className="flex flex-wrap gap-2">
-                    {soal.map((el, index) => (
+                    {soalList.map((el, index) => (
                         <button 
                             key={el.id}
                             className={`${(selectedSoal && selectedSoal.id === el.id) ? 'bg-green-500 text-white' : 'text-black hover:bg-green-500 hover:text-white'} flex justify-center items-center rounded-xl border-2 border-green-500 shadow-md px-2 py-1.5 w-12 h-12 transition-all cursor-pointer`}
@@ -339,7 +354,7 @@ export function SoalPage() {
                 <div className="flex w-full items-center py-4">
                     {loading 
                     ? <Loader/>
-                    : (soal.length 
+                    : (soalList.length 
                         ? <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500 w-120 font-semibold">Please select a question</div> 
                         : <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500 w-120 font-semibold">Please add a question</div>)
                     }

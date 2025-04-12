@@ -4,10 +4,11 @@ import { Pagination } from "./pagination";
 import { Loader } from "./loader";
 import { Icon } from "./icon";
 
-export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false}: ITable<T>) {
+export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false, isRowDisabled, iconOnActionButton = true}: ITable<T>) {
     
     const style = {
         head_column: `px-6 py-3 text-md text-start`,
+        action_button: "flex gap-2 py-1.5 px-2 rounded-md text-white min-w-16"
     }
 
     useEffect(() => {
@@ -21,26 +22,38 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
         return infoAction || editAction || deleteAction;
     }
 
-    const Action = ({data}: {data: T}): JSX.Element => {
+    const Action = ({data, disabled}: {data: T, disabled?: boolean}): JSX.Element => {
         if(actionExist()) {
             return (
                 <td className="flex gap-1 items-center py-2">
                     {infoAction && (
-                        <button onClick={() => onInfoAction && onInfoAction(data)} className="flex gap-2 bg-green-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
-                            <Icon name="heroicons:information-circle" shape="outline"/>
-                            <p className="font-semibold">{infoButtonText ? infoButtonText : 'Info'}</p>
+                        <button 
+                            onClick={() => onInfoAction && onInfoAction(data)} 
+                            className={`${style.action_button} ${disabled ? 'bg-gray-300' : 'bg-green-500 cursor-pointer'}`}
+                            disabled={disabled}
+                        >
+                            {iconOnActionButton && <Icon name="heroicons:information-circle" shape="outline"/>}
+                            <p className={`font-semibold ${disabled ? 'text-gray-400' : ''}`}>{infoButtonText ? infoButtonText : 'Info'}</p>
                         </button>
                     )}
                     {editAction && (
-                        <button onClick={() => onEditAction && onEditAction(data)} className="flex gap-2 bg-yellow-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
-                            <Icon name="heroicons:pencil-square" shape="outline"/>
-                            <p className="font-semibold">Edit</p>
+                        <button 
+                            onClick={() => onEditAction && onEditAction(data)} 
+                            className={`${style.action_button} ${disabled ? 'bg-gray-300' : 'bg-yellow-500 cursor-pointer'}`}
+                            disabled={disabled}
+                        >
+                            {iconOnActionButton && <Icon name="heroicons:pencil-square" shape="outline"/>}
+                            <p className={`font-semibold ${disabled ? 'text-gray-400' : ''}`}>Edit</p>
                         </button>
                     )}
                     {deleteAction && (
-                        <button onClick={() => onDeleteAction && onDeleteAction(data)} className="flex gap-2 bg-red-500 py-1.5 px-2 rounded-md text-white cursor-pointer min-w-16">
-                            <Icon name="heroicons:trash" shape="outline"/>
-                            <p className="font-semibold">Delete</p>
+                        <button 
+                            onClick={() => onDeleteAction && onDeleteAction(data)} 
+                            className={`${style.action_button} ${disabled ? 'bg-gray-300' : 'bg-red-500 cursor-pointer'}`}
+                            disabled={disabled}
+                        >
+                            {iconOnActionButton && <Icon name="heroicons:trash" shape="outline"/>}
+                            <p className={`font-semibold ${disabled ? 'text-gray-400' : ''}`}>Delete</p>
                         </button>
                     )}
                     {customActionButton}
@@ -119,8 +132,10 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                     </thead>
                     <tbody>
                         {data.map((data: T, rowIndex) => {
+                            const isDisabled = isRowDisabled?.(data);
+
                             return (
-                                <tr key={rowIndex} className={`${rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'} hover:bg-blue-200`}>
+                                <tr key={rowIndex} className={`${rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'} hover:bg-blue-200 ${isDisabled ? 'text-gray-400' : ''}`}>
                                     {numberRow && (
                                         <td className="px-6 py-4">
                                             {rowIndex + 1}    
@@ -141,7 +156,7 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
                                             </td>
                                         )
                                     })}
-                                    <Action data={data}/>
+                                    <Action data={data} disabled={isDisabled}/>
                                 </tr>
                             )
                         })}
