@@ -4,6 +4,7 @@ import axios from "axios";
 import { Environment } from "../environment/environment";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { getTokenPayload } from "../utils/jwt";
 
 interface LoginForm {
     username: string,
@@ -94,10 +95,12 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                 if(!res.data['guru']){
                     console.log("Peserta")
                     localStorage.setItem("authToken", token);
+                    console.log("Token Payload: ", getTokenPayload());
                     navigate("/daftar-ujian")
                 }else {
                     console.log("Guru")
                     localStorage.setItem("authToken", token);
+                    console.log("Token Payload: ", getTokenPayload());
                     navigate("/");
                 }
             }

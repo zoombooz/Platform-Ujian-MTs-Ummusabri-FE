@@ -16,7 +16,7 @@ import { Jurusan } from "./pages/jurusan";
 import { UjianCMS } from "./pages/ujian-cms";
 import { SoalPage } from "./pages/SoalPage";
 import { UjianLanding } from "./pages/UjianLanding";
-import { isTokenExpired } from "./utils/jwt";
+import { getTokenPayload, isTokenExpired } from "./utils/jwt";
 
 export function RouteLinks() {
 
@@ -24,6 +24,18 @@ export function RouteLinks() {
         const isAuthenticated = localStorage.getItem("authToken");
 
         return (isAuthenticated && !isTokenExpired()) ? <Outlet /> : <Navigate to={"/login-admin"} replace />
+    }
+
+    const IsStudent = () => {
+        const tokenPayload = getTokenPayload();
+
+        return (tokenPayload.nomor_peserta) ? <Outlet /> : <Navigate to={"/"} replace/>
+    }
+
+    const IsAdmin = () => {
+        const tokenPayload = getTokenPayload();
+
+        return (!tokenPayload.nomor_peserta) ? <Outlet /> : <Navigate to={"/daftar-ujian"} replace/>
     }
 
     return (
@@ -34,26 +46,31 @@ export function RouteLinks() {
                 <Route path="login-student" element={<Login type="login" role="student" />} />
                 
                 <Route element={<ProtectedRoute />}>
-                    <Route path="daftar-ujian" element={<UjianLanding/>} />
-                    <Route path="ujian/:ujian_id" element={<Ujian/>} />
+                    <Route element={<IsStudent />}>
+                        <Route path="daftar-ujian" element={<UjianLanding/>} />
+                        <Route path="ujian/:ujian_id" element={<Ujian/>} />
+                    </Route>
 
-                    <Route element={<Layout/>}>
-                        <Route path="" element={<DashboardPage/>} />
-                        <Route path="admin">
-                            <Route path="identitas" element={<Identitas />} />
-                            <Route path="daftar-kelas" element={<DaftarKelas />} />
-                            <Route path="biodata-siswa" element={<BiodataSiswa />} />
-                            <Route path="data-guru" element={<DataGuru />} />
-                            <Route path="data-panitia" element={<DataPanitia />} />
-                            <Route path="kelompok-ujian" element={<KelompokUjian />} />
-                            <Route path="mata-pelajaran" element={<MataPelajaran />} />
-                            <Route path="agama" element={<Agama />} />
-                            <Route path="peserta" element={<Peserta />} />
-                            <Route path="jurusan" element={<Jurusan />} />
-                            <Route path="ujian" element={<UjianCMS />} />
-                            <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
+                    <Route element={<IsAdmin/>}>
+                        <Route element={<Layout/>}>
+                            <Route path="" element={<DashboardPage/>} />
+                            <Route path="admin">
+                                <Route path="identitas" element={<Identitas />} />
+                                <Route path="daftar-kelas" element={<DaftarKelas />} />
+                                <Route path="biodata-siswa" element={<BiodataSiswa />} />
+                                <Route path="data-guru" element={<DataGuru />} />
+                                <Route path="data-panitia" element={<DataPanitia />} />
+                                <Route path="kelompok-ujian" element={<KelompokUjian />} />
+                                <Route path="mata-pelajaran" element={<MataPelajaran />} />
+                                <Route path="agama" element={<Agama />} />
+                                <Route path="peserta" element={<Peserta />} />
+                                <Route path="jurusan" element={<Jurusan />} />
+                                <Route path="ujian" element={<UjianCMS />} />
+                                <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
+                            </Route>
                         </Route>
                     </Route>
+
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" />} />
