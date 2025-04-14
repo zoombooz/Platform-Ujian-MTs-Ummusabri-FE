@@ -59,7 +59,7 @@ export function Ujian() {
             getDuration(ujian_id)
             getSesiSoal()
         }
-    })
+    }, [])
 
     const getSesiSoal = () => {
         setLoading(true);

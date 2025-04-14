@@ -9,8 +9,6 @@ import Swal from "sweetalert2";
 import { IKelompokUjian } from "../models/ujian.type";
 import { useDrawer } from "../context/DrawerContext";
 
-
-
 export function KelompokUjian() {
     
     const {openDrawer, closeDrawer} = useDrawer();

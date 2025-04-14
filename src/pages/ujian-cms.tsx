@@ -115,11 +115,15 @@ export function UjianCMS() {
                     title="Tambah Ujian"
                     headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
                     keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
-                    type={["text", "select", "select", "select", "date", "date", 'text']}
+                    type={["text", "select", "select", "select", "date", "date", 'select']}
                     selectList={{
                         kelompok_id: kelompokUjianList,
                         mapel_id: mapelList,
-                        kelas_id: daftarKelasList
+                        kelas_id: daftarKelasList,
+                        status: [
+                            {name: "Selesai", key: '1'},
+                            {name: "Belum Selesai", key: '0'}
+                        ]
                     }}
                     onSubmit={addClass}
                     onCancel={closeDrawer}
@@ -148,6 +152,11 @@ export function UjianCMS() {
             });
         }
 
+        daftar_kelas = {
+            ...daftar_kelas,
+            status: daftar_kelas.status.toString()
+        }
+
         openDrawer({
             width: "500px",
             height: "600px",
@@ -157,11 +166,15 @@ export function UjianCMS() {
                     title="Tambah Ujian"
                     headList={['Ujian', 'Kelompok Ujian', 'Mapel', 'Kelas', 'Tanggal Mulai', 'Tanggal Berakhir', 'Status']}
                     keyList={['nama', 'kelompok_id', 'mapel_id', 'kelas_id', 'start_date', 'end_date', 'status']}
-                    type={["text", "select", "select", "select", "date", "date", "text"]}
+                    type={["text", "select", "select", "select", "date", "date", "select"]}
                     selectList={{
                         kelompok_id: kelompokUjianList,
                         mapel_id: mapelList,
-                        kelas_id: daftarKelasList
+                        kelas_id: daftarKelasList,
+                        status: [
+                            {name: "Selesai", key: '1'},
+                            {name: "Belum Selesai", key: '0'}
+                        ]
                     }}
                     onSubmit={editClass}
                     onCancel={closeDrawer}

@@ -26,9 +26,10 @@ export function UjianLanding() {
 
     const getUjianList = () => {
         const ujian_list = ujianList.map(el => {
+            console.log("QWWWWW: ", el)
             return {
                 ...el,
-                kelompok_ujian_name: el.kelompok_ujian.nama,
+                kelompok_ujian_name: el.kelompok_ujian?.nama ?? "",
                 kelas_name: el.kelas.nama,
                 mapel_name: el.mapel.nama,
                 status_ujian: (el.isTrue !== null ? 'Finished' : 'Available')
@@ -39,7 +40,7 @@ export function UjianLanding() {
 
     useEffect(() => {
         getUjian();
-    })
+    }, [])
 
     const getUjian = () => {
         setLoading(true);
@@ -109,7 +110,7 @@ export function UjianLanding() {
                             <p className="text-white hidden sm:block">Log Out</p>
                         </button>
                     </div>
-                    <div className="hidden md:block">
+                    <div className="hidden md:block overflow-y-auto">
                         <Table <IUjian>
                             title={''}
                             headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran', 'Status']}

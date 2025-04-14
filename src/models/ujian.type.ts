@@ -10,7 +10,7 @@ export interface IUjian {
     id_sekolah: string | number,
     start_date: string,
     end_date: string,
-    status: string,
+    status: boolean | string | number,
     updated_at: string,
     created_at: string,
     isTrue: any

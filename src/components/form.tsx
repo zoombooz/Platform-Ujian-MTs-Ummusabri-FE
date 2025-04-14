@@ -87,7 +87,18 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                             </div>
                         )}
 
-                        {type[index] !== 'select' && type[index] !== 'text-editor' && (
+                        {type[index] === 'date' && (
+                            <input
+                                disabled={isDisabled(item)} 
+                                id={item} 
+                                type={type[index]} 
+                                value={formData[item] ? new Date(formData[item]).toISOString().split('T')[0] : ''}
+                                onChange={handleChange}
+                                className={`bg-gray-50 border-2 ${isDisabled(item) ? "border-gray-200 text-gray-400" : "border-gray-300 text-black"} rounded-lg px-2 py-1.5 text-black`}
+                            />
+                        )}
+
+                        {type[index] !== 'select' && type[index] !== 'text-editor' && type[index] !== 'date' && (
                             <input
                                 disabled={isDisabled(item)} 
                                 id={item} 

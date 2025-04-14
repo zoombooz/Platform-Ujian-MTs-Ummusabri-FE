@@ -26,7 +26,7 @@ export function DaftarKelas() {
 
     useEffect(() => {
         fetchData();
-    })
+    }, [])
 
     const fetchData = (URL?: string) => {
         setLoading(true);

@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { getTokenPayload } from "../utils/jwt";
 import logoPesri from '@assets/logo-pesri.png';
 import logoCambridge from '@assets/logo-cambridge.png';
+import students from '@assets/students.png'
 
 interface LoginForm {
     username: string,
@@ -131,7 +132,7 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
         <div className="flex w-full h-screen">
 
             <div className="relative flex justify-center items-center w-full bg-gray-300">
-                <img src="src/assets/students.JPG" alt="Students Studying" className="absolute hidden md:block w-full h-full object-cover"/>
+                <img src={students} alt="Students Studying" className="absolute hidden md:block w-full h-full object-cover"/>
 
                 <div className="relative flex flex-col justify-center items-center w-full sm:w-[75%] md:w-fit h-full sm:h-[80%] md:h-fit p-6 bg-gray-100 text-left gap-6 rounded-xl">
 
