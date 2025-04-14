@@ -185,7 +185,7 @@ export function Table<T extends Record<string, any>>({
                                         return (
                                             <td key={String(key)} className="px-6 py-4">
                                                 <p className={`${colValueWithBackground?.includes(key) ? (colBackgroundColor?.[data[key]] ? colBackgroundColor[data[key]] : colBackgroundColor?.['default']) : ''}`}>
-                                                    {data[key]}    
+                                                    {data[key] ?? '-'}    
                                                 </p>
                                             </td>
                                         )

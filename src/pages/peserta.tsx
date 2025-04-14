@@ -8,6 +8,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { IPeserta } from "../models/peserta.type";
 import { useDrawer } from "../context/DrawerContext";
+import { useNavigate } from "react-router";
 
 const baseUrl = Environment.base_url;
 
@@ -17,7 +18,7 @@ export function Peserta() {
     // @ Properties
     // -----------------------------------------------------------------------------------------------------
 
-    // const {openDialog, closeDialog} = useDialog();
+    const navigate = useNavigate();
     const {openDrawer, closeDrawer} = useDrawer();
     const [peserta, setPeserta] = useState<IPeserta[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -233,6 +234,10 @@ export function Peserta() {
         })
     }
 
+    const onEvaluasi = (peserta: IPeserta) => {
+        navigate(`/admin/evaluasi/${peserta.nomor_peserta}`)
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ HTML Element
     // -----------------------------------------------------------------------------------------------------
@@ -250,6 +255,8 @@ export function Peserta() {
                     kelas_id: kelasList
                 }}
                 pagination={pagination}
+                infoAction={true}
+                infoButtonText="Evaluasi"
                 editAction={true}
                 deleteAction={true}
                 loading={loading}
@@ -262,6 +269,7 @@ export function Peserta() {
                 onEditAction={handleEdit}
                 onDeleteAction={handleDelete}
                 onChangePage={fetchData}
+                onInfoAction={onEvaluasi}
             />
         </div>
     )

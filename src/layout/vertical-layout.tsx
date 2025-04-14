@@ -118,7 +118,6 @@ export function VerticalLayout() {
                     <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:tag" title="Kelompok Ujian"/>
                     <SublistContainer href="/admin/daftar-kelas" icon="heroicons:users" title="Daftar Kelas"/>
                     <SublistContainer href="/admin/ujian" icon="heroicons:document-text" title="Ujian"/>
-                    <SublistContainer href="/admin/evaluasi" icon="heroicons:document-check" title="Evaluasi Jawaban"/>
                 </div>)
             }
 

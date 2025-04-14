@@ -1,5 +1,6 @@
 import { IDaftarKelas } from "./kelas.type"
 import { IMataPelajaran } from "./mapel.type"
+import { IPeserta } from "./peserta.type"
 
 export interface IUjian {
     id: number,
@@ -13,7 +14,10 @@ export interface IUjian {
     status: boolean | string | number,
     updated_at: string,
     created_at: string,
-    isTrue: any
+    isTrue: any,
+    kelompok_ujian: IKelompokUjian,
+    mapel: IMataPelajaran,
+    kelas: IDaftarKelas
 }
 
 export interface IKelompokUjian {
@@ -26,8 +30,27 @@ export interface IKelompokUjian {
     id: number
 }
 
-export interface ISesiUjian extends IUjian {
-    kelompok_ujian: IKelompokUjian,
-    mapel: IMataPelajaran,
-    kelas: IDaftarKelas
+export interface ISesiUjian {
+    created_at: string,
+    updated_at: string,
+    ujian_id: number,
+    end_date: string,
+    start_date: string,
+    id: number,
+    isTrue: number,
+    nomor_peserta: number,
+    peserta: IPeserta,
+    ujian: IUjian,
+}
+
+export interface IHasilUjian {
+    id: number,
+    nama: string,
+    nomor_peserta: number,
+    ujian_id: number,
+    soal: string,
+    tipe_soal: string,
+    jawaban_soal: string,
+    jawaban_sesi: string,
+    isTrue: number
 }
