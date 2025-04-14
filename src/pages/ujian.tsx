@@ -37,6 +37,7 @@ export function Ujian() {
     const [answers, setAnswers] = useState<IAnswerForm[]>([])
     const [timeLimit, setTimeLimit] = useState<number|null>(null );
     const [loading, setLoading] = useState<boolean>(false);
+    const [sesiUjian, setSesiUjian] = useState<any>({});
 
     const endpoints = {
         get_soal: (ujian_id: number | string) => `siswa/soal?ujian_id=${ujian_id}`,
@@ -48,6 +49,7 @@ export function Ujian() {
         get_sesi_soal: `siswa/sesi_soal`,
         get_sesi_ujian: (ujian_id: number, nomor_peserta: number) => `siswa/sesi_ujian?ujian_id=${ujian_id}&nomor_peserta=${nomor_peserta}`,
         post_sesi_ujian: `siswa/sesi_ujian`,
+        put_sesi_ujian: (id: number) => `siswa/sesi_ujian/${id}`
     }
     const baseUrl = Environment.base_url;
 
@@ -99,16 +101,15 @@ export function Ujian() {
                 axios.get(urlGetSesiUjian, {headers})
                     .then(res => {
                         console.log("Response Get Sesi Ujian", res)
-                        if(/*res.data.data[0]*/!res.data.data.length){
-                            console.log(true)
-                            // const sesi_ujian = res.data.data[0];
+                        if(res.data.data[0]){
+                            const sesi_ujian = res.data.data[0];
+                            setSesiUjian(sesi_ujian)
                             
                         }else {
                             const urlPostSesiUjian = `${baseUrl}${endpoints['post_sesi_ujian']}`;
                             axios.post(urlPostSesiUjian, {
                                 nomor_peserta,
                                 ujian_id,
-                                // isTrue: 1
                             })
                         }
                     }) 
@@ -206,18 +207,14 @@ export function Ujian() {
             axios.post(url, {data: answer}, {headers}).then(() => {
                 const migratePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_migrate']}`, {headers});
                 const reevaluatePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_reevaluate']}`, {headers});
-                const sesiUjianPromise = axios.post(`${baseUrl}${endpoints['post_sesi_ujian']}`, {
+                const sesiUjianPromise = axios.post(`${baseUrl}${endpoints['put_sesi_ujian'](sesiUjian.id)}`, {
                     nomor_peserta,
                     ujian_id,
                     isTrue: 1
                 }, {headers});
 
                 Promise.all([migratePromise, reevaluatePromise, sesiUjianPromise])
-                    .then(([migrateRes, reevaluateRes, sesiUjianRes]) => {
-                        console.log("Response Migrate:", migrateRes);
-                        console.log("Response Reevaluate:", reevaluateRes);
-                        console.log("Response Sesi Ujian:", sesiUjianRes);
-
+                    .then(() => {
                         Swal.fire({
                             title: "Exam submitted!",
                             text: "You may leave now!",

@@ -78,11 +78,6 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
 
                         {type[index] === 'text-editor' && (
                             <div>
-                                {/* <WysiwygArea content={formData[item]} onChange={val => {
-                                    const content = val.replace(/ /g, "&nbsp;").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-                                    console.log({item, content})
-                                    setFormData((prevData) => ({...prevData, [item]: content}))
-                                }} /> */}
                                 <textarea 
                                     id={item} 
                                     value={formData[item]}
@@ -94,11 +89,12 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
 
                         {type[index] !== 'select' && type[index] !== 'text-editor' && (
                             <input
+                                disabled={isDisabled(item)} 
                                 id={item} 
                                 type={type[index]} 
                                 value={formData[item]}
                                 onChange={handleChange}
-                                className="bg-gray-50 border-2 border-gray-300 rounded-lg px-2 py-1.5 text-black"
+                                className={`bg-gray-50 border-2 ${isDisabled(item) ? "border-gray-200 text-gray-400" : "border-gray-300 text-black"} rounded-lg px-2 py-1.5 text-black`}
                             />
                         )}
 

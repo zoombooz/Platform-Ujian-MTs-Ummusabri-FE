@@ -81,7 +81,9 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
         const endpoint = type === 'login' ? role === 'admin' ? endpoints['login_admin'] : endpoints['login_student'] : endpoints['register_admin'];
         const url = `${Environment.base_url}${endpoint}`;
 
-        axios.post(url, body)
+        axios.post(url, body, {
+            withCredentials: true
+        })
         .then(res => {
             if(type === 'register'){
                 Swal.fire({
@@ -111,7 +113,7 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: err.response.data.error,
+                text: err.message,
             });
         })
 
