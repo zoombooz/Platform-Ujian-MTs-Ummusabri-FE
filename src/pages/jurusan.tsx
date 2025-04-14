@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react"
 import { Icon } from "../components/icon"
 import { Table } from "../components/table"
-import { defaultPaginationValue, defaultPaginationValueNew, IPaginationNew } from "../models/table.type"
-import { jurusanList } from "../models/mockup.constant"
-import { useDialog } from "../context/DialogContext"
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type"
 import { Form } from "../components/form"
 import { Environment } from "../environment/environment"
 import axios from "axios"
@@ -65,7 +63,7 @@ export function Jurusan() {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
-            }).then(response => {
+            }).then(() => {
                 fetchData();
                 closeDrawer();
             }).catch(error => {
@@ -101,7 +99,7 @@ export function Jurusan() {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
-            }).then(response => {
+            }).then(() => {
                 fetchData();
                 closeDrawer();
             }).catch(error => {
@@ -146,7 +144,7 @@ export function Jurusan() {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
-                }).then(response => {
+                }).then(() => {
                     fetchData();
                 }).catch(error => {
                     console.error(error);

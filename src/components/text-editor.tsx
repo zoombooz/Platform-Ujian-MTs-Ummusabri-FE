@@ -1,12 +1,9 @@
-import {useEffect, useState} from 'react';
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
 import {LexicalComposer} from '@lexical/react/LexicalComposer';
 import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {ContentEditable} from '@lexical/react/LexicalContentEditable';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { EditorState } from "lexical";
 
 const theme = {
     paragraph: "mb-2 text-black",
@@ -35,7 +32,6 @@ const theme = {
   // try to recover gracefully without losing user data.
 
 export function TextEditor() {
-    const [editorState, setEditorState] = useState<EditorState | null>(null);
 
     const initialConfig = {
         namespace: 'MyEditor',

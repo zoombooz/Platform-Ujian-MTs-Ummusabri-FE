@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { Icon } from "../components/icon";
 import logoPesri from "@assets/logo-pesri.png"
 
 export function DashboardPage() {
@@ -14,9 +13,9 @@ export function DashboardPage() {
         {title: "Agama", description: "Buat dan atur daftar agama para peserta", link: "/admin/agama"}
     ]
 
-    const style = {
-        button_list: 'flex items-center gap-2 text-gray-400 border-t border-gray-200 py-2 px-4 hover:bg-gray-100 transition-all cursor-pointer'
-    }
+    // const style = {
+    //     button_list: 'flex items-center gap-2 text-gray-400 border-t border-gray-200 py-2 px-4 hover:bg-gray-100 transition-all cursor-pointer'
+    // }
 
     return (
         <div className="flex flex-col items-center gap-6 p-8 w-full bg-gray-100 overflow-y-auto pb-16">

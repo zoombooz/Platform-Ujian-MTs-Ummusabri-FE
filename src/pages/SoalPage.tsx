@@ -1,15 +1,10 @@
-import { useEffect, useState } from "react";
-import { useDialog } from "../context/DialogContext";
+import { useCallback, useEffect, useState } from "react";
 import { Environment } from "../environment/environment";
-import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Form } from "../components/form";
-import { Table } from "../components/table";
 import { Icon } from "../components/icon";
 import { useParams } from "react-router";
-import WysiwygArea from "../components/WysiwygArea";
-import DOMPurify from "dompurify";
 import { useDrawer } from "../context/DrawerContext";
 import { Loader } from "../components/loader";
 
@@ -57,25 +52,7 @@ export function SoalPage() {
         get_ujian: 'admin/ujian'
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle Hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    useEffect(() => {
-        console.log("Ujian ID: ", ujian_id)
-        fetchData();
-        fetchAdditionalData(endpoints['get_ujian'], setUjianList);
-    }, [])
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Methods
-    // -----------------------------------------------------------------------------------------------------
-
-    const selectSoal = (soal: ISoal) => {
-        setSelectedSoal(soal);
-    }
-
-    const fetchData = (URL?: string, soal_id?: number) => {
+    const fetchData = useCallback((URL?: string, soal_id?: number) => {
         setLoading(true);
         const url = URL ?? `${baseUrl}${endpoints['get'](ujian_id)}&?limit=100`;
         axios.get(url, {
@@ -83,8 +60,8 @@ export function SoalPage() {
                 "Authorization": `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(response => {
-            const {data, pagination} = (({data, ...pagination}) => {
-                return {data, pagination}
+            const {data} = (({data}) => {
+                return {data}
             })(response.data)
             setSoalList(data);
             if(soal_id){
@@ -106,9 +83,9 @@ export function SoalPage() {
         }).finally(() => {
             setLoading(false);
         })
-    }
+    }, [baseUrl, endpoints, ujian_id])
 
-    const fetchAdditionalData = (endpoint: string, setList: React.Dispatch<React.SetStateAction<{name: string;key: string;}[]>>) => {
+    const fetchAdditionalData = useCallback((endpoint: string, setList: React.Dispatch<React.SetStateAction<{name: string;key: string;}[]>>) => {
         const url = `${baseUrl}${endpoint}?limit=100`;
         axios.get(url, {
             headers: {
@@ -125,7 +102,26 @@ export function SoalPage() {
         }).catch(error => {
             console.error(error)
         })
+    }, [baseUrl])
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle Hooks
+    // -----------------------------------------------------------------------------------------------------
+
+    useEffect(() => {
+        fetchData();
+        fetchAdditionalData(endpoints['get_ujian'], setUjianList);
+    }, [])
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Methods
+    // -----------------------------------------------------------------------------------------------------
+
+    const selectSoal = (soal: ISoal) => {
+        setSelectedSoal(soal);
     }
+
+    
 
     const handleAdd = (options: 'pilihan_ganda' | 'essai') => {
         const addSoal = async (body: Partial<ISoal>) => {

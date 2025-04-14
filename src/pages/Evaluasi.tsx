@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Environment } from "../environment/environment"
 import { useParams } from "react-router";
 import axios from "axios";
@@ -17,7 +17,7 @@ export interface IHasilUjian {
 
 export function Evaluasi () {
 
-    const [hasilUjianList, setHasilUjianList] = useState<IHasilUjian[]>([]);
+    // const [hasilUjianList, setHasilUjianList] = useState<IHasilUjian[]>([]);
 
     const {ujian_id, nomor_peserta} = useParams();
     const {base_url} = Environment;

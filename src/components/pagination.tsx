@@ -1,4 +1,4 @@
-import { IPagination, IPaginationNew } from "../models/table.type";
+import { IPaginationNew } from "../models/table.type";
 import { Icon } from "./icon";
 
 interface IPaginationComponent {

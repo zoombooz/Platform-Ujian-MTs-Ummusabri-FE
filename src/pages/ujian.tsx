@@ -57,7 +57,7 @@ export function Ujian() {
             getDuration(ujian_id)
             getSesiSoal()
         }
-    }, [])
+    })
 
     const getSesiSoal = () => {
         setLoading(true);
@@ -101,7 +101,7 @@ export function Ujian() {
                         console.log("Response Get Sesi Ujian", res)
                         if(/*res.data.data[0]*/!res.data.data.length){
                             console.log(true)
-                            const sesi_ujian = res.data.data[0];
+                            // const sesi_ujian = res.data.data[0];
                             
                         }else {
                             const urlPostSesiUjian = `${baseUrl}${endpoints['post_sesi_ujian']}`;
@@ -296,11 +296,11 @@ export function Ujian() {
     return (<>
         <div className="relative flex w-screen h-screen overflow-hidden">
 
-            {/* <AntiCheatGuard 
+            <AntiCheatGuard 
                 maxViolations={5}
                 onViolationLimitReached={() => {handleSubmit(false)}}
                 logViolation={res => console.log("Response Anti Cheat Guard: ", res)}
-            /> */}
+            />
 
             {loading && 
             <div className="absolute flex justify-center items-center w-full h-full">

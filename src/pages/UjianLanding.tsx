@@ -39,7 +39,7 @@ export function UjianLanding() {
 
     useEffect(() => {
         getUjian();
-    }, [])
+    })
 
     const getUjian = () => {
         setLoading(true);

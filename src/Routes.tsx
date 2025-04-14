@@ -3,11 +3,7 @@ import { Login } from "./pages/login";
 import { Ujian } from "./pages/ujian";
 import { Layout } from "./layout/layout";
 import { DashboardPage } from "./pages/dashboard";
-import { Identitas } from "./pages/identitas";
 import { DaftarKelas } from "./pages/daftar-kelas";
-import { BiodataSiswa } from "./pages/biodata-siswa";
-import { DataGuru } from "./pages/data-guru";
-import { DataPanitia } from "./pages/data-panitia";
 import { KelompokUjian } from "./pages/kelompok-ujian";
 import { MataPelajaran } from "./pages/mata-pelajaran";
 import { Agama } from "./pages/agama";
@@ -58,11 +54,7 @@ export function RouteLinks() {
                         <Route element={<Layout/>}>
                             <Route path="" element={<DashboardPage/>} />
                             <Route path="admin">
-                                <Route path="identitas" element={<Identitas />} />
                                 <Route path="daftar-kelas" element={<DaftarKelas />} />
-                                <Route path="biodata-siswa" element={<BiodataSiswa />} />
-                                <Route path="data-guru" element={<DataGuru />} />
-                                <Route path="data-panitia" element={<DataPanitia />} />
                                 <Route path="kelompok-ujian" element={<KelompokUjian />} />
                                 <Route path="mata-pelajaran" element={<MataPelajaran />} />
                                 <Route path="agama" element={<Agama />} />

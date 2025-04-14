@@ -1,5 +1,4 @@
 import { useState } from "react"
-import WysiwygArea from "./WysiwygArea";
 
 interface IForm <T> {
     data?: T,
