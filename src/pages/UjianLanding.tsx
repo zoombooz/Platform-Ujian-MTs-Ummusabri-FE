@@ -12,7 +12,7 @@ import { Icon } from "../components/icon";
 export function UjianLanding() {
 
     const navigate = useNavigate();
-    const [pagination] = useState<IPaginationNew>(defaultPaginationValueNew);
+    const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const [ujianList, setUjianList] = useState<ISesiUjian[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -39,19 +39,23 @@ export function UjianLanding() {
     }
 
     useEffect(() => {
-        getUjian();
+        fetchData();
     }, [])
 
-    const getUjian = () => {
+    const fetchData = (URL?: string) => {
         setLoading(true);
-        const url = `${baseUrl}${endpoints['get_ujian']}`;
+        const url = URL ?? `${baseUrl}${endpoints['get_ujian']}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(res => {
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(res.data)
             console.log("Ujian: ", res);
-            setUjianList(res.data.data);
+            setUjianList(data);
+            setPagination(pagination)
         }).catch(err => {
             console.error(err);
         }).finally(() => {
@@ -103,7 +107,7 @@ export function UjianLanding() {
                             <p className="text-gray-500 font-normal md:font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
                         </div>
                         <button 
-                            className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-xl cursor-pointer" 
+                            className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-full cursor-pointer" 
                             onClick={() => logOut()}
                         >
                             <Icon name="heroicons:arrow-left-start-on-rectangle" shape="outline" customClass="text-white sm:hidden" />
@@ -117,7 +121,7 @@ export function UjianLanding() {
                             keyList={['id', 'nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name', 'status_ujian']}
                             pagination={pagination}
                             data={getUjianList()}
-                            onChangePage={() => {}}
+                            onChangePage={fetchData}
                             infoAction={true}
                             onInfoAction={res => startUjian(res.id)}
                             infoButtonText="▶️ Mulai Ujian"

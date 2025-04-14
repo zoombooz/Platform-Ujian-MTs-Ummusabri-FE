@@ -210,27 +210,6 @@ export function Peserta() {
                 })
             }
         });
-
-        // openDrawer({
-        //     width: "500px",
-        //     height: "540px",
-        //     content: (
-        //         <Form <IPeserta>
-        //             data={peserta}
-        //             title="Edit Peserta"
-        //             headList={["Nama Peserta", "Jurusan", "Agama", "Kelas"]}
-        //             keyList={["nama", "jurusan_id", "agama_id", "kelas_id"]}
-        //             type={["text", "select", "select", "select"]}
-        //             selectList={{
-        //                 jurusan_id: jurusanList,
-        //                 agama_id: agamaList,
-        //                 kelas_id: kelasList
-        //             }}
-        //             onSubmit={editPeserta}
-        //             onCancel={closeDrawer}
-        //         />
-        //     )
-        // })
     }
 
     const handleDelete = (peserta: IPeserta) => {
