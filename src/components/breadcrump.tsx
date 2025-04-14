@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router"
 
-export function Breadcrump({input}: {input: string[]}) {
+export function Breadcrump({input}: {input?: string[]}) {
 
     const [path, setPath] = useState<string[]>([]);
     const { pathname } = useLocation();

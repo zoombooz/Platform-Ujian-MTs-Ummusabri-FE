@@ -6,6 +6,8 @@ import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { CardList } from "../components/CardList";
+import { Icon } from "../components/icon";
 
 export function UjianLanding() {
 
@@ -100,31 +102,61 @@ export function UjianLanding() {
                             <p className="text-gray-500 font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
                         </div>
                         <button 
-                            className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 w-32 rounded-xl text-white cursor-pointer" 
+                            className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-xl cursor-pointer" 
                             onClick={() => logOut()}
-                        >Log Out</button>
+                        >
+                            <Icon name="heroicons:arrow-left-start-on-rectangle" shape="outline" customClass="text-white sm:hidden" />
+                            <p className="text-white hidden sm:block">Log Out</p>
+                        </button>
                     </div>
-                    <Table <IUjian>
-                        title={''}
-                        headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran', 'Status']}
-                        keyList={['id', 'nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name', 'status_ujian']}
-                        pagination={pagination}
-                        data={getUjianList()}
-                        onChangePage={() => {}}
-                        infoAction={true}
-                        onInfoAction={res => startUjian(res.id)}
-                        infoButtonText="▶️ Mulai Ujian"
-                        loading={loading}
-                        numberRow={false}
-                        // isRowDisabled={(data) => (data.isTrue !== null)}
-                        iconOnActionButton={false}
-                        colValueWithBackground={['status_ujian']}
-                        colBackgroundColor={{
-                            'Available': 'bg-green-500 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
-                            'Finished': 'bg-red-500/80 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
-                            'default': 'bg-gray-500 px-3 py-2 rounded-lg'
-                        }}
-                    />
+                    <div className="hidden md:block">
+                        <Table <IUjian>
+                            title={''}
+                            headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran', 'Status']}
+                            keyList={['id', 'nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name', 'status_ujian']}
+                            pagination={pagination}
+                            data={getUjianList()}
+                            onChangePage={() => {}}
+                            infoAction={true}
+                            onInfoAction={res => startUjian(res.id)}
+                            infoButtonText="▶️ Mulai Ujian"
+                            loading={loading}
+                            numberRow={false}
+                            isRowDisabled={(data) => (data.isTrue !== null)}
+                            iconOnActionButton={false}
+                            colValueWithBackground={['status_ujian']}
+                            colBackgroundColor={{
+                                'Available': 'bg-green-500 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
+                                'Finished': 'bg-red-500/80 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
+                                'default': 'bg-gray-500 px-3 py-2 rounded-lg'
+                            }}
+                        />
+                    </div>
+
+                    <div className="block md:hidden overflow-y-auto">
+                        <CardList 
+                            title={'Daftar Ujian'}
+                            cardTitle="nama"
+                            headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran', 'Status']}
+                            keyList={['id', 'nama', 'kelompok_ujian_name', 'kelas_name', 'mapel_name', 'status_ujian']}
+                            pagination={pagination}
+                            data={getUjianList()}
+                            onChangePage={() => {}}
+                            infoAction={true}
+                            onInfoAction={res => startUjian(res.id)}
+                            // infoButtonText="▶️ Mulai Ujian"
+                            loading={loading}
+                            // numberRow={false}
+                            isCardDisabled={(data) => (data.isTrue !== null)}
+                            // iconOnActionButton={false}
+                            // colValueWithBackground={['status_ujian']}
+                            // colBackgroundColor={{
+                            //     'Available': 'bg-green-500 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
+                            //     'Finished': 'bg-red-500/80 px-3 py-2 rounded-lg text-white font-semibold flex justify-center',
+                            //     'default': 'bg-gray-500 px-3 py-2 rounded-lg'
+                            // }}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

@@ -25,14 +25,14 @@ export function DashboardPage() {
             
             <div className="flex flex-col gap-4 items-center">
                 <img src={logoPesri} alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-2 w-60 h-60"/>
-                <p className="text-gray-500 text-xl font-medium">Dashboard CMS Ujian MTS UMMUSABRI</p>
+                <p className="text-gray-500 text-xl font-medium text-center">Dashboard CMS Ujian MTS UMMUSABRI</p>
                 <p className="text-blue-400 text-lg font-semibold">ADMIN SEKOLAH</p>
             </div>
 
-            <div className="flex flex-col w-full max-w-240 px-20">
+            <div className="flex flex-col w-full max-w-240 md:px-20">
                 <p className="font-semibold text-lg text-gray-700">Halaman</p>
                 <div className="w-full h-1 bg-gray-300 my-4"></div>
-                <div className="grid grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                     {fiturList.map(el => (
                     <div className="flex flex-col gap-2">
                         <Link to={el.link} className="w-fit font-semibold text-xl text-gray-600 hover:text-gray-800 hover:underline transition-all">{el.title}</Link>

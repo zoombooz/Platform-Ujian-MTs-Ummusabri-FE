@@ -4,7 +4,34 @@ import { Pagination } from "./pagination";
 import { Loader } from "./loader";
 import { Icon } from "./icon";
 
-export function Table<T extends Record<string, any>>({title, data, headList, keyList, selectList, pagination, classCustom, infoAction = false, infoButtonText, editAction = false, deleteAction = false, numberRow = true, loading, onInfoAction, onEditAction, onDeleteAction, additionalButton, onChangePage, customActionButton, showSearch = false, showItemPerPage = false, isRowDisabled, iconOnActionButton = true, colValueWithBackground, colBackgroundColor}: ITable<T>) {
+export function Table<T extends Record<string, any>>({
+    title, 
+    data, 
+    headList, 
+    keyList, 
+    selectList, 
+    pagination, 
+    classCustom, 
+    infoAction = false, 
+    infoButtonText, 
+    editAction = false, 
+    deleteAction = false, 
+    numberRow = true, 
+    loading, 
+    onInfoAction, 
+    onEditAction, 
+    onDeleteAction, 
+    onChangePage, 
+    additionalButton, 
+    customActionButton, 
+    showSearch = false, 
+    showItemPerPage = false, 
+    isRowDisabled, 
+    iconOnActionButton = true, 
+    colValueWithBackground, 
+    colBackgroundColor,
+    titleIcon
+}: ITable<T>) {
     
     const style = {
         head_column: `px-6 py-3 text-md text-start`,
@@ -80,8 +107,11 @@ export function Table<T extends Record<string, any>>({title, data, headList, key
 
     return (
         <div className={`relative flex flex-col overflow-x-auto ${classCustom}`}>
-            <div className="flex justify-between">
-                <h1 className="text-2xl mb-4 font-bold text-gray-600">{title}</h1>
+            <div className="flex justify-between border-l-6 border-green-600">
+                <div className="flex items-center gap-4 ml-4">
+                    {titleIcon && <Icon name={titleIcon} shape='outline' customClass="text-green-500"/>}
+                    <p className="text-xl font-bold text-gray-600">{title}</p>
+                </div>
 
                 {additionalButton}
             </div>

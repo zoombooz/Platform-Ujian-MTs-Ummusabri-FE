@@ -28,7 +28,8 @@ export interface ITable <T> {
     colBackgroundColor?: {
         [key: string]: string,
         default: string
-    }
+    };
+    titleIcon?: string;
 }
 
 export interface IPaginationNew {

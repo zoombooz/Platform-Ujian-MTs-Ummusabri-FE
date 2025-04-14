@@ -7,8 +7,8 @@ import { useNavigate, useParams } from "react-router";
 import { getTokenPayload } from "../utils/jwt";
 import { Loader } from "../components/loader";
 import Swal from "sweetalert2";
-import { HorizontalLayout } from "../layout/horizontal-layout";
 import AntiCheatGuard from "../components/AntiCheatGuard";
+import { Icon } from "../components/icon";
 
 interface IAnswerForm {
     soal_id: number,
@@ -27,9 +27,8 @@ interface IUploadAnswer {
 
 export function Ujian() {
 
-    const [tabSwitches, setTabSwitches] = useState<number>(0);
-
     const navigate = useNavigate();
+    const peserta = getTokenPayload();
     const {nomor_peserta} = getTokenPayload();
     const {ujian_id} = useParams();
     const [questions, setQuestions] = useState<ISoal[]>([]);
@@ -40,13 +39,14 @@ export function Ujian() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const endpoints = {
-        start_ujian: (ujian_id: number | string) => `siswa/soal?ujian_id=${ujian_id}`,
+        get_soal: (ujian_id: number | string) => `siswa/soal?ujian_id=${ujian_id}`,
         get_duration: (id: string) => `siswa/ujian/${id}`,
         upload_jawaban: 'siswa/sesi_soal', // Untuk upload jawaban satu-satu
         upload_jawaban_banyak: 'siswa/submit_ujian', // Untuk upload dalam array of jawaban
         hasil_ujian_migrate:  'siswa/hasil_ujian/migrate',
         hasil_ujian_reevaluate: 'siswa/hasil_ujian/reevaluate',
         get_sesi_soal: `siswa/sesi_soal`,
+        get_sesi_ujian: (ujian_id: number, nomor_peserta: number) => `siswa/sesi_ujian?ujian_id=${ujian_id}&nomor_peserta=${nomor_peserta}`,
         post_sesi_ujian: `siswa/sesi_ujian`,
     }
     const baseUrl = Environment.base_url;
@@ -76,37 +76,46 @@ export function Ujian() {
     }
 
     const startUjian = (id: string | number) => {
-        const url = `${baseUrl}${endpoints['start_ujian'](id)}`;
-        axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('authToken')}`
-            }
-        }).then(res => {
-            setQuestions(res.data.data);
-            setAnswers(() => {
-                const arr: IAnswerForm[] = [];
-                res.data.data.forEach((element: ISoal) => {
-                    arr.push({
-                        soal_id: element.id,
-                        jawaban: '',
-                        ragu: false,
-                        ujian_id: Number(element.ujian_id),
-                        tipe_soal: element.tipe_soal
-                    })
+        const url_get_soal = `${baseUrl}${endpoints['get_soal'](id)}`;
+        const headers = { Authorization: `Bearer ${localStorage.getItem('authToken')}` };
+        axios.get(url_get_soal, { headers })
+            .then(res => {
+                setQuestions(res.data.data);
+                setAnswers(() => {
+                    const arr: IAnswerForm[] = [];
+                    res.data.data.forEach((element: ISoal) => {
+                        arr.push({
+                            soal_id: element.id,
+                            jawaban: '',
+                            ragu: false,
+                            ujian_id: Number(element.ujian_id),
+                            tipe_soal: element.tipe_soal
+                        })
+                    });
+                    return arr;
                 });
-                return arr;
-                // return new Array(res.data.data.length).fill(0).map((_, i) => {
-                //     return {
-                //         soal_id: i + 1,
-                //         jawaban: '',
-                //         ragu: false
-                //     }
-                // })
-            }   
-            )
-        }).catch(err => {
-            console.error(err);
-        })
+
+                const urlGetSesiUjian = `${baseUrl}${endpoints['get_sesi_ujian'](Number(ujian_id), peserta.nomor_peserta)}`;
+                axios.get(urlGetSesiUjian, {headers})
+                    .then(res => {
+                        console.log("Response Get Sesi Ujian", res)
+                        if(/*res.data.data[0]*/!res.data.data.length){
+                            console.log(true)
+                            const sesi_ujian = res.data.data[0];
+                            
+                        }else {
+                            const urlPostSesiUjian = `${baseUrl}${endpoints['post_sesi_ujian']}`;
+                            axios.post(urlPostSesiUjian, {
+                                nomor_peserta,
+                                ujian_id,
+                                // isTrue: 1
+                            })
+                        }
+                    }) 
+
+            }).catch(err => {
+                console.error(err);
+            })
     }
 
     const getDuration = (id: string) => {
@@ -287,11 +296,11 @@ export function Ujian() {
     return (<>
         <div className="relative flex w-screen h-screen overflow-hidden">
 
-            <AntiCheatGuard 
+            {/* <AntiCheatGuard 
                 maxViolations={5}
                 onViolationLimitReached={() => {handleSubmit(false)}}
                 logViolation={res => console.log("Response Anti Cheat Guard: ", res)}
-            />
+            /> */}
 
             {loading && 
             <div className="absolute flex justify-center items-center w-full h-full">
@@ -304,17 +313,22 @@ export function Ujian() {
                 onClick={() => {setDrawerOpen(false)}}
             >
                 <div 
-                    className="absolute right-0 w-full md:w-3/4 lg:w-1/4 h-full bg-gray-100 drawer-animation border-l-2 border-slate-500"
+                    className="absolute right-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 h-full bg-gray-100 drawer-animation border-l-2 border-slate-500"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="flex flex-col justify-between p-4 h-full">
                         <div>
-                            <p className="text-black px-2 pt-2 mb-4 font-bold text-xl">Jawaban</p>
-                            <div id="soal-list" className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 xl:gap-4 p-2`}>
+                            <div className="flex justify-between items-center">
+                                <p className="text-black px-2 pt-2 mb-4 font-bold text-xl">Jawaban</p>
+                                <button className="cursor-pointer" onClick={() => setDrawerOpen(false)}>
+                                    <Icon name={'heroicons:x-mark'} shape={'outline'} />
+                                </button>
+                            </div>
+                            <div id="soal-list" className={`flex flex-wrap gap-2 xl:gap-4 p-2`}>
                                 {range(1, questions.length + 1).map((el) => (
                                     <button 
                                         key={el}
-                                        onClick={() => setCurrentNumber(el)} 
+                                        onClick={() => {setCurrentNumber(el); setDrawerOpen(false)}} 
                                         className={`relative group flex flex-col justify-center items-center w-12 h-12 border-2 rounded-xl cursor-pointer transition-all ${answers[el-1].ragu ? 'bg-yellow-400 border-yellow-600' : 'bg-white border-green-400'}`}
                                     >
                                         {answers[el-1].jawaban &&
@@ -336,11 +350,11 @@ export function Ujian() {
             </div>
             }
 
-            <div className="flex justify-center w-full h-full bg-gray-200 p-6">
+            <div className="flex justify-center w-full h-full bg-gray-200 md:p-6">
                 <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
-                    <div id="header" className="flex justify-between h-[10%]">
+                    <div id="header" className="flex items-center justify-between h-[10%]">
                         <p className="font-bold">NO &nbsp;<span className="bg-teal-800 text-white px-3 py-2 rounded-md">{currentNumber}</span></p>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 h-12">
                             <button className="font-semibold border-2 border-yellow-500 text-yellow-500 px-3 py-2 rounded-xl cursor-pointer hover:bg-yellow-500 hover:text-white transition-all" onClick={() => setDrawerOpen(true)}>Daftar Soal</button>
                             <div className="flex items-center bg-slate-300 rounded-xl px-2 py-1 font-semibold">
                                 {timeLimit && 
@@ -352,7 +366,7 @@ export function Ujian() {
 
                     <div id="content" className="flex flex-col gap-2 px-4 h-full">
 
-                        {currentSoal().soal && (
+                        {currentSoal() && currentSoal().soal && (
                         <div className="">
                             <p className="no-select">
                                 {currentSoal().soal}
@@ -393,7 +407,7 @@ export function Ujian() {
                     </div>
                     
 
-                    <div id="control" className="flex justify-center gap-2 h-[10%]">
+                    <div id="control" className="flex justify-center gap-2 h-16">
                         <button 
                             disabled={!(currentNumber > 1)} 
                             className={`${style.control_button} ${currentNumber > 1 ? style.control_button_active : style.control_button_inactive}`} 

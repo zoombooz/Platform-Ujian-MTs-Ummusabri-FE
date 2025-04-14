@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 export function VerticalLayout() {
 
     const navigate = useNavigate();
-    const { isExpanded } = useLayout();
+    const { isExpanded, toggleExpand } = useLayout();
 
     const [subList, setSubList] = useState<{[key: string]: boolean}>({
         'admin': false,
@@ -69,8 +69,9 @@ export function VerticalLayout() {
     }
 
     const SublistHead = ({name, title, icon}: {name: string, title: string, icon: string}) => {
+
         return (
-            <div onClick={() => openSublist(name)} className={`${style.list} ${subList[name] ? style.sublistOpen : ''} `}>
+            <div onClick={() => {openSublist(name); if(!isExpanded) toggleExpand()}} className={`${style.list} ${subList[name] ? style.sublistOpen : ''} `}>
                 <div className={style.option}>
                     <Icon name={icon} shape="outline"/>
                     {isExpanded && <p className={style.text}>{title}</p>}
@@ -97,7 +98,7 @@ export function VerticalLayout() {
     }
 
     return (
-        <div className={`h-full ${isExpanded ? 'w-60' : 'w-16'} bg-green-900 flex flex-col text-white overflow-y-hidden hide-scrollbar transition-all duration-300`}>
+        <div className={`h-full ${isExpanded ? 'w-60' : 'w-0 md:w-16'} absolute md:static bg-green-900 flex flex-col text-white overflow-y-hidden hide-scrollbar transition-all duration-300 z-99`}>
 
             <div className={`flex ${isExpanded ? 'flex-row' : 'flex-col'} justify-center py-4 px-2`}>
                 <img src={logoPesri} alt="Logo Pesri" className={isExpanded ? style.logo : style.logo_sm}/>

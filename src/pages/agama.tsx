@@ -186,6 +186,7 @@ export function Agama() {
                         </button>
                     </div>
                 )}
+                titleIcon="heroicons:moon"
             />
         </div>
     )

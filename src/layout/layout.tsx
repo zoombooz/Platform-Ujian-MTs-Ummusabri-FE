@@ -14,7 +14,7 @@ export function Layout() {
             <LayoutProvider>
                 <div className="relative h-screen flex flex-col">
                     <HorizontalLayout/>
-                    <div className="flex h-full overflow-y-hidden">
+                    <div className="relative flex h-full overflow-y-hidden">
                         <VerticalLayout/>
                         <div className="relative flex flex-col w-full h-full overflow-y-auto overflow-x-hidden">
                             <DrawerProvider>

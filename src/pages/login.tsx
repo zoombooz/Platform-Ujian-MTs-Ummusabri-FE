@@ -127,10 +127,10 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
     return (
         <div className="flex w-full h-screen">
 
-            <AntiCheatGuard 
+            {/* <AntiCheatGuard 
                 maxViolations={5}
                 cooldownMs = {10000}
-            />
+            /> */}
 
             <div className="relative flex justify-center items-center w-full bg-blue-100">
                 <img src="src/assets/students.JPG" alt="Students Studying" className="absolute w-full h-full object-fill"/>

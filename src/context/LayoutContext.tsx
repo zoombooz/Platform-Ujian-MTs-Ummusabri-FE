@@ -8,7 +8,7 @@ interface LayoutContextType {
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 
 export const LayoutProvider = ({children}: {children: ReactNode}) => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
     const toggleExpand = () => {
         setIsExpanded(value => !value);
