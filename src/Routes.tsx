@@ -24,6 +24,8 @@ export function RouteLinks() {
     const ProtectedRoute = () => {
         const isAuthenticated = localStorage.getItem("authToken");
 
+        console.log("Is Expired", isTokenExpired())
+
         return (isAuthenticated && !isTokenExpired()) ? <Outlet /> : <Navigate to={"/login-admin"} replace />
     }
 

@@ -94,12 +94,12 @@ export function UjianLanding() {
         <div className="relative flex w-screen h-screen overflow-hidden">
             
             
-            <div className="flex justify-center w-full h-full bg-gray-200 p-6">
-                <div className="flex flex-col bg-white h-full rounded-md shadow-md p-4 w-full xl:max-w-400">
+            <div className="flex justify-center w-full h-full bg-gray-100 md:bg-gray-200 p-6">
+                <div className="flex flex-col md:bg-white h-full rounded-md md:shadow-md md:p-4 w-full xl:max-w-400">
                     <div className="flex justify-between pb-2">
                         <div>
                             <h1 className="font-bold">📝Daftar Ujian Tersedia</h1>
-                            <p className="text-gray-500 font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
+                            <p className="text-gray-500 font-normal md:font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
                         </div>
                         <button 
                             className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-xl cursor-pointer" 
@@ -133,7 +133,7 @@ export function UjianLanding() {
                         />
                     </div>
 
-                    <div className="block md:hidden overflow-y-auto">
+                    <div className="block md:hidden overflow-y-auto h-full">
                         <CardList 
                             title={'Daftar Ujian'}
                             cardTitle="nama"

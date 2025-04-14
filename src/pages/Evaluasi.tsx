@@ -46,8 +46,8 @@ export function Evaluasi () {
     }
 
     return (
-        <div className="w-full h-full bg-gray-200 p-10 overflow-y-auto">
-            <div>Evaluasi Works</div>
+        <div className="flex justify-center items-center w-full h-full bg-gray-200 p-10 overflow-y-auto">
+            <div className="font-bold text-2xl text-gray-700">Coming Soon</div>
         </div>
     )
 

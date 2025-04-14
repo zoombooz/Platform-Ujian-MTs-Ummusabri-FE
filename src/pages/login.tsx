@@ -5,7 +5,8 @@ import { Environment } from "../environment/environment";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getTokenPayload } from "../utils/jwt";
-import AntiCheatGuard from "../components/AntiCheatGuard";
+import logoPesri from '@assets/logo-pesri.png';
+import logoCambridge from '@assets/logo-cambridge.png';
 
 interface LoginForm {
     username: string,
@@ -120,34 +121,25 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
     const style = {
         input_container: `flex flex-col gap-2`,
         input: `px-2 py-1 w-80`,
-        button: `transition-all w-40 text-white px-2 py-2 rounded-sm cursor-pointer`,
+        button: `transition-all w-40 text-white font-semibold px-2 py-2 rounded-full cursor-pointer`,
         text_button: `text-blue-500 hover:text-blue-600 transition-all hover:underline cursor-pointer`
     }
 
     return (
         <div className="flex w-full h-screen">
 
-            {/* <AntiCheatGuard 
-                maxViolations={5}
-                cooldownMs = {10000}
-            /> */}
+            <div className="relative flex justify-center items-center w-full bg-gray-300">
+                <img src="src/assets/students.JPG" alt="Students Studying" className="absolute hidden md:block w-full h-full object-fill"/>
 
-            <div className="relative flex justify-center items-center w-full bg-blue-100">
-                <img src="src/assets/students.JPG" alt="Students Studying" className="absolute w-full h-full object-fill"/>
-
-                <div className="relative flex flex-col justify-center items-center p-6 bg-gray-100 text-left gap-6 rounded-md">
+                <div className="relative flex flex-col justify-center items-center w-full sm:w-[75%] md:w-fit h-full sm:h-[80%] md:h-fit p-6 bg-gray-100 text-left gap-6 rounded-xl">
 
 
-                    <div id="header" className="flex flex-col gap-4 w-full">
-                        <h1 className="text-3xl text-gray-600 font-light">{getTitle()}</h1>
-                        {/* {(type === 'login' && role === 'admin') && (
-                            <p className="text-gray-400 font-normal">Belum punya akun? <Link to="/register-admin" className={style.text_button}>Daftar</Link></p>
-                        )}
-
-                        {(type === 'register' && role === 'admin') && (
-                            <p className="text-gray-400 font-normal">Sudah punya akun? <Link to="/login-admin" className={style.text_button}>Masuk</Link></p>
-                        )}  */}
-                        
+                    <div id="header" className="flex flex-col gap-4">
+                        <div className="flex gap-2">
+                            <img src={logoPesri} alt="Logo Pesri" className="w-20 h-20"/>
+                            <img src={logoCambridge} alt="Logo Cambridge" className="w-20 h-20 translate-y-2"/>
+                        </div>
+                        <h1 className="text-3xl text-gray-600 font-semibold">{getTitle()}</h1>
                     </div>
 
                     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full">
