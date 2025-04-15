@@ -93,10 +93,6 @@ export function Evaluasi () {
                 keyList={['nama_ujian', 'nama_kelompok_ujian', 'nama_mapel', 'nama_kelas', 'start_date', 'end_date', 'status_ujian']}
                 pagination={pagination}
                 infoAction={true}
-                editAction={true}
-                deleteAction={true}
-                onEditAction={() => {}}
-                onDeleteAction={() => {}}
                 onInfoAction={(row) => fetchHasilUjian(row.ujian.id)}
                 onChangePage={fetchUjian}
                 loading={loading}

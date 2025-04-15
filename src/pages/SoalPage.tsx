@@ -150,11 +150,11 @@ export function SoalPage() {
 
         const headList = options === 'pilihan_ganda'
             ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
-            : ["Ujian", "Tipe Soal", "Soal"]
+            : ["Ujian", "Tipe Soal", "Soal", 'Jawaban']
 
         const keyList = options === 'pilihan_ganda'
             ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
-            : ["ujian_id", "tipe_soal", "soal"]
+            : ["ujian_id", "tipe_soal", "soal", 'jawaban']
 
         openDrawer({
             content: (
@@ -215,11 +215,11 @@ export function SoalPage() {
 
         const headList = soal.tipe_soal === 'pilihan_ganda'
             ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
-            : ["Ujian", "Tipe Soal", "Soal"]
+            : ["Ujian", "Tipe Soal", "Soal", "Jawaban"]
 
         const keyList = soal.tipe_soal === 'pilihan_ganda'
             ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
-            : ["ujian_id", "tipe_soal", "soal"]
+            : ["ujian_id", "tipe_soal", "soal", "jawaban"]
 
         openDrawer({
             content: (
@@ -328,10 +328,10 @@ export function SoalPage() {
                         <p>c. {selectedSoal.pilihan_c}</p>
                         <p>d. {selectedSoal.pilihan_d}</p>
                         <p>e. {selectedSoal.pilihan_e}</p>
-                        <p className="font-bold mt-4 text-green-700">Jawaban: {selectedSoal.jawaban}</p>
                     </div>
                     )
                     }
+                    <p className="font-bold mt-4 text-green-700">Jawaban: {selectedSoal.jawaban}</p>
 
                 </div>
                 <div className="flex gap-4">

@@ -27,6 +27,10 @@ interface IUploadAnswer {
 
 export function Ujian() {
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Properties
+    // -----------------------------------------------------------------------------------------------------
+
     const navigate = useNavigate();
     const peserta = getTokenPayload();
     const {nomor_peserta} = getTokenPayload();
@@ -53,15 +57,23 @@ export function Ujian() {
     }
     const baseUrl = Environment.base_url;
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle Hooks
+    // -----------------------------------------------------------------------------------------------------
+
     useEffect(() => {
         if(ujian_id){
             startUjian(ujian_id);
             getDuration(ujian_id)
-            getSesiSoal()
+            fetchSesiSoal()
         }
     }, [])
 
-    const getSesiSoal = () => {
+    // -----------------------------------------------------------------------------------------------------
+    // @ CRUD Functions
+    // -----------------------------------------------------------------------------------------------------
+
+    const fetchSesiSoal = () => {
         setLoading(true);
         const url = `${baseUrl}${endpoints['get_sesi_soal']}`;
         axios.get(url, {
@@ -110,6 +122,10 @@ export function Ujian() {
                             axios.post(urlPostSesiUjian, {
                                 nomor_peserta,
                                 ujian_id,
+                            }).then(res => {
+                                setSesiUjian(res.data.data)
+                            }).catch(err => {
+                                console.error(err)
                             })
                         }
                     }) 
@@ -165,7 +181,6 @@ export function Ujian() {
     }
 
     const clickDoubt = (nomor: number) => {
-        console.log("Check")
         setAnswers(prevAnswers => {
             return prevAnswers.map((answer, index) => 
                 index === nomor - 1 ? {...answer, ragu: !answer.ragu} : answer
@@ -202,42 +217,66 @@ export function Ujian() {
             })
             const headers = { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
 
-            const url = `${baseUrl}${endpoints['upload_jawaban_banyak']}`;
-
-            axios.post(url, {data: answer}, {headers}).then(() => {
-                const migratePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_migrate']}`, {headers});
-                const reevaluatePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_reevaluate']}`, {headers});
-                const sesiUjianPromise = axios.post(`${baseUrl}${endpoints['put_sesi_ujian'](sesiUjian.id)}`, {
-                    nomor_peserta,
-                    ujian_id,
-                    isTrue: 1
-                }, {headers});
-
-                Promise.all([migratePromise, reevaluatePromise, sesiUjianPromise])
-                    .then(() => {
-                        Swal.fire({
-                            title: "Exam submitted!",
-                            text: "You may leave now!",
-                            icon: "success"
-                        }).then(() => {
-                            navigate('/daftar-ujian');
-                        });
+            console.log("Sesi Ujian: ", sesiUjian)
+            
+            const urlGetSesiUjian = `${baseUrl}${endpoints['get_sesi_ujian'](Number(ujian_id), peserta.nomor_peserta)}`;
+            axios.get(urlGetSesiUjian, {headers})
+            .then(res => {
+                console.log("Response Get Sesi Ujian", res)
+                if(res.data.data[0]){
+                    upload2(res.data.data[0].id)
+                    
+                }else {
+                    const urlPostSesiUjian = `${baseUrl}${endpoints['post_sesi_ujian']}`;
+                    axios.post(urlPostSesiUjian, {
+                        nomor_peserta,
+                        ujian_id,
+                    }).then(res => {
+                        upload2(res.data.data.id);
                     }).catch(err => {
-                        console.error(err);
-                        Swal.fire({
-                            icon: "error",
-                            title: "Upload Failed",
-                            text: err?.response?.data?.error || "An error occurred while uploading answers.",
+                        console.error(err)
+                    })
+                }
+            }) 
+            
+            
+            const upload2 = (sesi_ujian_id: number) => {
+                const url = `${baseUrl}${endpoints['upload_jawaban_banyak']}`;
+                axios.post(url, {data: answer}, {headers}).then(() => {
+                    const migratePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_migrate']}`, {headers});
+                    const reevaluatePromise = axios.get(`${baseUrl}${endpoints['hasil_ujian_reevaluate']}`, {headers});
+                    const sesiUjianPromise = axios.put(`${baseUrl}${endpoints['put_sesi_ujian'](sesi_ujian_id)}`, {
+                        nomor_peserta,
+                        ujian_id,
+                        isTrue: 1
+                    }, {headers});
+    
+                    Promise.all([migratePromise, reevaluatePromise, sesiUjianPromise])
+                        .then(() => {
+                            Swal.fire({
+                                title: "Exam submitted!",
+                                text: "You may leave now!",
+                                icon: "success"
+                            }).then(() => {
+                                navigate('/daftar-ujian');
+                            });
+                        }).catch(err => {
+                            console.error(err);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Upload Failed",
+                                text: err?.response?.data?.error || "An error occurred while uploading answers.",
+                            });
                         });
+                }).catch(err => {
+                    console.error(err);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Request Failed",
+                        text: err.response.data.error,
                     });
-            }).catch(err => {
-                console.error(err);
-                Swal.fire({
-                    icon: "error",
-                    title: "Request Failed",
-                    text: err.response.data.error,
                 });
-            });
+            }
         }
 
         if(open_dialog){
@@ -266,6 +305,10 @@ export function Ujian() {
         submit_button: `bg-red-500 cursor-pointer hover:bg-red-600`,
         doubt_button: `w-24 rounded-xl py-1.5 text-white font-semibold`
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ HTML
+    // -----------------------------------------------------------------------------------------------------
 
     if(loading && !questions.length && !answers.length) {
         return (

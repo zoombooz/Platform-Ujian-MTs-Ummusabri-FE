@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Environment } from "../environment/environment"
 import { useEffect, useState } from "react";
-import { ISesiUjian, IUjian } from "../models/ujian.type";
+import { IUjian } from "../models/ujian.type";
 import { Table } from "../components/table";
 import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { useNavigate } from "react-router";
@@ -13,7 +13,7 @@ export function UjianLanding() {
 
     const navigate = useNavigate();
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
-    const [ujianList, setUjianList] = useState<ISesiUjian[]>([]);
+    const [ujianList, setUjianList] = useState<IUjian[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const endpoints = {
@@ -24,9 +24,8 @@ export function UjianLanding() {
     }
     const baseUrl = Environment.base_url;
 
-    const getUjianList = () => {
+    const getUjianList = () : IUjian[] => {
         const ujian_list = ujianList.map(el => {
-            console.log("QWWWWW: ", el)
             return {
                 ...el,
                 kelompok_ujian_name: el.kelompok_ujian?.nama ?? "",
