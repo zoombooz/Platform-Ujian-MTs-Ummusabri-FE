@@ -93,8 +93,8 @@ export function Table<T extends Record<string, any>>({
     if(!data.length && loading !== undefined && !loading) {
         return (
             <div className={`relative flex flex-col overflow-x-auto ${classCustom}`}>
-                <div className="flex justify-between">
-                    <h1 className="text-xl mb-4">{title}</h1>
+                <div className="flex justify-between mb-4">
+                    <h1 className="text-xl font-bold text-gray-600">{title}</h1>
 
                     {additionalButton}
                 </div>

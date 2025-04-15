@@ -187,9 +187,10 @@ export function SoalPage() {
     }
 
     const handleEdit = (soal: ISoal) => {
-        const editAgama = (editedAgama: ISoal) => {
+        const editAgama = (editedSoal: ISoal) => {
+            console.log("Edited Soal: ", editedSoal)
             const url = `${baseUrl}${endpoints['edit'](soal.id)}`;
-                axios.put(url, editedAgama, {
+                axios.put(url, editedSoal, {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                     }
@@ -214,12 +215,12 @@ export function SoalPage() {
         }
 
         const headList = soal.tipe_soal === 'pilihan_ganda'
-            ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
-            : ["Ujian", "Tipe Soal", "Soal", "Jawaban"]
+            ? ["Ujian", "Tipe Soal", "Upload Gambar", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+            : ["Ujian", "Tipe Soal", "Upload Gambar", "Soal", "Jawaban"]
 
         const keyList = soal.tipe_soal === 'pilihan_ganda'
-            ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
-            : ["ujian_id", "tipe_soal", "soal", "jawaban"]
+            ? ["ujian_id", "tipe_soal", "image", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+            : ["ujian_id", "tipe_soal", "image", "soal", "jawaban"]
 
         openDrawer({
             content: (
@@ -228,7 +229,7 @@ export function SoalPage() {
                     title="Edit Soal"
                     headList={headList}
                     keyList={keyList}
-                    type={["select", "select", "text-editor", "text", "text", "text", "text", "text", "select"]}
+                    type={["select", "select", "file", "text-editor", "text", "text", "text", "text", "text", "select"]}
                     selectList={{
                         ujian_id: ujianList,
                         tipe_soal: tipe_soal,
@@ -319,7 +320,7 @@ export function SoalPage() {
                 <>
                 <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500">
                     <h3 className="font-semibold mb-4 capitalize">Tipe Soal: <span className="font-normal">{selectedSoal.tipe_soal.replace('_', ' ')}</span></h3>
-                    <p>{selectedSoal.soal}</p>
+                    <p style={{whiteSpace:'pre-line'}} dangerouslySetInnerHTML={{ __html: selectedSoal.soal }}></p>
                     {
                     selectedSoal.tipe_soal === 'pilihan_ganda' && (
                     <div className="flex flex-col gap-1">

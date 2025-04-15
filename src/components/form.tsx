@@ -33,6 +33,33 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
         setFormData((prevData) => ({...prevData, [id]: value}))
     }
 
+    const handleChangeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if(file) {
+            convertImageToBase64(file).then(image => {
+                const {id} = e.target;
+                setFormData((prevData) => ({...prevData, [id]: image.split(',')[1]}))
+            })
+        }
+    }
+
+    const convertImageToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+        
+            reader.onload = () => {
+                const base64String = reader.result as string;
+                resolve(base64String);
+            };
+        
+            reader.onerror = (error) => {
+                reject(error);
+            };
+        
+            reader.readAsDataURL(file); // Read file as Base64 string
+        });
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData)
@@ -98,7 +125,17 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
                             />
                         )}
 
-                        {type[index] !== 'select' && type[index] !== 'text-editor' && type[index] !== 'date' && (
+                        {type[index] === 'file' && (
+                            <input 
+                                disabled={isDisabled(item)} 
+                                id={item} 
+                                type={type[index]} 
+                                onChange={handleChangeFileUpload}
+                                className={`bg-gray-50 border-2 ${isDisabled(item) ? "border-gray-200 text-gray-400" : "border-gray-300 text-black"} rounded-lg px-2 py-1.5 text-black`}
+                            />
+                        )}
+
+                        {type[index] !== 'select' && type[index] !== 'text-editor' && type[index] !== 'date' && type[index] !== 'file' && (
                             <input
                                 disabled={isDisabled(item)} 
                                 id={item} 
