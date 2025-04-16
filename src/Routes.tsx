@@ -15,6 +15,7 @@ import { UjianLanding } from "./pages/UjianLanding";
 import { getTokenPayload, isTokenExpired } from "./utils/jwt";
 import { Evaluasi } from "./pages/Evaluasi";
 import { HasilUjian } from "./pages/HasilUjian";
+import { Guru } from "./pages/Guru";
 
 export function RouteLinks() {
 
@@ -60,6 +61,7 @@ export function RouteLinks() {
                                 <Route path="mata-pelajaran" element={<MataPelajaran />} />
                                 <Route path="agama" element={<Agama />} />
                                 <Route path="peserta" element={<Peserta />} />
+                                <Route path="guru" element={<Guru />} />
                                 <Route path="jurusan" element={<Jurusan />} />
                                 <Route path="ujian" element={<UjianCMS />} />
                                 <Route path="evaluasi/:nomor_peserta/" element={<Evaluasi />} />

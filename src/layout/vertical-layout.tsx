@@ -113,6 +113,7 @@ export function VerticalLayout() {
                 (<div className="transition-all">
                     <SublistContainer href="/admin/agama" icon="heroicons:moon" title="Agama"/>
                     <SublistContainer href="/admin/peserta" icon="heroicons:user" title="Peserta"/>
+                    <SublistContainer href="/admin/guru" icon="heroicons:user" title="Guru"/>
                     <SublistContainer href="/admin/jurusan" icon="heroicons:academic-cap" title="Jurusan"/>
                     <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:bars-3-bottom-left" title="Mata Pelajaran"/>
                     <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:tag" title="Kelompok Ujian"/>
