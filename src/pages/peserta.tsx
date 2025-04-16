@@ -151,9 +151,9 @@ export function Peserta() {
       content: (
         <Form<IPeserta>
           title="Tambah Peserta"
-          headList={["Nama Peserta", "Password", "Jurusan", "Agama", "Kelas"]}
-          keyList={["nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
-          type={["text", "password", "select", "select", "select"]}
+          headList={["Nomor Peserta","Nama Peserta", "Password", "Jurusan", "Agama", "Kelas"]}
+          keyList={["nomor_peserta","nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
+          type={["text","text", "password", "select", "select", "select"]}
           selectList={{
             jurusan_id: jurusanList,
             agama_id: agamaList,
