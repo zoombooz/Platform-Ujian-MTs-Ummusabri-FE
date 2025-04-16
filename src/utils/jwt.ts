@@ -6,6 +6,14 @@ export function isTokenExpired() {
     return Date.now() >= getTokenPayload().exp * 1000;
 }
 
+export function isRoleAdmin() {
+    return getTokenPayload().role === 'admin';
+}
+
+export function isRoleGuru() {
+    return getTokenPayload().role === 'guru';
+}
+
 function jwtDecode(t: any) {
     if(t){
         const token: {raw: any, header: any, payload: any} = {raw: '', header: '', payload: ''};

@@ -197,13 +197,6 @@ export function SoalPage() {
                 }).then(() => {
                     closeDrawer();
                     fetchData(undefined, soal.id);
-                    // setSelectedSoal(() => {
-                    //     const findSoal = soalList.find(el => el.id === soal.id);
-                    //     if(findSoal){
-                    //         return findSoal;
-                    //     }
-                    //     return null;
-                    // });
                 }).catch ((error) => {
                     console.error(error);
                     Swal.fire({
@@ -320,6 +313,9 @@ export function SoalPage() {
                 <>
                 <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500">
                     <h3 className="font-semibold mb-4 capitalize">Tipe Soal: <span className="font-normal">{selectedSoal.tipe_soal.replace('_', ' ')}</span></h3>
+                    {selectedSoal.image && (
+                        <img src={selectedSoal.image} alt="" />
+                    )}
                     <p style={{whiteSpace:'pre-line'}} dangerouslySetInnerHTML={{ __html: selectedSoal.soal }}></p>
                     {
                     selectedSoal.tipe_soal === 'pilihan_ganda' && (

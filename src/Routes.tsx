@@ -12,7 +12,7 @@ import { Jurusan } from "./pages/jurusan";
 import { UjianCMS } from "./pages/ujian-cms";
 import { SoalPage } from "./pages/SoalPage";
 import { UjianLanding } from "./pages/UjianLanding";
-import { getTokenPayload, isTokenExpired } from "./utils/jwt";
+import { getTokenPayload, isRoleAdmin, isRoleGuru, isTokenExpired } from "./utils/jwt";
 import { Evaluasi } from "./pages/Evaluasi";
 import { HasilUjian } from "./pages/HasilUjian";
 import { Guru } from "./pages/Guru";
@@ -33,10 +33,18 @@ export function RouteLinks() {
         return (tokenPayload.nomor_peserta) ? <Outlet /> : <Navigate to={"/"} replace/>
     }
 
-    const IsAdmin = () => {
+    const IsAdminOrGuru = () => {
         const tokenPayload = getTokenPayload();
 
         return (!tokenPayload.nomor_peserta) ? <Outlet /> : <Navigate to={"/daftar-ujian"} replace/>
+    }
+
+    const IsAdmin = () => {
+        return isRoleAdmin() ? <Outlet /> : <Navigate to={"/"} replace />
+    }
+
+    const IsGuru = () => {
+        return isRoleGuru() ? <Outlet /> : <Navigate to={"/"} replace />
     }
 
     return (
@@ -52,21 +60,30 @@ export function RouteLinks() {
                         <Route path="ujian/:ujian_id" element={<Ujian/>} />
                     </Route>
 
-                    <Route element={<IsAdmin/>}>
+                    <Route element={<IsAdminOrGuru/>}>
                         <Route element={<Layout/>}>
                             <Route path="" element={<DashboardPage/>} />
                             <Route path="admin">
-                                <Route path="daftar-kelas" element={<DaftarKelas />} />
-                                <Route path="kelompok-ujian" element={<KelompokUjian />} />
-                                <Route path="mata-pelajaran" element={<MataPelajaran />} />
-                                <Route path="agama" element={<Agama />} />
-                                <Route path="peserta" element={<Peserta />} />
-                                <Route path="guru" element={<Guru />} />
-                                <Route path="jurusan" element={<Jurusan />} />
-                                <Route path="ujian" element={<UjianCMS />} />
-                                <Route path="evaluasi/:nomor_peserta/" element={<Evaluasi />} />
-                                <Route path="evaluasi/:nomor_peserta/:ujian_id" element={<HasilUjian />} />
-                                <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
+                                <Route element={<IsAdmin/>}>
+                                    <Route path="daftar-kelas" element={<DaftarKelas />} />
+                                    <Route path="kelompok-ujian" element={<KelompokUjian />} />
+                                    <Route path="mata-pelajaran" element={<MataPelajaran />} />
+                                    <Route path="agama" element={<Agama />} />
+                                    <Route path="peserta" element={<Peserta />} />
+                                    <Route path="guru" element={<Guru />} />
+                                    <Route path="jurusan" element={<Jurusan />} />
+                                    <Route path="ujian" element={<UjianCMS />} />
+                                    <Route path="evaluasi/:nomor_peserta/" element={<Evaluasi />} />
+                                    <Route path="evaluasi/:nomor_peserta/:ujian_id" element={<HasilUjian />} />
+                                    <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
+                                </Route>
+                                <Route element={<IsGuru/>}>
+                                    <Route path="daftar-kelas" element={<DaftarKelas />} />
+                                    <Route path="ujian" element={<UjianCMS />} />
+                                    <Route path="evaluasi/:nomor_peserta/" element={<Evaluasi />} />
+                                    <Route path="evaluasi/:nomor_peserta/:ujian_id" element={<HasilUjian />} />
+                                    <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
+                                </Route>
                             </Route>
                         </Route>
                     </Route>

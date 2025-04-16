@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { convertImageToBase64 } from "../utils/upload";
 
 interface IForm <T> {
     data?: T,
@@ -42,23 +43,6 @@ export function Form<T extends Record<string, any>>({data, title, headList, keyL
             })
         }
     }
-
-    const convertImageToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-        
-            reader.onload = () => {
-                const base64String = reader.result as string;
-                resolve(base64String);
-            };
-        
-            reader.onerror = (error) => {
-                reject(error);
-            };
-        
-            reader.readAsDataURL(file); // Read file as Base64 string
-        });
-    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
