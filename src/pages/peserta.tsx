@@ -204,7 +204,7 @@ export function Peserta() {
             <Form<IPeserta>
               data={peserta}
               title="Edit Peserta"
-              headList={["Nama Peserta", "Jurusan", "Agama", "Kelas"]}
+              headList={["Nomor Peserta","Nama Peserta", "Jurusan", "Agama", "Kelas"]}
               keyList={["nomor_peserta","nama", "jurusan_id", "agama_id", "kelas_id"]}
               type={["text","text", "select", "select", "select"]}
               selectList={{
