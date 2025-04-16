@@ -182,12 +182,12 @@ export function Guru() {
                         <Form <IPeserta>
                             data={input_guru}
                             title="Edit Peserta"
-                            headList={["Nama Guru", "Password Terbaru"]}
-                            keyList={["nama", "password"]}
-                            type={["text", "text"]}
+                            headList={["Nama Guru", "Username", "Password Terbaru"]}
+                            keyList={["nama", "username", "password"]}
+                            type={["text", "text", 'password']}
                             onSubmit={editGuru}
                             onCancel={closeDrawer}
-                            disabled={['nama']}
+                            disabled={['nama', 'username']}
                         />
                     )
                 })
