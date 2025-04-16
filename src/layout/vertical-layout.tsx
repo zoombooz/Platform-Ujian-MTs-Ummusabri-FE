@@ -5,6 +5,7 @@ import { useLayout } from "../context/LayoutContext";
 import logoPesri from '@assets/logo-pesri.png';
 import logoCambridge from '@assets/logo-cambridge.png';
 import Swal from "sweetalert2";
+import { isRoleAdmin } from "../utils/jwt";
 
 export function VerticalLayout() {
 
@@ -111,13 +112,17 @@ export function VerticalLayout() {
 
             { (subList['admin'] && isExpanded) && 
                 (<div className="transition-all">
-                    <SublistContainer href="/admin/agama" icon="heroicons:moon" title="Agama"/>
+                    {isRoleAdmin() && (
+                    <>
+                        <SublistContainer href="/admin/agama" icon="heroicons:moon" title="Agama"/>
+                        <SublistContainer href="/admin/guru" icon="heroicons:user" title="Guru"/>
+                        <SublistContainer href="/admin/jurusan" icon="heroicons:academic-cap" title="Jurusan"/>
+                        <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:bars-3-bottom-left" title="Mata Pelajaran"/>
+                        <SublistContainer href="/admin/daftar-kelas" icon="heroicons:users" title="Daftar Kelas"/>
+                    </>
+                    )}
                     <SublistContainer href="/admin/peserta" icon="heroicons:user" title="Peserta"/>
-                    <SublistContainer href="/admin/guru" icon="heroicons:user" title="Guru"/>
-                    <SublistContainer href="/admin/jurusan" icon="heroicons:academic-cap" title="Jurusan"/>
-                    <SublistContainer href="/admin/mata-pelajaran" icon="heroicons:bars-3-bottom-left" title="Mata Pelajaran"/>
                     <SublistContainer href="/admin/kelompok-ujian" icon="heroicons:tag" title="Kelompok Ujian"/>
-                    <SublistContainer href="/admin/daftar-kelas" icon="heroicons:users" title="Daftar Kelas"/>
                     <SublistContainer href="/admin/ujian" icon="heroicons:document-text" title="Ujian"/>
                 </div>)
             }
