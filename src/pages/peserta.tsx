@@ -205,8 +205,8 @@ export function Peserta() {
               data={peserta}
               title="Edit Peserta"
               headList={["Nama Peserta", "Jurusan", "Agama", "Kelas"]}
-              keyList={["nama", "jurusan_id", "agama_id", "kelas_id"]}
-              type={["text", "select", "select", "select"]}
+              keyList={["nomor_peserta","nama", "jurusan_id", "agama_id", "kelas_id"]}
+              type={["text","text", "select", "select", "select"]}
               selectList={{
                 jurusan_id: jurusanList,
                 agama_id: agamaList,
