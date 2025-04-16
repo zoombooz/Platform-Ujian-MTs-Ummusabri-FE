@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { Icon } from "../components/icon";
 import { useDrawer } from "../context/DrawerContext";
 import { Form } from "../components/form";
-
+import { isRoleAdmin, getTokenPayload } from "../utils/jwt";
 export function Guru() {
 
     const {openDrawer, closeDrawer} = useDrawer();
@@ -17,7 +17,7 @@ export function Guru() {
     const [mapelList, setMapelList] = useState<{name: string, key: string | number}[]>([]);
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
     const endpoints = {
-        get_guru: 'admin/guru',
+        get_guru: isRoleAdmin() ? 'admin/guru' : `admin/guru?id=${getTokenPayload().id}`,
         post_guru: 'admin/guru',
         put_guru: (id: number) => `admin/guru/${id}`,
         delete_guru: (id: number) => `admin/guru/${id}`,

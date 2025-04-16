@@ -8,7 +8,7 @@ import { Form } from "../components/form";
 import Swal from "sweetalert2";
 import { IMataPelajaran } from "../models/mapel.type";
 import { useDrawer } from "../context/DrawerContext";
-
+import { isRoleAdmin, getTokenPayload } from "../utils/jwt";
 
 
 export function MataPelajaran() {
@@ -21,7 +21,7 @@ export function MataPelajaran() {
 
     const endpoints = {
         create: `admin/mapel`,
-        get: `admin/mapel`,
+        get: isRoleAdmin() ? `admin/mapel` : `admin/mapel?mapel_id=${getTokenPayload().mapel_id}`,
         edit: (id: number) => `admin/mapel/${id}`,
         delete: (id: number) => `admin/mapel/${id}` 
     }
