@@ -16,7 +16,8 @@ import { getTokenPayload, isTokenExpired } from "./utils/jwt";
 import { Evaluasi } from "./pages/Evaluasi";
 import { HasilUjian } from "./pages/HasilUjian";
 import { Guru } from "./pages/Guru";
-
+import { TestComponent } from "./testing/TestComponent";
+import { SoalPage2 } from "./pages/SoalPage2";
 export function RouteLinks() {
 
     const ProtectedRoute = () => {
@@ -63,8 +64,8 @@ export function RouteLinks() {
                     <Route element={<IsAdminOrGuru/>}>
                         <Route element={<Layout/>}>
                             <Route path="" element={<DashboardPage/>} />
+                            {/* <Route path="" element={<TestComponent />} /> */}
                             <Route path="admin">
-
                                     <Route path="daftar-kelas" element={<DaftarKelas />} />
                                     <Route path="kelompok-ujian" element={<KelompokUjian />} />
                                     <Route path="mata-pelajaran" element={<MataPelajaran />} />
@@ -75,7 +76,7 @@ export function RouteLinks() {
                                     <Route path="ujian" element={<UjianCMS />} />
                                     <Route path="evaluasi/:nomor_peserta/" element={<Evaluasi />} />
                                     <Route path="evaluasi/:nomor_peserta/:ujian_id" element={<HasilUjian />} />
-                                    <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage />} />
+                                    <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage2 />} />
 
                             </Route>
                         </Route>

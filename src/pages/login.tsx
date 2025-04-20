@@ -106,7 +106,14 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                     console.log("Guru")
                     localStorage.setItem("authToken", token);
                     console.log("Token Payload: ", getTokenPayload());
-                    navigate("/");
+                    Swal.fire({
+                        title: "Successfully Login!",
+                        text: `Welcome ${getTokenPayload().nama}!`,
+                        icon: "success"
+                    }).then(() => {
+                        navigate('/');
+                    });
+                    // navigate("/");
                 }
             }
         }).catch(err => {
@@ -248,10 +255,10 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                         <button className={`bg-blue-500 mt-8 ${style.button}`}>{type === 'login' ? 'Sign In' : 'Sign Up'}</button>
 
                     </form>
-                    {role === 'student'
+                    {/* {role === 'student'
                     ? <Link to="/login-admin" className="text-blue-500 hover:text-blue-600 hover:underline">Masuk sebagai admin</Link>
                     : <Link to="/login-student" className="text-blue-500 hover:text-blue-600 hover:underline">Masuk sebagai murid</Link>
-                    }
+                    } */}
                     
                 </div>
             </div>

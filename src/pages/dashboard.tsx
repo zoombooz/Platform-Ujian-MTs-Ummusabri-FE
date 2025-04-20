@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import logoPesri from "@assets/logo-pesri.png"
-
+import { getTokenPayload } from "../utils/jwt";
 export function DashboardPage() {
 
     const fiturList: {title: string, description: string, link: string}[] = [
@@ -18,7 +18,8 @@ export function DashboardPage() {
             <div className="flex flex-col gap-4 items-center">
                 <img src={logoPesri} alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-2 w-60 h-60"/>
                 <p className="text-gray-500 text-xl font-medium text-center">Dashboard CMS Ujian MTS UMMUSABRI</p>
-                <p className="text-blue-400 text-lg font-semibold">ADMIN SEKOLAH</p>
+                <p className="text-gray-500 text-lg font-semibold">SELAMAT DATANG, {getTokenPayload().nama.toUpperCase()} DI</p>
+                <p className="text-blue-400 text-lg font-semibold">CMS UNTUK {getTokenPayload().role.toUpperCase()} SEKOLAH</p>
             </div>
 
             <div className="flex flex-col w-full max-w-240 md:px-20">
