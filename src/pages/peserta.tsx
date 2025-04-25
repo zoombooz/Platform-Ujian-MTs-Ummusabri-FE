@@ -13,6 +13,25 @@ import { IPeserta } from "../models/peserta.type";
 import { useDrawer } from "../context/DrawerContext";
 import { useNavigate } from "react-router";
 import { getTokenPayload, isRoleAdmin } from "../utils/jwt";
+import { Import } from "../components/Import";
+
+export interface ISoal {
+  id: number,
+  ujian_id: string | number,
+  soal: string,
+  image: string | null,
+  tipe_soal: string,
+  pilihan_a: string,
+  pilihan_b: string,
+  pilihan_c: string,
+  pilihan_d: string,
+  pilihan_e: string,
+  jawaban: string,
+  created_at: string,
+  updated_at: string,
+  ujian: string | null,
+  file: any
+}
 
 const baseUrl = Environment.base_url;
 
@@ -47,6 +66,7 @@ export function Peserta() {
     get_agama: "admin/agama",
     get_jurusan: "admin/jurusan",
     get_kelas: "admin/daftar_kelas",
+    import_peserta: "admin/import_peserta",
   };
 
   // -----------------------------------------------------------------------------------------------------
@@ -259,6 +279,73 @@ export function Peserta() {
     });
   };
 
+  const handleImport = () => {
+    const importSoal = async (body: Partial<ISoal>) => {
+        body = {
+            ...body,
+            // ujian_id: Number(ujian_id)
+        }
+        const url = `${baseUrl}${endpoints['import_peserta']}`;
+        const data = new FormData();
+        data.append('file', body?.file as any);
+        data.append('ujian_id', body.ujian_id as any);
+        try {
+            console.log("Going to import: ", data)
+            await axios.post(url, data, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            closeDrawer();
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            console.log("Error: ", error)
+            Swal.fire({
+                icon: "error",
+                title: "Request Failed",
+                text: `${(error as Error).message}`
+            })
+        }
+    }
+
+    // const headList = options === 'pilihan_ganda'
+    //     ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+    //     : ["Ujian", "Tipe Soal", "Soal", 'Jawaban']
+
+    // const keyList = options === 'pilihan_ganda'
+    //     ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+    //     : ["ujian_id", "tipe_soal", "soal", 'jawaban']
+
+        openDrawer({
+            content: (
+                <Import <ISoal>
+                    // data={{
+                    //     ujian_id
+                    // }}
+                    title="Import Soal"
+                    headList={["Upload"]}
+                    keyList={["file"]}
+                    type={["file"]}
+                    // selectList={{
+                    //     ujian_id: ujianList,
+                    //     tipe_soal: tipe_soal,
+                    //     jawaban: [
+                    //         {name: "A", key: 'A'},
+                    //         {name: "B", key: 'B'},
+                    //         {name: "C", key: 'C'},
+                    //         {name: "D", key: 'D'},
+                    //         {name: "E", key: 'E'}
+                    //     ]
+                    // }}
+                    // disabled={['ujian_id']}
+                    onSubmit={importSoal}
+                    onCancel={closeDrawer}
+                />
+            )
+        })
+  }
+
   const onEvaluasi = (peserta: IPeserta) => {
     navigate(`/admin/evaluasi/${peserta.nomor_peserta}`);
   };
@@ -286,12 +373,21 @@ export function Peserta() {
           kelas_id: kelasList,
         }}
         pagination={pagination}
+        downloadPdfButton={true}
         infoAction={true}
         infoButtonText="Evaluasi"
         editAction={true}
         deleteAction={true}
         loading={loading}
         additionalButton={
+          <>
+          <button
+            className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all"
+            onClick={handleImport}
+          >
+            <Icon name="heroicons:plus" shape="outline" />
+            <p>Import Peserta</p>
+          </button>
           <button
             className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all"
             onClick={handleAdd}
@@ -299,6 +395,7 @@ export function Peserta() {
             <Icon name="heroicons:plus" shape="outline" />
             <p>Tambah Peserta</p>
           </button>
+          </>
         }
         onEditAction={handleEdit}
         onDeleteAction={handleDelete}

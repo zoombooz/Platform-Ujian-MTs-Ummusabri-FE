@@ -7,7 +7,7 @@ import { Icon } from "../components/icon";
 import { useParams } from "react-router";
 import { useDrawer } from "../context/DrawerContext";
 import { Loader } from "../components/loader";
-import { ImportSoal } from "../components/ImportSoal";
+import { Import } from "../components/Import";
 export interface ISoal {
     id: number,
     ujian_id: string | number,
@@ -132,6 +132,7 @@ export function SoalPage2() {
                 ...body,
                 ujian_id: Number(ujian_id)
             }
+            
             const url = `${baseUrl}${endpoints['add']}`;
             try {
                 await axios.post(url, body, {
@@ -315,7 +316,7 @@ export function SoalPage2() {
 
             openDrawer({
                 content: (
-                    <ImportSoal <ISoal>
+                    <Import <ISoal>
                         // data={{
                         //     ujian_id
                         // }}

@@ -30,6 +30,7 @@ export interface ITable <T> {
         default: string
     };
     titleIcon?: string;
+    downloadPdfButton?: boolean|null;
 }
 
 export interface IPaginationNew {

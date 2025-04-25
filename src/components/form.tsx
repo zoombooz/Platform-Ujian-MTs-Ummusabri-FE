@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { convertImageToBase64 } from "../utils/upload";
+import WysiwygArea from "./WysiwygArea";
 
 interface IForm<T> {
   data?: T;
@@ -123,12 +124,18 @@ export function Form<T extends Record<string, any>>({
 
             {type[index] === "text-editor" && (
               <div>
-                <textarea
+                {/* <textarea
                   id={item}
                   value={formData[item]}
                   onChange={handleChange}
                   className="bg-gray-50 border-2 border-gray-300 rounded-lg px-2 py-1.5 text-black w-full"
-                ></textarea>
+                ></textarea> */}
+                <WysiwygArea
+                  content={formData[item]}
+                  onChange={(value) =>
+                    setFormData((prevData) => ({ ...prevData, [item]: btoa(unescape(encodeURIComponent(value))) }))
+                  }
+                />
               </div>
             )}
 

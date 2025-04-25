@@ -4,7 +4,8 @@ import './index.css';
 import { RouteLinks } from './Routes.tsx';
 
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <RouteLinks></RouteLinks>
-    </StrictMode>
+    // <StrictMode>
+    //     <RouteLinks></RouteLinks>
+    // </StrictMode>
+    <RouteLinks></RouteLinks>
 )

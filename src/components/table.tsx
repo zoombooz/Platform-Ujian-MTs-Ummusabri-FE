@@ -3,6 +3,8 @@ import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 import { Loader } from "./loader";
 import { Icon } from "./icon";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { ExamCard } from "./printExamCard";
 
 export function Table<T extends Record<string, any>>({
     title, 
@@ -30,7 +32,8 @@ export function Table<T extends Record<string, any>>({
     iconOnActionButton = true, 
     colValueWithBackground, 
     colBackgroundColor,
-    titleIcon
+    titleIcon,
+    downloadPdfButton,
 }: ITable<T>) {
     
     const style = {
@@ -191,6 +194,25 @@ export function Table<T extends Record<string, any>>({
                                         )
                                     })}
                                     <Action data={data} disabled={isDisabled}/>
+                                    {downloadPdfButton && (
+                                            <div style={{ padding: '1rem', paddingBottom:'2rem', margin:'auto',width:'80%' }}>
+                                            <PDFDownloadLink
+                                              document={<ExamCard student={data} />}
+                                              fileName={`${data.name} Kartu Ujian.pdf`}
+                                              style={{
+                                                textDecoration: 'none',
+                                                padding: '10px 20px',
+                                                color: '#fff',
+                                                backgroundColor: '#007bff',
+                                                borderRadius: 4,
+                                              }}
+                                            >
+                                              {({ blob, url, loading, error }) =>
+                                                loading ? 'Membuat PDF...' : 'Download PDF'
+                                              }
+                                            </PDFDownloadLink>
+                                          </div>
+                                    )}
                                 </tr>
                             )
                         })}
