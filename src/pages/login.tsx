@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Icon } from "../components/icon";
 import axios from "axios";
 import { Environment } from "../environment/environment";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getTokenPayload } from "../utils/jwt";
 import logoPesri from '@assets/logo-pesri.png';
@@ -255,10 +255,6 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                         <button className={`bg-blue-500 mt-8 ${style.button}`}>{type === 'login' ? 'Sign In' : 'Sign Up'}</button>
 
                     </form>
-                    {/* {role === 'student'
-                    ? <Link to="/login-admin" className="text-blue-500 hover:text-blue-600 hover:underline">Masuk sebagai admin</Link>
-                    : <Link to="/login-student" className="text-blue-500 hover:text-blue-600 hover:underline">Masuk sebagai murid</Link>
-                    } */}
                     
                 </div>
             </div>

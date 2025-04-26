@@ -17,7 +17,7 @@ export function DashboardPage() {
         <div className="flex flex-col items-center gap-6 p-8 w-full h-full bg-gray-100 overflow-y-auto pb-16">
             <div className="flex flex-col gap-4 items-center">
                 <img src={logoPesri} alt="Logo Sekolah" className="rounded-full drop-shadow-xl mb-2 w-60 h-60"/>
-                <p className="text-gray-500 text-xl font-medium text-center">Dashboard CMS Ujian MTS UMMUSABRI</p>
+                <p className="text-gray-500 text-xl font-medium text-center">Dashboard CMS Ujian MTS UMMUSSHABRI</p>
                 <p className="text-gray-500 text-lg font-semibold">SELAMAT DATANG, {getTokenPayload().nama.toUpperCase()} DI</p>
                 <p className="text-blue-400 text-lg font-semibold">CMS UNTUK {getTokenPayload().role.toUpperCase()} SEKOLAH</p>
             </div>

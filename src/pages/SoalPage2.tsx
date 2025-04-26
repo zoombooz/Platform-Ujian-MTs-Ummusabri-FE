@@ -8,6 +8,7 @@ import { useParams } from "react-router";
 import { useDrawer } from "../context/DrawerContext";
 import { Loader } from "../components/loader";
 import { ImportSoal } from "../components/ImportSoal";
+import ArabicTextWrapper from "../components/ArabicTextWrapper/ArabicTextWrapper";
 export interface ISoal {
     id: number,
     ujian_id: string | number,
@@ -124,8 +125,6 @@ export function SoalPage2() {
         setSelectedSoal(soal);
     }
 
-    
-
     const handleAdd = (options: 'pilihan_ganda' | 'essai') => {
         const addSoal = async (body: Partial<ISoal>) => {
             body = {
@@ -191,7 +190,6 @@ export function SoalPage2() {
 
     const handleEdit = (soal: ISoal) => {
         const editAgama = (editedSoal: ISoal) => {
-            console.log("Edited Soal: ", editedSoal)
             const url = `${baseUrl}${endpoints['edit'](soal.id)}`;
                 axios.put(url, editedSoal, {
                     headers: {
@@ -286,7 +284,6 @@ export function SoalPage2() {
             data.append('template', body?.template as any);
             data.append('ujian_id', body.ujian_id as any);
             try {
-                console.log("Going to import: ", data)
                 await axios.post(url, data, {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem('authToken')}`
@@ -296,7 +293,6 @@ export function SoalPage2() {
                 fetchData();
             } catch (error) {
                 console.error(error);
-                console.log("Error: ", error)
                 Swal.fire({
                     icon: "error",
                     title: "Request Failed",
@@ -305,41 +301,19 @@ export function SoalPage2() {
             }
         }
 
-        // const headList = options === 'pilihan_ganda'
-        //     ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
-        //     : ["Ujian", "Tipe Soal", "Soal", 'Jawaban']
-
-        // const keyList = options === 'pilihan_ganda'
-        //     ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
-        //     : ["ujian_id", "tipe_soal", "soal", 'jawaban']
-
-            openDrawer({
-                content: (
-                    <ImportSoal <ISoal>
-                        // data={{
-                        //     ujian_id
-                        // }}
-                        title="Import Soal"
-                        headList={["Upload"]}
-                        keyList={["template"]}
-                        type={["file"]}
-                        // selectList={{
-                        //     ujian_id: ujianList,
-                        //     tipe_soal: tipe_soal,
-                        //     jawaban: [
-                        //         {name: "A", key: 'A'},
-                        //         {name: "B", key: 'B'},
-                        //         {name: "C", key: 'C'},
-                        //         {name: "D", key: 'D'},
-                        //         {name: "E", key: 'E'}
-                        //     ]
-                        // }}
-                        disabled={['ujian_id']}
-                        onSubmit={importSoal}
-                        onCancel={closeDrawer}
-                    />
-                )
-            })
+        openDrawer({
+            content: (
+                <ImportSoal <ISoal>
+                    title="Import Soal"
+                    headList={["Upload"]}
+                    keyList={["template"]}
+                    type={["file"]}
+                    disabled={['ujian_id']}
+                    onSubmit={importSoal}
+                    onCancel={closeDrawer}
+                />
+            )
+        })
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -386,23 +360,34 @@ export function SoalPage2() {
             (
                 <>
                 <div className="bg-white shadow-md p-4 rounded-xl border-l-4 border-green-500">
-                    <h3 className="font-semibold mb-4 capitalize">Tipe Soal: <span className="font-normal">{selectedSoal.tipe_soal.replace('_', ' ')}</span></h3>
+                    <h3 className="font-semibold mb-4 capitalize">
+                        Tipe Soal: <span className="font-normal">{selectedSoal.tipe_soal.replace('_', ' ')}</span>
+                    </h3>
+
                     {selectedSoal.image && (
                         <img className="max-h-[7.625rem]" src={selectedSoal.image} alt="" />
                     )}
-                    <p style={{whiteSpace:'pre-line'}} dangerouslySetInnerHTML={{ __html: selectedSoal.soal }}></p>
+
+                    {/* <p 
+                        style={{whiteSpace:'pre-line', fontFamily:`${font}`}} dangerouslySetInnerHTML={{ __html: selectedSoal.soal }}
+                    ></p> */}
+                    <ArabicTextWrapper text={selectedSoal.soal} />
+
                     {
                     selectedSoal.tipe_soal === 'pilihan_ganda' && (
                     <div className="flex flex-col gap-1">
-                        <p>a. {selectedSoal.pilihan_a}</p>
-                        <p>b. {selectedSoal.pilihan_b}</p>
-                        <p>c. {selectedSoal.pilihan_c}</p>
-                        <p>d. {selectedSoal.pilihan_d}</p>
-                        <p>e. {selectedSoal.pilihan_e}</p>
+                        <p>a. <ArabicTextWrapper text={selectedSoal.pilihan_a} /> </p>
+                        <p>b. <ArabicTextWrapper text={selectedSoal.pilihan_b} /> </p>
+                        <p>c. <ArabicTextWrapper text={selectedSoal.pilihan_c} /> </p>
+                        <p>d. <ArabicTextWrapper text={selectedSoal.pilihan_d} /> </p>
+                        <p>e. <ArabicTextWrapper text={selectedSoal.pilihan_e} /> </p>
                     </div>
                     )
                     }
-                    <p className="font-bold mt-4 text-green-700">Jawaban: {selectedSoal.jawaban}</p>
+
+                    <p className="font-bold mt-4 text-green-700">
+                        Jawaban: <ArabicTextWrapper text={selectedSoal.jawaban} />
+                    </p>
 
                 </div>
                 <div className="flex gap-4">

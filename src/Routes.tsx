@@ -10,13 +10,11 @@ import { Agama } from "./pages/agama";
 import { Peserta } from "./pages/peserta";
 import { Jurusan } from "./pages/jurusan";
 import { UjianCMS } from "./pages/ujian-cms";
-import { SoalPage } from "./pages/SoalPage";
 import { UjianLanding } from "./pages/UjianLanding";
 import { getTokenPayload, isTokenExpired } from "./utils/jwt";
 import { Evaluasi } from "./pages/Evaluasi";
 import { HasilUjian } from "./pages/HasilUjian";
 import { Guru } from "./pages/Guru";
-import { TestComponent } from "./testing/TestComponent";
 import { SoalPage2 } from "./pages/SoalPage2";
 export function RouteLinks() {
 
@@ -40,19 +38,10 @@ export function RouteLinks() {
         return (!tokenPayload.nomor_peserta) ? <Outlet /> : <Navigate to={"/daftar-ujian"} replace/>
     }
 
-    // const IsAdmin = () => {
-    //     return isRoleAdmin() ? <Outlet /> : <Navigate to={"/"} replace />
-    // }
-
-    // const IsGuru = () => {
-    //     return isRoleGuru() ? <Outlet /> : <Navigate to={"/"} replace />
-    // }
-
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="login-admin" element={<Login type="login" role="admin" />} />
-                {/* <Route path="register-admin" element={<Login type="register" role="admin" />} /> */}
                 <Route path="login-student" element={<Login type="login" role="student" />} />
                 
                 <Route element={<ProtectedRoute />}>
@@ -64,7 +53,6 @@ export function RouteLinks() {
                     <Route element={<IsAdminOrGuru/>}>
                         <Route element={<Layout/>}>
                             <Route path="" element={<DashboardPage/>} />
-                            {/* <Route path="" element={<TestComponent />} /> */}
                             <Route path="admin">
                                     <Route path="daftar-kelas" element={<DaftarKelas />} />
                                     <Route path="kelompok-ujian" element={<KelompokUjian />} />
