@@ -13,6 +13,7 @@ import { IPeserta } from "../models/peserta.type";
 import { useDrawer } from "../context/DrawerContext";
 import { useNavigate } from "react-router";
 import { getTokenPayload, isRoleAdmin } from "../utils/jwt";
+import { pesertaService } from "../service/pesertaService";
 
 const baseUrl = Environment.base_url;
 
@@ -66,21 +67,17 @@ export function Peserta() {
 
   const fetchData = (URL?: string) => {
     setLoading(true);
-    const url = URL ?? `${baseUrl}${endpoints["get"]}`;
-    axios
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
+    pesertaService.getPeserta(URL)
+      .then(response => {
+        if(response){
+          const { data, pagination } = (({ data, ...pagination }) => {
+            return { data, pagination };
+          })(response.data);
+          setPeserta(data);
+          setPagination(pagination);
+        }
       })
-      .then((response) => {
-        const { data, pagination } = (({ data, ...pagination }) => {
-          return { data, pagination };
-        })(response.data);
-        setPeserta(data);
-        setPagination(pagination);
-      })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         Swal.fire({
           icon: "error",
@@ -125,24 +122,19 @@ export function Peserta() {
 
   const handleAdd = () => {
     const addPeserta = async (body: Partial<IPeserta>) => {
-      const url = `${baseUrl}${endpoints["add"]}`;
-      try {
-        const response = await axios.post(url, body, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
-        console.log("Add Agama Response: ", response);
+      pesertaService.addPeserta(body)
+      .then(() => {
         closeDrawer();
         fetchData();
-      } catch (error) {
+      })
+      .catch(error => {
         console.error(error);
         Swal.fire({
           icon: "error",
           title: "Request Failed",
           text: `${(error as Error).message}`,
         });
-      }
+      })
     };
 
     openDrawer({
@@ -167,26 +159,21 @@ export function Peserta() {
   };
 
   const handleEdit = (peserta: IPeserta) => {
-    const editPeserta = async (body: Partial<IPeserta>) => {
-      const url = `${baseUrl}${endpoints["edit"](peserta.id)}`;
-      try {
-        const response = await axios.put(url, body, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
-        console.log("Edit Agama Response: ", response);
-        closeDrawer();
-        fetchData();
-      } catch (error) {
-        console.error(error);
-        Swal.fire({
-          icon: "error",
-          title: "Request Failed",
-          text: `${(error as Error).message}`,
-        });
-      }
-    };
+    const editPeserta = (body: Partial<IPeserta>) => {
+      pesertaService.editPeserta(peserta.id.toString(), body)
+        .then(() => {
+          closeDrawer();
+          fetchData();
+        })
+        .catch(error => {
+          console.error(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Request Failed',
+            text: `${(error as Error).message}`
+          })
+        })
+    }
 
     Swal.fire({
       title: "Perubahan yang diinginkan?",
@@ -248,13 +235,9 @@ export function Peserta() {
       cancelButtonText: "Tidak",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const url = `${baseUrl}${endpoints["delete"](peserta.id)}`;
-        await axios.delete(url, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
-        fetchData();
+        pesertaService.deletePeserta(peserta.id.toString()).then(() => {
+          fetchData();
+        })
       }
     });
   };
