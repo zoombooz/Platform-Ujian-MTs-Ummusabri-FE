@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import Quill from 'quill';
-import 'quill/dist/quill.snow.css'; // Import the Snow theme CSS
-import '../app.css'
+import katex from 'katex'; // Import library KaTeX
+import 'quill/dist/quill.snow.css';
+import 'katex/dist/katex.min.css';
 
 interface QuillEditorProps {
     value: string;
@@ -14,23 +15,38 @@ const RichTextEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && editorRef.current && !quillRef.current) {
+            // 1. Load KaTeX ke window global
+            (window as any).katex = katex;
+
+            // 2. Import dan registrasi modul formula
+            const Formula = Quill.import('formats/formula');
+            Quill.register('formats/formula', Formula, true);
+
+            // 3. Inisialisasi Quill dengan konfigurasi katex
             quillRef.current = new Quill(editorRef.current, {
-                theme: 'snow', // Use the Snow theme
+                theme: 'snow',
                 modules: {
                     toolbar: [
                         [{ header: [1, 2, false] }],
                         ['bold', 'italic', 'underline', 'strike'],
                         [{ list: 'ordered' }, { list: 'bullet' }],
-                        ['link'],
-                        ['clean'], // Remove formatting
+                        ['link', 'formula'],
+                        ['clean'],
                     ],
+                    // 4. Tambahkan konfigurasi formula
+                    formula: {
+                        katexOptions: {
+                            output: 'html',
+                            throwOnError: false,
+                        }
+                    }
                 },
             });
 
-            // Set initial value
-            quillRef.current.root.innerHTML = value;///
+            // Set nilai awal
+            quillRef.current.root.innerHTML = value;
 
-            // Listen for text changes
+            // Listen perubahan
             quillRef.current.on('text-change', () => {
                 const content = quillRef.current?.root.innerHTML || '';
                 onChange(content);
@@ -38,7 +54,6 @@ const RichTextEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
         }
 
         return () => {
-            // Clean up the Quill instance
             quillRef.current = null;
         };
     }, []);

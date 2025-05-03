@@ -16,7 +16,7 @@ interface IForm<T> {
   onCancel: () => void;
 }
 
-export function ImportSoal<T extends Record<string, any>>({
+export function Import<T extends Record<string, any>>({
   data,
   title,
   headList,

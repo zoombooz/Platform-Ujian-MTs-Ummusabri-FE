@@ -13,6 +13,7 @@ export default function WysiwygArea({content, onChange}: WysiwygAreaProps) {
     const handleContentChange = (value: string) => {
         setDescription(value);
         if(onChange) onChange(value);
+        
     };
 
     return (

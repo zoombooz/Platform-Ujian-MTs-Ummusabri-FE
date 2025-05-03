@@ -92,3 +92,7 @@ ul {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none;     /* IE 10+ */
 }
+
+.quill > .ql-toolbar:first-child {
+    display: none !important;
+  }
