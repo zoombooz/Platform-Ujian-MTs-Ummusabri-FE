@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 5,
-    fontFamily: "Noto Sans Arabic" // Uncomment if you register an Arabic font
+    fontFamily: "Amiri" // Uncomment if you register an Arabic font
   },
   title: {
     fontSize: 20,
