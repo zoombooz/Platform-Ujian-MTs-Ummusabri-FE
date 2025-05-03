@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Icon } from "../components/icon";
 import axios from "axios";
 import { Environment } from "../environment/environment";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getTokenPayload } from "../utils/jwt";
 import logoPesri from '@assets/logo-pesri.png';

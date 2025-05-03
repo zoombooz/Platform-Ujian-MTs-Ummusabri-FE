@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { convertImageToBase64 } from "../utils/upload";
+// import { convertImageToBase64 } from "../utils/upload";
 
 interface IForm<T> {
   data?: T;
@@ -17,7 +17,7 @@ interface IForm<T> {
   onCancel: () => void;
 }
 
-export function ImportSoal<T extends Record<string, any>>({
+export function Import<T extends Record<string, any>>({
   data,
   title,
   headList,
