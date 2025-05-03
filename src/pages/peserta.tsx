@@ -323,10 +323,11 @@ export function Peserta() {
                     // data={{
                     //     ujian_id
                     // }}
-                    title="Import Soal"
+                    title="Import Peserta"
                     headList={["Upload"]}
                     keyList={["file"]}
                     type={["file"]}
+                    acceptFile={[".xlsx", ".xls", ".csv"]}
                     // selectList={{
                     //     ujian_id: ujianList,
                     //     tipe_soal: tipe_soal,
