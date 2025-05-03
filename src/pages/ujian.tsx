@@ -22,7 +22,8 @@ interface IUploadAnswer {
     jawaban: string,
     nomor_peserta: number,
     soal_id: number,
-    ujian_id: number
+    ujian_id: number,
+    tipe_soal: string
 }
 
 export function Ujian() {
@@ -51,7 +52,7 @@ export function Ujian() {
         hasil_ujian_migrate:  'siswa/hasil_ujian/migrate',
         hasil_ujian_reevaluate: 'siswa/hasil_ujian/reevaluate',
         get_sesi_soal: `siswa/sesi_soal`,
-        get_sesi_ujian: (ujian_id: number, nomor_peserta: number) => `siswa/sesi_ujian?ujian_id=${ujian_id}&nomor_peserta=${nomor_peserta}`,
+        get_sesi_ujian: (ujian_id: number|string, nomor_peserta: number|string) => `siswa/sesi_ujian?ujian_id=${ujian_id}&nomor_peserta=${nomor_peserta}`,
         post_sesi_ujian: `siswa/sesi_ujian`,
         put_sesi_ujian: (id: number) => `siswa/sesi_ujian/${id}`
     }
@@ -136,13 +137,19 @@ export function Ujian() {
     }
 
     const getDuration = (id: string) => {
-        const url = `${baseUrl}${endpoints['get_duration'](id)}`;
+        const url = `${baseUrl}${endpoints['get_sesi_ujian'](id, nomor_peserta)}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(res => {
-            const deadline = new Date(res.data.end_date).getTime();
+            // const deadline = new Date(res.data.end_date).getTime();
+            // setTimeLimit(deadline)
+            // console.log("Get Duration", res.data.data[0])
+            const endTime = new Date(res.data.data[0].end_date + 'Z').toLocaleString();
+            const deadline = new Date(endTime).getTime();
+            // console.log(`Current Time: ${new Date()}, Deadline: ${new Date(res.data.data[0].end_date)}`)
+            console.log("Get Deadline ",deadline)
             setTimeLimit(deadline)
         }).catch(err => {
             console.error(err);
@@ -186,6 +193,7 @@ export function Ujian() {
                 index === nomor - 1 ? {...answer, ragu: !answer.ragu} : answer
             )
         })
+        console.log("Current Soal",currentSoal())
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -193,7 +201,8 @@ export function Ujian() {
             soal_id: currentSoal().id,
             jawaban: e.target.value,
             nomor_peserta,
-            ujian_id: Number(currentSoal().ujian_id)
+            ujian_id: Number(currentSoal().ujian_id),
+            tipe_soal: currentSoal().tipe_soal
         }
 
         uploadJawaban(body);
@@ -414,6 +423,14 @@ export function Ujian() {
                         </div>
                         )}
 
+                        {currentSoal() && currentSoal().image && (
+                        
+                        <div className="flex justify-center">
+                            <img src={currentSoal().image ?? ""} alt="soal" className="rounded-lg shadow-md max-h-72 object-cover" />
+                        </div>
+                        )
+                        }
+
                         {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd', 'e'].map((el) => (
                             <div 
                                 className={`${style.radio_button} ${answers[currentNumber - 1].jawaban === el.toUpperCase() ? 'bg-gray-300' : ''} transition-all`} 
@@ -431,7 +448,7 @@ export function Ujian() {
                             </div>
                         ))}
 
-                        {currentSoal().tipe_soal === 'essai' && (
+                        { (currentSoal().tipe_soal === 'essai' || currentSoal().tipe_soal === 'essay')  && (
                             <>
                             <label htmlFor=""></label>
                             <textarea 

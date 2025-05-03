@@ -279,10 +279,11 @@ export function Peserta() {
         openDrawer({
             content: (
                 <Import <ISoal>
-                    title="Import Soal"
+                    title="Import Peserta"
                     headList={["Upload"]}
                     keyList={["file"]}
                     type={["file"]}
+                    acceptFile={[".xlsx", ".xls", ".csv"]}
                     onSubmit={importSoal}
                     onCancel={closeDrawer}
                 />

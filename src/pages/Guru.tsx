@@ -25,7 +25,8 @@ export interface ISoal {
     created_at: string,
     updated_at: string,
     ujian: string | null,
-    file: any
+    file: any,
+    acceptFile: string[],
   }
 
 export function Guru() {
@@ -280,10 +281,11 @@ export function Guru() {
                         // data={{
                         //     ujian_id
                         // }}
-                        title="Import Soal"
+                        title="Import Guru"
                         headList={["Upload"]}
                         keyList={["file"]}
                         type={["file"]}
+                        acceptFile={[".xlsx", ".xls", ".csv"]}
                         // selectList={{
                         //     ujian_id: ujianList,
                         //     tipe_soal: tipe_soal,

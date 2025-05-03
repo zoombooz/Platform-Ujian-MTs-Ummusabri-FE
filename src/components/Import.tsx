@@ -7,6 +7,7 @@ interface IForm<T> {
   keyList: string[];
   disabled?: string[];
   type: string[];
+  acceptFile?: string[];
   hint?: string[];
   selectList?: {
     [key: string]: { key: string | number; name: string }[];
@@ -22,6 +23,7 @@ export function Import<T extends Record<string, any>>({
   headList,
   keyList,
   type,
+  acceptFile,
   disabled = [],
   hint,
   selectList,
@@ -155,7 +157,7 @@ export function Import<T extends Record<string, any>>({
                 disabled={isDisabled(item)}
                 id={item}
                 type={type[index]}
-                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                accept={acceptFile?.join(',') ?? ".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
                 onChange={handleChangeFileUpload}
                 className={`bg-gray-50 border-2 ${
                   isDisabled(item)
