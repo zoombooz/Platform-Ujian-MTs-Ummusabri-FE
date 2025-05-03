@@ -22,7 +22,8 @@ interface IUploadAnswer {
     jawaban: string,
     nomor_peserta: number,
     soal_id: number,
-    ujian_id: number
+    ujian_id: number,
+    tipe_soal: string
 }
 
 export function Ujian() {
@@ -200,7 +201,8 @@ export function Ujian() {
             soal_id: currentSoal().id,
             jawaban: e.target.value,
             nomor_peserta,
-            ujian_id: Number(currentSoal().ujian_id)
+            ujian_id: Number(currentSoal().ujian_id),
+            tipe_soal: currentSoal().tipe_soal
         }
 
         uploadJawaban(body);
