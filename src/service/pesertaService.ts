@@ -1,23 +1,46 @@
 import { IPeserta } from "../models/peserta.type";
+import { IPaginationNew } from "../models/table.type";
+import { getTokenPayload, isRoleAdmin } from "../utils/jwt";
 import { BaseService } from "./baseService";
 
-class PesertaService extends BaseService {
+type PaginatedResponse <T> = IPaginationNew & {data: T}
+
+class PesertaService extends BaseService <IPeserta> {
 
     private endpoints = {
         get: `admin/peserta`,
         add: `admin/peserta`,
         edit: (peserta_id: string) => `admin/peserta/${peserta_id}`,
         delete: (peserta_id: string) => `admin/peserta/${peserta_id}`,
+        import: `admin/import_peserta`,
     };
     
-    getPeserta(URL?: string, jurusan_id: string = '') {
+    async getPeserta(URL?: string): Promise<{data: IPeserta[], pagination: IPaginationNew}> {
+        const now = Date.now();
+
         const queryParams = {
-            jurusan_id
+            jurusan_id: isRoleAdmin() ? getTokenPayload().mapel_id : ''
         }
         const url = URL ?? `${this.baseUrl}${this.endpoints['get']}${this.buildQueryParams(queryParams)}`;
-        return this.api.get(url).catch(error => {
-            this.handleOperationError('pesertaService', 'getPeserta', url, error);
-        });   
+
+        if(this.isCacheValid(url)){
+            const {data, pagination} = this.allData[url];
+            return {data, pagination}
+        }
+
+        try {
+            const response = await this.api.get<PaginatedResponse<IPeserta[]>>(url);
+            const {data, pagination} = (({data, ...pagination}) => {
+                return {data, pagination}
+            })(response.data)
+            
+            this.allData[url] = {data, timestamp: now, pagination};
+            this.currentData = data;
+            return {data: this.currentData, pagination}
+        } catch (error) {
+            this.handleOperationError('pesertaService', 'getPeserta', url, error as Error);
+            throw error;
+        } 
     }
     
     addPeserta(body: Partial<IPeserta>) {
@@ -33,6 +56,11 @@ class PesertaService extends BaseService {
     deletePeserta(peserta_id: string) {
         const url = `${this.baseUrl}${this.endpoints['delete'](peserta_id)}`;
         return this.api.delete(url);
+    }
+
+    importPeserta(data: FormData) {
+        const url = `${this.baseUrl}${this.endpoints['import']}`;
+        return this.api.post(url, data)
     }
 }
 

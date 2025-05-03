@@ -1,13 +1,27 @@
 import Swal from "sweetalert2";
 import { Environment } from "../environment/environment";
 import axios, { AxiosInstance } from "axios";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 
-export class BaseService {
+export interface EntityCache <T> {
+    [key: string]: {
+        data: T[],
+        timestamp: number,
+        pagination: IPaginationNew
+    }
+}
+
+export class BaseService <T> {
     protected api: AxiosInstance;
     protected baseUrl = Environment.base_url;
     protected header = {
         headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }
     }
+
+    protected allData: EntityCache<T> = {};
+    protected currentData: T[] = [];
+    protected cacheDuration: number = 5 * 60 * 1000;
+    protected pagination: IPaginationNew = defaultPaginationValueNew;
 
     constructor(url?: string) {
         this.api = axios.create({
@@ -56,5 +70,13 @@ export class BaseService {
             title,
             text: `${(error as Error).message}`,
         })
+    }
+
+    protected isCacheValid(cacheKey: string): boolean {
+        if(!this.allData[cacheKey]) return false;
+
+        const currentTime = Date.now();
+        const cacheAge = currentTime - this.allData[cacheKey].timestamp;
+        return cacheAge < this.cacheDuration;
     }
 }
