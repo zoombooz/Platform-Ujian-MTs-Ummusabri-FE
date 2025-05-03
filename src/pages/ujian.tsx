@@ -51,7 +51,7 @@ export function Ujian() {
         hasil_ujian_migrate:  'siswa/hasil_ujian/migrate',
         hasil_ujian_reevaluate: 'siswa/hasil_ujian/reevaluate',
         get_sesi_soal: `siswa/sesi_soal`,
-        get_sesi_ujian: (ujian_id: number, nomor_peserta: number) => `siswa/sesi_ujian?ujian_id=${ujian_id}&nomor_peserta=${nomor_peserta}`,
+        get_sesi_ujian: (ujian_id: number|string, nomor_peserta: number|string) => `siswa/sesi_ujian?ujian_id=${ujian_id}&nomor_peserta=${nomor_peserta}`,
         post_sesi_ujian: `siswa/sesi_ujian`,
         put_sesi_ujian: (id: number) => `siswa/sesi_ujian/${id}`
     }
@@ -136,13 +136,19 @@ export function Ujian() {
     }
 
     const getDuration = (id: string) => {
-        const url = `${baseUrl}${endpoints['get_duration'](id)}`;
+        const url = `${baseUrl}${endpoints['get_sesi_ujian'](id, nomor_peserta)}`;
         axios.get(url, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         }).then(res => {
-            const deadline = new Date(res.data.end_date).getTime();
+            // const deadline = new Date(res.data.end_date).getTime();
+            // setTimeLimit(deadline)
+            // console.log("Get Duration", res.data.data[0])
+            const endTime = new Date(res.data.data[0].end_date + 'Z').toLocaleString();
+            const deadline = new Date(endTime).getTime();
+            // console.log(`Current Time: ${new Date()}, Deadline: ${new Date(res.data.data[0].end_date)}`)
+            console.log("Get Deadline ",deadline)
             setTimeLimit(deadline)
         }).catch(err => {
             console.error(err);
