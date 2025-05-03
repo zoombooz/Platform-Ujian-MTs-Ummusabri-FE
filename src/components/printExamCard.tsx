@@ -6,7 +6,7 @@ import {
   View, 
   StyleSheet, 
   Image, 
-  Font 
+  // Font 
 } from '@react-pdf/renderer';
 
 // Define interfaces for our data
@@ -32,10 +32,10 @@ interface ExamCardProps {
 }
 
 // You would need to register any custom fonts you want to use
-Font.register({
-  family: 'Noto Sans Arabic',
-  src: '/src/font/NotoSansArabic.ttf',
-});
+// Font.register({
+//   family: 'Noto Sans Arabic',
+//   src: '/src/font/NotoSansArabic.ttf',
+// });
 
 // Create styles
 const styles = StyleSheet.create({

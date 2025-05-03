@@ -371,6 +371,7 @@ export function SoalPage2() {
                     {/* <p 
                         style={{whiteSpace:'pre-line', fontFamily:`${font}`}} dangerouslySetInnerHTML={{ __html: selectedSoal.soal }}
                     ></p> */}
+                    
                     <ArabicTextWrapper text={selectedSoal.soal} />
 
                     {
