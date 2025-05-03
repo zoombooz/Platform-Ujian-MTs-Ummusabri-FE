@@ -207,7 +207,7 @@ export function Table<T extends Record<string, any>>({
                                                 borderRadius: 4,
                                               }}
                                             >
-                                              {({ blob, url, loading, error }) =>
+                                              {({ loading }) =>
                                                 loading ? 'Membuat PDF...' : 'Download PDF'
                                               }
                                             </PDFDownloadLink>

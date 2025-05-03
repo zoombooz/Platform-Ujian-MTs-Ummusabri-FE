@@ -10,13 +10,13 @@ import { Agama } from "./pages/agama";
 import { Peserta } from "./pages/peserta";
 import { Jurusan } from "./pages/jurusan";
 import { UjianCMS } from "./pages/ujian-cms";
-import { SoalPage } from "./pages/SoalPage";
+// import { SoalPage } from "./pages/SoalPage";
 import { UjianLanding } from "./pages/UjianLanding";
 import { getTokenPayload, isTokenExpired } from "./utils/jwt";
 import { Evaluasi } from "./pages/Evaluasi";
 import { HasilUjian } from "./pages/HasilUjian";
 import { Guru } from "./pages/Guru";
-import { TestComponent } from "./testing/TestComponent";
+// import { TestComponent } from "./testing/TestComponent";
 import { SoalPage2 } from "./pages/SoalPage2";
 export function RouteLinks() {
 
