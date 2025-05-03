@@ -85,7 +85,6 @@ export function Peserta() {
 
     const fetchData = (URL?: string) => {
         setLoading(true);
-        
         pesertaService.getPeserta(URL)
         .then(response => {
             if(response){
@@ -93,14 +92,6 @@ export function Peserta() {
                 setPeserta(data);
                 setPagination(pagination);
             }
-        })
-        .catch(error => {
-            console.error(error);
-            Swal.fire({
-            icon: "error",
-            title: "Request Failed",
-            text: `${(error as Error).message}`,
-            });
         })
         .finally(() => {
             setLoading(false);
@@ -150,7 +141,7 @@ export function Peserta() {
             icon: "error",
             title: "Request Failed",
             text: `${(error as Error).message}`,
-            });
+        });
         })
         };
 
@@ -244,12 +235,12 @@ export function Peserta() {
 
     const handleDelete = (peserta: IPeserta) => {
         Swal.fire({
-        title: "Apakah anda yakin ingin menghapus peserta ini?",
-        text: "Data yang dihapus tidak dapat kembali",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Iya",
-        cancelButtonText: "Tidak",
+            title: "Apakah anda yakin ingin menghapus peserta ini?",
+            text: "Data yang dihapus tidak dapat kembali",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak",
         }).then(async (result) => {
             if (result.isConfirmed) {
                 pesertaService.deletePeserta(peserta.id.toString()).then(() => { fetchData() })

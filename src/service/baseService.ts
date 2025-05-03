@@ -79,4 +79,12 @@ export class BaseService <T> {
         const cacheAge = currentTime - this.allData[cacheKey].timestamp;
         return cacheAge < this.cacheDuration;
     }
+
+    protected clearCache() {
+        const cache = this.allData;
+        for(const key in cache){
+            delete cache[key]
+        }
+        this.allData = cache;
+    }
 }

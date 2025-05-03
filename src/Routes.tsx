@@ -16,6 +16,7 @@ import { Evaluasi } from "./pages/Evaluasi";
 import { HasilUjian } from "./pages/HasilUjian";
 import { Guru } from "./pages/Guru";
 import { SoalPage2 } from "./pages/SoalPage2";
+import { MonitoringPage } from "./pages/Monitoring";
 export function RouteLinks() {
 
     const ProtectedRoute = () => {
@@ -53,6 +54,7 @@ export function RouteLinks() {
                     <Route element={<IsAdminOrGuru/>}>
                         <Route element={<Layout/>}>
                             <Route path="" element={<DashboardPage/>} />
+                            <Route path="monitoring" element={<MonitoringPage/>} />
                             <Route path="admin">
                                     <Route path="daftar-kelas" element={<DaftarKelas />} />
                                     <Route path="kelompok-ujian" element={<KelompokUjian />} />

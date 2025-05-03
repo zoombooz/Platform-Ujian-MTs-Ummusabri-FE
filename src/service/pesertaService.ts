@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import { IPeserta } from "../models/peserta.type";
 import { IPaginationNew } from "../models/table.type";
 import { getTokenPayload, isRoleAdmin } from "../utils/jwt";
@@ -15,11 +16,13 @@ class PesertaService extends BaseService <IPeserta> {
         import: `admin/import_peserta`,
     };
     
-    async getPeserta(URL?: string): Promise<{data: IPeserta[], pagination: IPaginationNew}> {
+    async getPeserta(URL?: string, page: number = 1, limit: number = 10): Promise<{data: IPeserta[], pagination: IPaginationNew}> {
         const now = Date.now();
 
         const queryParams = {
-            jurusan_id: isRoleAdmin() ? getTokenPayload().mapel_id : ''
+            jurusan_id: isRoleAdmin() ? getTokenPayload().mapel_id : '',
+            page,
+            limit
         }
         const url = URL ?? `${this.baseUrl}${this.endpoints['get']}${this.buildQueryParams(queryParams)}`;
 
@@ -36,29 +39,38 @@ class PesertaService extends BaseService <IPeserta> {
             
             this.allData[url] = {data, timestamp: now, pagination};
             this.currentData = data;
-            return {data: this.currentData, pagination}
+            return {data, pagination}
         } catch (error) {
             this.handleOperationError('pesertaService', 'getPeserta', url, error as Error);
+            Swal.fire({
+                icon: "error",
+                title: "Request Failed",
+                text: `${(error as Error).message}`,
+            });
             throw error;
         } 
     }
     
     addPeserta(body: Partial<IPeserta>) {
+        this.clearCache();
         const url = `${this.baseUrl}${this.endpoints['add']}`;
         return this.api.post(url, body);
     }
 
     editPeserta(peserta_id: string, body: Partial<IPeserta>) {
+        this.clearCache();
         const url = `${this.baseUrl}${this.endpoints['edit'](peserta_id)}`;
         return this.api.put(url, body);
     }
 
     deletePeserta(peserta_id: string) {
+        this.clearCache();
         const url = `${this.baseUrl}${this.endpoints['delete'](peserta_id)}`;
         return this.api.delete(url);
     }
 
     importPeserta(data: FormData) {
+        this.clearCache();
         const url = `${this.baseUrl}${this.endpoints['import']}`;
         return this.api.post(url, data)
     }
