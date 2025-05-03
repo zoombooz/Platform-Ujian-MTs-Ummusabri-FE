@@ -25,13 +25,21 @@ export function UjianLanding() {
     const baseUrl = Environment.base_url;
 
     const getUjianList = () : IUjian[] => {
+        console.log("ujianList: ", ujianList);
         const ujian_list = ujianList.map(el => {
+            // console.log({
+            //     ...el,
+            //     kelompok_ujian_name: el.kelompok_ujian?.nama ?? "",
+            //     kelas_name: el.kelas.nama,
+            //     mapel_name: el.mapel.nama,
+            //     status_ujian: el.isTrue
+            // })
             return {
                 ...el,
                 kelompok_ujian_name: el.kelompok_ujian?.nama ?? "",
                 kelas_name: el.kelas.nama,
                 mapel_name: el.mapel.nama,
-                status_ujian: (el.isTrue !== null ? 'Finished' : 'Available')
+                status_ujian: (el.isTrue && el.isTrue !== null ? 'Finished' : 'Available')
             }
         });
         return ujian_list;
@@ -126,7 +134,7 @@ export function UjianLanding() {
                             infoButtonText="▶️ Mulai Ujian"
                             loading={loading}
                             numberRow={false}
-                            isRowDisabled={(data) => (data.isTrue !== null)}
+                            isRowDisabled={(data) => (data.isTrue && data.isTrue !== null)}
                             iconOnActionButton={false}
                             colValueWithBackground={['status_ujian']}
                             colBackgroundColor={{

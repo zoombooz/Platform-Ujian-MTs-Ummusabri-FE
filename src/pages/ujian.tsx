@@ -186,6 +186,7 @@ export function Ujian() {
                 index === nomor - 1 ? {...answer, ragu: !answer.ragu} : answer
             )
         })
+        console.log("Current Soal",currentSoal())
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -414,6 +415,14 @@ export function Ujian() {
                         </div>
                         )}
 
+                        {currentSoal() && currentSoal().image && (
+                        
+                        <div className="flex justify-center">
+                            <img src={currentSoal().image ?? ""} alt="soal" className="rounded-lg shadow-md max-h-72 object-cover" />
+                        </div>
+                        )
+                        }
+
                         {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd', 'e'].map((el) => (
                             <div 
                                 className={`${style.radio_button} ${answers[currentNumber - 1].jawaban === el.toUpperCase() ? 'bg-gray-300' : ''} transition-all`} 
@@ -431,7 +440,7 @@ export function Ujian() {
                             </div>
                         ))}
 
-                        {currentSoal().tipe_soal === 'essai' && (
+                        { (currentSoal().tipe_soal === 'essai' || currentSoal().tipe_soal === 'essay')  && (
                             <>
                             <label htmlFor=""></label>
                             <textarea 
