@@ -107,6 +107,7 @@ export function VerticalLayout() {
             </div>
 
             <ListContainer href="/" icon="heroicons:home" title="Dashboard" />
+            <ListContainer href="/monitoring" icon="heroicons:chart-bar-square" title="Analisis Ujian" />
 
             <SublistHead name="admin" title="Administrator" icon="heroicons:computer-desktop" />
 

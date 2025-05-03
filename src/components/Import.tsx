@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { convertImageToBase64 } from "../utils/upload";
 
 interface IForm<T> {
   data?: T;
@@ -57,13 +56,9 @@ export function Import<T extends Record<string, any>>({
   const handleChangeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-    //   convertImageToBase64(file).then((image) => {
-    //     const { id } = e.target;
-    //     setFormData((prevData) => ({ ...prevData, [id]: image }));
-    //   });
-    setFormData((prevData) => ({
-        ...prevData,
-        [e.target.id]: file,
+      setFormData((prevData) => ({
+          ...prevData,
+          [e.target.id]: file,
       }));
     }
   };

@@ -321,16 +321,16 @@ export function Guru() {
                 deleteAction={true}
                 loading={loading}
                 additionalButton={(
-                    <>
-                    <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleImport}>
-                        <Icon name="heroicons:plus" shape="outline"/>
-                        <p>Import Guru</p>
-                    </button>
-                    <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleAdd}>
-                        <Icon name="heroicons:plus" shape="outline"/>
-                        <p>Tambah Guru</p>
-                    </button>
-                    </>
+                    <div className="flex gap-2">
+                        <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleImport}>
+                            <Icon name="heroicons:plus" shape="outline"/>
+                            <p>Import Guru</p>
+                        </button>
+                        <button className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all" onClick={handleAdd}>
+                            <Icon name="heroicons:plus" shape="outline"/>
+                            <p>Tambah Guru</p>
+                        </button>
+                    </div>
                 )}
                 onEditAction={handleEdit}
                 onDeleteAction={handleDelete}
