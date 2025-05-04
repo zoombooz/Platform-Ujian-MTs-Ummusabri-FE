@@ -48,7 +48,7 @@ export class BaseService <T> {
         let textString = '?';
         let firstIndex = true;
         for(const key in queryParams){
-            if(firstIndex) {
+            if(firstIndex && queryParams[key]) {
                 textString += `${key}=${queryParams[key]}`;
                 firstIndex = false;
             }else if(queryParams[key]){
