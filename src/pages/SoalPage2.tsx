@@ -316,6 +316,10 @@ export function SoalPage2() {
         })
     }
 
+    // const imageDetector = (input: string): boolean => {
+
+    // }
+
     // -----------------------------------------------------------------------------------------------------
     // @ HTML
     // -----------------------------------------------------------------------------------------------------
@@ -377,11 +381,21 @@ export function SoalPage2() {
                     {
                     selectedSoal.tipe_soal === 'pilihan_ganda' && (
                     <div className="flex flex-col gap-1">
-                        <p>a. <ArabicTextWrapper text={selectedSoal.pilihan_a} /> </p>
-                        <p>b. <ArabicTextWrapper text={selectedSoal.pilihan_b} /> </p>
-                        <p>c. <ArabicTextWrapper text={selectedSoal.pilihan_c} /> </p>
-                        <p>d. <ArabicTextWrapper text={selectedSoal.pilihan_d} /> </p>
-                        <p>e. <ArabicTextWrapper text={selectedSoal.pilihan_e} /> </p>
+                        <p>a. 
+                            <ArabicTextWrapper text={selectedSoal.pilihan_a} /> 
+                        </p>
+                        <p>b. 
+                            <ArabicTextWrapper text={selectedSoal.pilihan_b} /> 
+                        </p>
+                        <p>c. 
+                            <ArabicTextWrapper text={selectedSoal.pilihan_c} /> 
+                        </p>
+                        <p>d. 
+                            <ArabicTextWrapper text={selectedSoal.pilihan_d} /> 
+                        </p>
+                        <p>e. 
+                            <ArabicTextWrapper text={selectedSoal.pilihan_e} /> 
+                        </p>
                     </div>
                     )
                     }

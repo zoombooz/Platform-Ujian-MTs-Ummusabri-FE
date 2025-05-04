@@ -39,8 +39,8 @@ export function UjianLanding() {
             return {
                 ...el,
                 kelompok_ujian_name: el.kelompok_ujian?.nama ?? "",
-                kelas_name: el.kelas.nama,
-                mapel_name: el.mapel.nama,
+                kelas_name: el.kelas?.nama,
+                mapel_name: el.mapel?.nama,
                 status_ujian: (el.isTrue && el.isTrue !== null ? 'Finished' : 'Available')
             }
         });

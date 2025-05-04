@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Countdown } from "../components/countdown";
 import { Environment } from "../environment/environment";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { Loader } from "../components/loader";
 import Swal from "sweetalert2";
 import AntiCheatGuard from "../components/AntiCheatGuard";
 import { Icon } from "../components/icon";
+import * as Rx from 'rxjs';
 
 interface IAnswerForm {
     soal_id: number,
@@ -44,6 +45,9 @@ export function Ujian() {
     const [loading, setLoading] = useState<boolean>(false);
     const [sesiUjian, setSesiUjian] = useState<any>({});
 
+    const essayInput$ = useRef(new Rx.Subject<IUploadAnswer>()).current;
+    const latestEssayAnswer = useRef<IUploadAnswer|null>(null);
+
     const endpoints = {
         get_soal: (ujian_id: number | string) => `siswa/soal?ujian_id=${ujian_id}`,
         get_duration: (id: string) => `siswa/ujian/${id}`,
@@ -68,7 +72,14 @@ export function Ujian() {
             getDuration(ujian_id)
             fetchSesiSoal()
         }
-    }, [])
+        const subscription = essayInput$
+            .pipe(Rx.debounceTime(5000))
+            .subscribe((body) => {
+                uploadJawaban(body)
+            }) 
+
+        return () => subscription.unsubscribe();
+    }, [essayInput$])
 
     // -----------------------------------------------------------------------------------------------------
     // @ CRUD Functions
@@ -181,6 +192,7 @@ export function Ujian() {
     }
 
     const changeSoal = (option: 'prev' | 'next'): void => {
+        flushPendingEssayAnswer();
         // Make sure to not change it to non existing number
         if(currentNumber === 1 && option === 'prev') return;
         if(currentNumber === questions.length && option === 'next') return;
@@ -205,7 +217,14 @@ export function Ujian() {
             tipe_soal: currentSoal().tipe_soal
         }
 
-        uploadJawaban(body);
+        if(body.tipe_soal === 'essai'){
+            latestEssayAnswer.current = body;
+            essayInput$.next(body)
+        }else {
+            uploadJawaban(body)
+        }
+
+        // uploadJawaban(body);
         setAnswers(prevAnswers => {
             return prevAnswers.map((answer, index) => 
                 index === currentNumber - 1 ? {...answer, jawaban: e.target.value} : answer
@@ -213,7 +232,15 @@ export function Ujian() {
         })
     }
 
+    const flushPendingEssayAnswer = () => {
+        if(latestEssayAnswer.current) {
+            uploadJawaban(latestEssayAnswer.current);
+            latestEssayAnswer.current = null;
+        }
+    }
+
     const handleSubmit = (open_dialog: boolean) => {
+        flushPendingEssayAnswer()
         const upload = () => {
             const answer: any[] = answers.map(el => {
                 return {
