@@ -197,14 +197,14 @@ export function MonitoringPage() {
         };
     };
 
-    const getAllClasses = (): { data: { name: string; data: number[] }[]; categories: string[] } => {
-        if (!analisisUjian) return { data: [], categories: [] };
-        const arr = analisisUjian.class_analysis.all_classes;
-        return {
-            data: [{ name: 'All Classes Avg Score', data: arr.map(c => c.average_score) }],
-            categories: arr.map(c => c.class_name)
-        };
-    };
+    // const getAllClasses = (): { data: { name: string; data: number[] }[]; categories: string[] } => {
+    //     if (!analisisUjian) return { data: [], categories: [] };
+    //     const arr = analisisUjian.class_analysis.all_classes;
+    //     return {
+    //         data: [{ name: 'All Classes Avg Score', data: arr.map(c => c.average_score) }],
+    //         categories: arr.map(c => c.class_name)
+    //     };
+    // };
 
     const style = {
         chart: 'bg-white rounded-xl shadow-xl p-2'
