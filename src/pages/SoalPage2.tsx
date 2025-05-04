@@ -316,9 +316,15 @@ export function SoalPage2() {
         })
     }
 
-    // const imageDetector = (input: string): boolean => {
-
-    // }
+    const isImageUrl = (input: string) => {
+        try {
+            const parsedUrl = new URL(input);
+            console.log(parsedUrl)
+            return /\.(jpeg|jpg|gif|png|webp|bmp|svg)$/i.test(parsedUrl.pathname);
+        }catch(_) {
+            return false;
+        }
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ HTML
@@ -382,20 +388,37 @@ export function SoalPage2() {
                     selectedSoal.tipe_soal === 'pilihan_ganda' && (
                     <div className="flex flex-col gap-1">
                         <p>a. 
-                            <ArabicTextWrapper text={selectedSoal.pilihan_a} /> 
+                            {isImageUrl(selectedSoal.pilihan_a) 
+                            ? <img src={selectedSoal.pilihan_a} className="ml-8"/>
+                            : <ArabicTextWrapper text={selectedSoal.pilihan_a} /> 
+                            }
                         </p>
                         <p>b. 
-                            <ArabicTextWrapper text={selectedSoal.pilihan_b} /> 
+                            {isImageUrl(selectedSoal.pilihan_b)
+                            ? <img src={selectedSoal.pilihan_b} className="ml-8"/>
+                            : <ArabicTextWrapper text={selectedSoal.pilihan_b} /> 
+                            }
                         </p>
                         <p>c. 
-                            <ArabicTextWrapper text={selectedSoal.pilihan_c} /> 
+                            {isImageUrl(selectedSoal.pilihan_c)
+                            ? <img src={selectedSoal.pilihan_c} className="ml-8"/>
+                            : <ArabicTextWrapper text={selectedSoal.pilihan_c} /> 
+                            }
                         </p>
                         <p>d. 
-                            <ArabicTextWrapper text={selectedSoal.pilihan_d} /> 
+                            {isImageUrl(selectedSoal.pilihan_d)
+                            ? <img src={selectedSoal.pilihan_d} className="ml-8"/>
+                            : <ArabicTextWrapper text={selectedSoal.pilihan_d} /> 
+                            }
                         </p>
+                        {selectedSoal.pilihan_e && (
                         <p>e. 
-                            <ArabicTextWrapper text={selectedSoal.pilihan_e} /> 
+                            {isImageUrl(selectedSoal.pilihan_e)
+                            ? <img src={selectedSoal.pilihan_e} className="ml-8"/>
+                            : <ArabicTextWrapper text={selectedSoal.pilihan_e} /> 
+                            }
                         </p>
+                        )}
                     </div>
                     )
                     }
