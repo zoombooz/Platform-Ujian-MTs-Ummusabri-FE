@@ -34,7 +34,47 @@ interface AnalisisUjian {
             score: number,
             rank: number
         }
+    },
+    
+    top_performers: {
+        nomor_peserta: number,
+        nama: string,
+        kelas: string,
+        score: number
+    }[],
+
+    overall_statistics: {
+        count: number,
+        min: number,
+        max: number,
+        average: number,
+        median: number,
+        stdDev: number,
+        confidence_interval?: {
+            low: number,
+            high: number
+        }
+    },
+
+    class_analysis: {
+        all_classes: {
+            class_name: string,
+            average_score: number
+        }[],
+        top_5_classes: {
+            class_name: string,
+            average_score: number
+        }[],
+        bottom_5_classes: {
+            class_name: string,
+            average_score: number
+        }[]
     }
+
+    
+
+    
+
 }
 
 export function MonitoringPage() {
@@ -78,48 +118,93 @@ export function MonitoringPage() {
         })
     }
 
-    const getSummary = (): {data: {name: string, data: number[]}[], categories: string[]} => {
-        if(!analisisUjian) return {data: [], categories: []};
-        const hasil: number[] = [];
-        const categories: string[] = [];
-        for(const key of Object.keys(analisisUjian.descriptive) as (keyof typeof analisisUjian.descriptive)[]){
-            categories.push(key);
-            hasil.push(analisisUjian.descriptive[key]);
-        }
-        const data = [{
-            name: 'Value',
-            data: hasil,
-        }]
-        return {data, categories}
+    const getSummary = (): { data: { name: string, data: number[] }[], categories: string[] } => {
+        if (!analisisUjian) return { data: [], categories: [] };
+
+        const stats = (analisisUjian as any).overall_statistics ?? analisisUjian.descriptive;
+        const categories: string[] = [
+            "count",
+            "min",
+            "max",
+            "average",
+            "median",
+            "stdDev",
+            // "ci_low",
+            // "ci_high"
+        ];
+
+        const values: number[] = [
+            stats.count,
+            stats.min,
+            stats.max,
+            stats.average,
+            stats.median,
+            stats.stdDev,
+            // confidence_interval may be in stats.confidence_interval or stats.confidence_interval_95
+            // stats.confidence_interval?.low ?? stats.confidence_interval_95?.low ?? 0,
+            // stats.confidence_interval?.high ?? stats.confidence_interval_95?.high ?? 0
+        ];
+
+        return {
+            data: [{ name: "Value", data: values }],
+            categories
+        };
     }
 
-    const getScore = (): {data: {name: string, data: number[]}[], categories: string[]} => {
-        if(!analisisUjian) return {data: [], categories: []}
-        const data =  [{
-            name: 'Nilai Ujian',
-            data: analisisUjian.scores.map(el => {
-                return el.score
-            })
-        }]
-        const categories = analisisUjian.scores.map(el => {
-            return el.nama
-        })
-        return {data, categories}
-    }
+    const getScore = (): { data: { name: string; data: number[] }[]; categories: string[] } => {
+        if (!analisisUjian) return { data: [], categories: [] };
 
-    const getRanking = (): {data: {name: string, data: number[]}[], categories: string[]} => {
-        if(!analisisUjian) return {data: [], categories: []}
-        const data =  [{
-            name: 'Nilai Ujian',
-            data: analisisUjian.scores.map(el => {
-                return el.score
-            })
-        }]
-        const categories = analisisUjian.scores.map(el => {
-            return el.nama
-        })
-        return {data, categories}
-    }
+        const data = [
+            {
+                name: 'Top Performers',
+                data: analisisUjian.top_performers.map(tp => tp.score)
+            }
+        ];
+        const categories = analisisUjian.top_performers.map(tp => tp.nama);
+
+        return { data, categories };
+    };
+
+    // const getRanking = (): {data: {name: string, data: number[]}[], categories: string[]} => {
+    //     if(!analisisUjian) return {data: [], categories: []}
+    //     const data =  [{
+    //         name: 'Nilai Ujian',
+    //         data: analisisUjian.scores.map(el => {
+    //             return el.score
+    //         })
+    //     }]
+    //     const categories = analisisUjian.scores.map(el => {
+    //         return el.nama
+    //     })
+    //     return {data, categories}
+    // }
+
+    const getClassTop5 = (): { data: { name: string; data: number[] }[]; categories: string[] } => {
+        if (!analisisUjian) return { data: [], categories: [] };
+        const arr = analisisUjian.class_analysis.top_5_classes;
+        return {
+            data: [{ name: 'Top 5 Classes', data: arr.map(c => c.average_score) }],
+            categories: arr.map(c => c.class_name)
+        };
+    };
+
+    const getClassBottom5 = (): { data: { name: string; data: number[] }[]; categories: string[] } => {
+        if (!analisisUjian) return { data: [], categories: [] };
+        const arr = analisisUjian.class_analysis.bottom_5_classes;
+        return {
+            data: [{ name: 'Bottom 5 Classes', data: arr.map(c => c.average_score) }],
+            categories: arr.map(c => c.class_name)
+        };
+    };
+
+    const getAllClasses = (): { data: { name: string; data: number[] }[]; categories: string[] } => {
+        if (!analisisUjian) return { data: [], categories: [] };
+        const arr = analisisUjian.class_analysis.all_classes;
+        return {
+            data: [{ name: 'All Classes Avg Score', data: arr.map(c => c.average_score) }],
+            categories: arr.map(c => c.class_name)
+        };
+    };
 
     const style = {
         chart: 'bg-white rounded-xl shadow-xl p-2'
@@ -157,16 +242,26 @@ export function MonitoringPage() {
                         categories={getScore().categories}
                         data={getScore().data}
                         minValueHeight={100}
-                        title="Nilai Ujian"
+                        title="Top 5 Peserta Ujian"
                     /> 
                 </div>
 
                 <div className={style.chart}>
                     <BarChart
-                        categories={getRanking().categories}
-                        data={getRanking().data}
+                        categories={getClassTop5().categories}
+                        data={getClassTop5().data}
                         minValueHeight={100}
-                        title="Ranking"
+                        title="Top 5 Kelas berdasarkan Rata-rata"
+                    /> 
+                </div>
+
+                
+                <div className={style.chart}>
+                    <BarChart
+                        categories={getAllClasses().categories}
+                        data={getAllClasses().data}
+                        minValueHeight={100}
+                        title="Nilai Rata-rata Per-Kelas"
                     /> 
                 </div>
             </div>
