@@ -1,4 +1,4 @@
-import { JSX, useEffect } from "react";
+import { JSX, useEffect, useState } from "react";
 import { ITable, paginationLimitList } from "../models/table.type";
 import { Pagination } from "./pagination";
 import { Loader } from "./loader";
@@ -35,7 +35,7 @@ export function Table<T extends Record<string, any>>({
     titleIcon,
     downloadPdfButton,
 }: ITable<T>) {
-    
+    const [triggerPdf,setTriggerPdf] = useState(false); 
     const style = {
         head_column: `px-6 py-3 text-md text-start`,
         action_button: "flex gap-2 py-2 px-3 rounded-md text-white min-w-16"
@@ -194,11 +194,11 @@ export function Table<T extends Record<string, any>>({
                                         )
                                     })}
                                     <Action data={data} disabled={isDisabled}/>
-                                    {downloadPdfButton && (
+                                    {downloadPdfButton && triggerPdf && (
                                             <div style={{ padding: '1rem', paddingBottom:'2rem', margin:'auto',width:'80%' }}>
                                             <PDFDownloadLink
                                               document={<ExamCard student={data} />}
-                                              fileName={`${data.name} Kartu Ujian.pdf`}
+                                              fileName={`${data.nama} Kartu Ujian.pdf`}
                                               style={{
                                                 textDecoration: 'none',
                                                 padding: '10px 20px',
@@ -213,6 +213,17 @@ export function Table<T extends Record<string, any>>({
                                             </PDFDownloadLink>
                                           </div>
                                     )}
+                                    {downloadPdfButton && !triggerPdf && (
+                                            <div style={{ padding: '1rem', paddingBottom:'2rem', margin:'auto',width:'80%' }}>
+                                                <button
+                                                    onClick={() => setTriggerPdf(true)}
+                                                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md transition-colors duration-200"
+                                                >
+                                                    Process PDF
+                                                </button>
+                                            </div>
+                                    )}
+
                                 </tr>
                             )
                         })}
