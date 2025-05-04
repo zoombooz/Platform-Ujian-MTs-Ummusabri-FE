@@ -251,17 +251,17 @@ export function MonitoringPage() {
                         categories={getClassTop5().categories}
                         data={getClassTop5().data}
                         minValueHeight={100}
-                        title="Top 5 Kelas berdasarkan Rata-rata"
+                        title="Top 5 Kelas Teratas berdasarkan Rata-rata"
                     /> 
                 </div>
 
                 
                 <div className={style.chart}>
                     <BarChart
-                        categories={getAllClasses().categories}
-                        data={getAllClasses().data}
+                        categories={getClassBottom5().categories}
+                        data={getClassBottom5().data}
                         minValueHeight={100}
-                        title="Nilai Rata-rata Per-Kelas"
+                        title="5 Kelas Terendah berdasarkan Rata-rata"
                     /> 
                 </div>
             </div>
