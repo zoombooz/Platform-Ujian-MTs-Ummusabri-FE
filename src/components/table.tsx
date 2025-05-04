@@ -42,7 +42,7 @@ export function Table<T extends Record<string, any>>({
     }
 
     useEffect(() => {
-        console.log("Checking dulu: ", selectList)
+        // console.log("Checking dulu: ", selectList)
     }, [])
 
     const actionExist = (): boolean => {
@@ -233,8 +233,6 @@ export function Table<T extends Record<string, any>>({
                 <Pagination pagination={pagination} customClass="mt-4" onChangePage={onChangePage}/>
             </>
             }
-
         </div>
-
     )
 }

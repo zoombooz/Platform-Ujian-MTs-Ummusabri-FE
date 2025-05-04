@@ -6,16 +6,20 @@ import { BaseService } from "./baseService"
 class UjianService extends BaseService <IUjian>  {
 
     private endpoints = {
-        get: `admin/ujian`
+        get: `admin/ujian`,
+        add: `admin/ujian`,
+        edit: (ujian_id: number) => `admin/ujian/${ujian_id}`,
+        delete: (ujian_id: number) => `admin/ujian/${ujian_id}`,
     }
 
-    async getUjian(URL?: string, page: number = 1, limit: number = 10): Promise<{data: IUjian[], pagination: IPaginationNew}> {
+    async getUjian(URL?: string, page: number = 1, limit: number = 10, kelompok_ujian_id?: string): Promise<{data: IUjian[], pagination: IPaginationNew}> {
         const now = Date.now()
 
         const queryParams = {
             mapel_id: isRoleAdmin() ? '' : getTokenPayload().mapel_id,
             page,
-            limit
+            limit,
+            kelompok_ujian_id
         }
 
         const url = URL ?? `${this.baseUrl}${this.endpoints['get']}${this.buildQueryParams(queryParams)}`;
@@ -38,6 +42,24 @@ class UjianService extends BaseService <IUjian>  {
             this.handleOperationError('ujianService', 'getUjian', url, error as Error);
             throw error;
         }
+    }
+
+    addUjian(body: Partial<IUjian>) {
+        this.clearCache();
+        const url = `${this.baseUrl}${this.endpoints['add']}`;
+        return this.api.post(url, body);
+    }
+
+    editUjian(ujian_id: number, body: Partial<IUjian>) {
+        this.clearCache();
+        const url = `${this.baseUrl}${this.endpoints['edit'](ujian_id)}`;
+        return this.api.put(url, body);
+    }
+
+    deleteUjian(ujian_id: number) {
+        this.clearCache();
+        const url = `${this.baseUrl}${this.endpoints['delete'](ujian_id)}`;
+        return this.api.delete(url);
     }
 }
 
