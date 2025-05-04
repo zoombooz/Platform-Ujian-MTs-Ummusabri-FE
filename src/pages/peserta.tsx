@@ -325,7 +325,7 @@ export function Peserta() {
             deleteAction={true}
             loading={loading}
             additionalButton={
-            <>
+            <div className="flex gap-2">
             <button
                 className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all"
                 onClick={handleImport}
@@ -340,7 +340,7 @@ export function Peserta() {
                 <Icon name="heroicons:plus" shape="outline" />
                 <p>Tambah Peserta</p>
             </button>
-            </>
+            </div>
             }
             onEditAction={handleEdit}
             onDeleteAction={handleDelete}
