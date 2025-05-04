@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import AntiCheatGuard from "../components/AntiCheatGuard";
 import { Icon } from "../components/icon";
 import * as Rx from 'rxjs';
+import ArabicTextWrapper from "../components/ArabicTextWrapper/ArabicTextWrapper";
 
 interface IAnswerForm {
     soal_id: number,
@@ -333,6 +334,16 @@ export function Ujian() {
         }
     }
 
+    const isImageUrl = (input: string) => {
+        try {
+            const parsedUrl = new URL(input);
+            console.log(parsedUrl)
+            return /\.(jpeg|jpg|gif|png|webp|bmp|svg)$/i.test(parsedUrl.pathname);
+        }catch(_) {
+            return false;
+        }
+    }
+
     const style = {
         radio_button: `flex gap-2 border-2 border-gray-300 px-3 py-2 rounded-xl w-fit min-w-80`,
         control_button: `min-w-24 w-fit px-2 py-1.5 rounded-xl text-white font-semibold transition-all`,
@@ -440,14 +451,12 @@ export function Ujian() {
                         </div>
                     </div>
 
-                    <div id="content" className="flex flex-col gap-2 px-4 h-full">
+                    <div id="content" className="flex flex-col gap-2 px-4 pb-12 h-full overflow-y-auto">
 
                         {currentSoal() && currentSoal().soal && (
-                        <div className="">
-                            <p className="no-select">
-                                {currentSoal().soal}
-                            </p>
-                        </div>
+                        <p className="no-select ">
+                            <ArabicTextWrapper text={currentSoal().soal}></ArabicTextWrapper>
+                        </p>
                         )}
 
                         {currentSoal() && currentSoal().image && (
@@ -459,6 +468,8 @@ export function Ujian() {
                         }
 
                         {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd', 'e'].map((el) => (
+                            <>
+                            {currentSoal()[`pilihan_${el}` as keyof ISoal] && (
                             <div 
                                 className={`${style.radio_button} ${answers[currentNumber - 1].jawaban === el.toUpperCase() ? 'bg-gray-300' : ''} transition-all`} 
                                 key={el}
@@ -471,8 +482,15 @@ export function Ujian() {
                                     checked={answers[currentNumber - 1].jawaban === el.toUpperCase()} 
                                     onChange={handleChange}
                                 />
-                                <label htmlFor={el}>{currentSoal()[`pilihan_${el}` as keyof ISoal]}</label>
+                                <label htmlFor={el}>
+                                    {isImageUrl(currentSoal()[`pilihan_${el}` as keyof ISoal] as string) 
+                                    ? <img src={currentSoal()[`pilihan_${el}` as keyof ISoal] as string} className="ml-8"/>
+                                    : <ArabicTextWrapper text={currentSoal()[`pilihan_${el}` as keyof ISoal] as string} /> 
+                                    }
+                                </label>
                             </div>
+                            )}
+                            </>
                         ))}
 
                         { (currentSoal().tipe_soal === 'essai' || currentSoal().tipe_soal === 'essay')  && (
