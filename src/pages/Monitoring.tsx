@@ -4,6 +4,7 @@ import axios from "axios";
 import { Environment } from "../environment/environment";
 import { ujianService } from "../service/ujianService";
 import { IUjian } from "../models/ujian.type";
+import { Loader } from "../components/loader";
 
 interface AnalisisUjian {
     descriptive: {
@@ -88,24 +89,34 @@ export function MonitoringPage() {
     const [ujianList, setUjianList] = useState<IUjian[]>([]);
     const [selectedUjian, setSelectedUjian] = useState<IUjian | null>(null);
     const [analisisUjian, setAnalisisUjian] = useState<AnalisisUjian | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         fetchUjianList();
     }, [])
 
     const fetchUjianList = () => {
+        setLoading(true);
         ujianService.getUjian(undefined, 1, 100)
         .then(res => {
             const {data} = res;
             setUjianList(data);
         })
+        .finally(() => {
+            setLoading(false);
+        })
     }
 
     const fetchDataUjian = (ujian_id: number) => {
+        setLoading(true);
         const url = `${base_url}${endpoints['analisis_jawaban'](ujian_id)}`;
-        axios.get(url).then(res => {
+        axios.get(url)
+        .then(res => {
             setAnalisisUjian(res.data);
             console.log("Analisis Jawaban: ", res)
+        })
+        .finally(() => {
+            setLoading(false);
         })
     }
 
@@ -211,7 +222,12 @@ export function MonitoringPage() {
     }
 
     return (
-    <div className="flex flex-col gap-6 w-full h-full bg-gray-200 p-10 overflow-y-auto">
+    <div className="relative flex flex-col gap-6 w-full h-full bg-gray-200 p-10 overflow-y-auto">
+        {loading && (
+        <div className="absolute flex justify-center items-center w-full h-full">
+            <Loader/>
+        </div>
+        )}
         <div className="flex justify-between items-center">
             <p className="text-[20px] font-bold text-gray-600">Analisis Hasil Ujian</p>   
             <select 
