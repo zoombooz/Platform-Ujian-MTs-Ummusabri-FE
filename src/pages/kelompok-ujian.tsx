@@ -8,9 +8,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { IKelompokUjian } from "../models/ujian.type";
 import { useDrawer } from "../context/DrawerContext";
+import { useNavigate } from "react-router";
 
 export function KelompokUjian() {
     
+    const navigate = useNavigate();
     const {openDrawer, closeDrawer} = useDrawer();
     const [loading, setLoading] = useState<boolean>(false);
     const [pagination, setPagination] = useState<IPaginationNew>(defaultPaginationValueNew);
@@ -161,6 +163,10 @@ export function KelompokUjian() {
         })
     }
 
+    const handleInfo = (data: IKelompokUjian) => {
+        navigate(`/admin/ujian?kelompok_ujian_id=${data.id}`)
+    }
+
     return (
         <div className="w-full h-full bg-gray-200 p-10 overflow-y-auto">
             <Table <IKelompokUjian>
@@ -169,6 +175,8 @@ export function KelompokUjian() {
                 headList={['ID', 'Nama Kelompok Ujian', "Tanggal Dimulai", "Tanggal Berakhir"]}
                 keyList={['id', 'nama', "start_date", "end_date"]}
                 pagination={pagination}
+                infoAction={true}
+                infoButtonText="Lihat Ujian"
                 editAction={true}
                 deleteAction={true}
                 additionalButton={(
@@ -179,6 +187,7 @@ export function KelompokUjian() {
                     </button>
                 </div>
                 )}
+                onInfoAction={handleInfo}
                 onEditAction={handleEdit}
                 onDeleteAction={handleDelete}
                 onChangePage={fetchData}

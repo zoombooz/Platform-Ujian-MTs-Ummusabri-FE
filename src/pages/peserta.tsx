@@ -65,7 +65,7 @@ export function Peserta() {
         get_agama: "admin/agama",
         get_jurusan: "admin/jurusan",
         get_kelas: "admin/daftar_kelas",
-        import_peserta: "admin/import_peserta",
+        // import_peserta: "admin/import_peserta",
     };
 
     // -----------------------------------------------------------------------------------------------------
@@ -253,20 +253,17 @@ export function Peserta() {
             body = {
                 ...body,
             }
-            const url = `${baseUrl}${endpoints['import_peserta']}`;
+            // const url = `${baseUrl}${endpoints['import_peserta']}`;
             const data = new FormData();
             data.append('file', body?.file as any);
             data.append('ujian_id', body.ujian_id as any);
-            try {
-                console.log("Going to import: ", data)
-                await axios.post(url, data, {
-                    headers: {
-                        "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-                    }
-                });
-                closeDrawer();
+
+            pesertaService.importPeserta(data)
+            .then(() => {
                 fetchData();
-            } catch (error) {
+                closeDrawer();
+            })
+            .catch(error => {
                 console.error(error);
                 console.log("Error: ", error)
                 Swal.fire({
@@ -274,7 +271,26 @@ export function Peserta() {
                     title: "Request Failed",
                     text: `${(error as Error).message}`
                 })
-            }
+            })
+            
+            // try {
+            //     console.log("Going to import: ", data)
+            //     await axios.post(url, data, {
+            //         headers: {
+            //             "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+            //         }
+            //     });
+            //     closeDrawer();
+            //     fetchData();
+            // } catch (error) {
+            //     console.error(error);
+            //     console.log("Error: ", error)
+            //     Swal.fire({
+            //         icon: "error",
+            //         title: "Request Failed",
+            //         text: `${(error as Error).message}`
+            //     })
+            // }
         }
         openDrawer({
             content: (
@@ -325,7 +341,7 @@ export function Peserta() {
             deleteAction={true}
             loading={loading}
             additionalButton={
-            <>
+            <div className="flex gap-2">
             <button
                 className="flex justify-center items-center gap-2 w-fit h-fit p-2 bg-blue-500 rounded-md cursor-pointer text-white hover:bg-blue-600 transition-all"
                 onClick={handleImport}
@@ -340,7 +356,7 @@ export function Peserta() {
                 <Icon name="heroicons:plus" shape="outline" />
                 <p>Tambah Peserta</p>
             </button>
-            </>
+            </div>
             }
             onEditAction={handleEdit}
             onDeleteAction={handleDelete}

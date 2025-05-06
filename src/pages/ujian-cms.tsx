@@ -1,51 +1,39 @@
 import { useEffect, useState } from "react";
 import { Table } from "../components/table";
-import {
-  defaultPaginationValueNew,
-  IPaginationNew,
-} from "../models/table.type";
+import { defaultPaginationValueNew, IPaginationNew } from "../models/table.type";
 import { Form } from "../components/form";
 import { Icon } from "../components/icon";
 import { Environment } from "../environment/environment";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
-import { IUjian } from "../models/ujian.type";
+import { useNavigate, useSearchParams } from "react-router";
+import { IUjian, ujianFormHeadList, ujianFormKeyList, ujianFormStatus, ujianFormType } from "../models/ujian.type";
 import { useDrawer } from "../context/DrawerContext";
-import { getTokenPayload, isRoleAdmin } from "../utils/jwt";
+import { ujianService } from "../service/ujianService";
 
 const baseUrl = Environment.base_url;
 
 export function UjianCMS() {
+
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams] = useSearchParams();
   const { openDrawer, closeDrawer } = useDrawer();
-  const [pagination, setPagination] = useState<IPaginationNew>(
-    defaultPaginationValueNew
-  );
+
   const [ujian, setUjian] = useState<IUjian[]>([]);
-  const [kelompokUjianList, setKelompokUjianList] = useState<
-    { name: string; key: string }[]
-  >([]);
-  const [mapelList, setMapelList] = useState<{ name: string; key: string }[]>(
-    []
-  );
-  const [daftarKelasList, setDaftarKelasList] = useState<
-    { name: string; key: string }[]
-  >([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [mapelList, setMapelList] = useState<{ name: string; key: string }[]>([]);
+  const [pagination, setPagination] = useState<IPaginationNew>( defaultPaginationValueNew );
+  const [daftarKelasList, setDaftarKelasList] = useState<{ name: string; key: string }[]>([]);
+  const [kelompokUjianList, setKelompokUjianList] = useState<{ name: string; key: string }[]>([]);
+
   const endpoints = {
-    create: `admin/ujian`,
-    get: isRoleAdmin()
-      ? `admin/ujian`
-      : `admin/ujian?mapel_id=${getTokenPayload().mapel_id}`,
-    edit: (id: number) => `admin/ujian/${id}`,
-    delete: (id: number) => `admin/ujian/${id}`,
     get_kelompok_ujian: "admin/kelompok_ujian",
     get_mapel: "admin/mapel",
     get_daftar_kelas: "admin/daftar_kelas",
   };
 
   useEffect(() => {
+    console.log("Query Params: ", searchParams.get('kelompok_ujian_id'))
     fetchData();
     fetchAdditionalData(endpoints["get_daftar_kelas"], setDaftarKelasList);
     fetchAdditionalData(endpoints["get_mapel"], setMapelList);
@@ -54,32 +42,14 @@ export function UjianCMS() {
 
   const fetchData = (URL?: string) => {
     setLoading(true);
-    const url = URL ?? `${baseUrl}${endpoints["get"]}`;
-    console.log(url);
-    axios
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
-      .then((response) => {
-        const { data, pagination } = (({ data, ...pagination }) => {
-          return { data, pagination };
-        })(response.data);
-        setUjian(data);
-        setPagination(pagination);
-      })
-      .catch((error) => {
-        console.error(error);
-        Swal.fire({
-          icon: "error",
-          title: "Request Failed",
-          text: `${(error as Error).message}`,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const kelompok_ujian_id = searchParams.get('kelompok_ujian_id') ?? undefined;
+    ujianService.getUjian(URL, 1, 10, kelompok_ujian_id)
+    .then(res => {
+      const {data, pagination} = res;
+      setUjian(data);
+      setPagination(pagination);
+    })
+    .finally(() => setLoading(false))
   };
 
   const fetchAdditionalData = (
@@ -115,25 +85,19 @@ export function UjianCMS() {
         ...body,
         id_sekolah: 1,
       };
-      const url = `${baseUrl}${endpoints["create"]}`;
-      axios
-        .post(url, body, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        })
-        .then(() => {
-          fetchData();
-          closeDrawer();
-        })
-        .catch((err) => {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Request Failed",
-            text: err.response.data.error,
-          });
+      ujianService.addUjian(body)
+      .then(() => {
+        fetchData();
+        closeDrawer();
+      })
+      .catch(err => {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Request Failed",
+          text: err.response.data.error,
         });
+      })
     };
 
     openDrawer({
@@ -142,41 +106,14 @@ export function UjianCMS() {
       content: (
         <Form<IUjian>
           title="Tambah Ujian"
-          headList={[
-            "Ujian",
-            "Kelompok Ujian",
-            "Mapel",
-            "Kelas",
-            "Tanggal Mulai",
-            "Tanggal Berakhir",
-            "Status",
-          ]}
-          keyList={[
-            "nama",
-            "kelompok_id",
-            "mapel_id",
-            "kelas_id",
-            "start_date",
-            "end_date",
-            "status",
-          ]}
-          type={[
-            "text",
-            "select",
-            "select",
-            "select",
-            "date",
-            "date",
-            "select",
-          ]}
+          headList={ujianFormHeadList}
+          keyList={ujianFormKeyList}
+          type={ujianFormType}
           selectList={{
             kelompok_id: kelompokUjianList,
             mapel_id: mapelList,
             kelas_id: daftarKelasList,
-            status: [
-              { name: "Selesai", key: "1" },
-              { name: "Belum Selesai", key: "0" },
-            ],
+            status: ujianFormStatus,
           }}
           onSubmit={addClass}
           onCancel={closeDrawer}
@@ -185,32 +122,26 @@ export function UjianCMS() {
     });
   };
 
-  const handleEdit = (daftar_kelas: IUjian) => {
+  const handleEdit = (ujian: IUjian) => {
     const editClass = (editedData: IUjian) => {
-      const url = `${baseUrl}${endpoints["edit"](daftar_kelas.id)}`;
-      axios
-        .put(url, editedData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        })
-        .then(() => {
-          fetchData();
-          closeDrawer();
-        })
-        .catch((err) => {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Request Failed",
-            text: err.response.data.error,
-          });
+      ujianService.editUjian(ujian.id, editedData)
+      .then(() => {
+        fetchData();
+        closeDrawer();
+      })
+      .catch((err) => {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Request Failed",
+          text: err.response.data.error,
         });
+      });
     };
 
-    daftar_kelas = {
-      ...daftar_kelas,
-      status: daftar_kelas.status.toString(),
+    ujian = {
+      ...ujian,
+      status: ujian.status.toString(),
     };
 
     openDrawer({
@@ -218,43 +149,16 @@ export function UjianCMS() {
       height: "600px",
       content: (
         <Form<IUjian>
-          data={daftar_kelas}
+          data={ujian}
           title="Tambah Ujian"
-          headList={[
-            "Ujian",
-            "Kelompok Ujian",
-            "Mapel",
-            "Kelas",
-            "Tanggal Mulai",
-            "Tanggal Berakhir",
-            "Status",
-          ]}
-          keyList={[
-            "nama",
-            "kelompok_id",
-            "mapel_id",
-            "kelas_id",
-            "start_date",
-            "end_date",
-            "status",
-          ]}
-          type={[
-            "text",
-            "select",
-            "select",
-            "select",
-            "date",
-            "date",
-            "select",
-          ]}
+          headList={ujianFormHeadList}
+          keyList={ujianFormKeyList}
+          type={ujianFormType}
           selectList={{
             kelompok_id: kelompokUjianList,
             mapel_id: mapelList,
             kelas_id: daftarKelasList,
-            status: [
-              { name: "Selesai", key: "1" },
-              { name: "Belum Selesai", key: "0" },
-            ],
+            status: ujianFormStatus,
           }}
           onSubmit={editClass}
           onCancel={closeDrawer}
@@ -263,7 +167,7 @@ export function UjianCMS() {
     });
   };
 
-  const handleDelete = (kelas: IUjian) => {
+  const handleDelete = (ujian: IUjian) => {
     Swal.fire({
       title: "Menghapus Item",
       text: "Apakah anda yakin ingin menghapus item ini?",
@@ -273,24 +177,16 @@ export function UjianCMS() {
       cancelButtonText: "Tidak",
     }).then((result) => {
       if (result.isConfirmed) {
-        const url = `${baseUrl}${endpoints["delete"](kelas.id)}`;
-        axios
-          .delete(url, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-          })
-          .then(() => {
-            fetchData();
-          })
-          .catch((error) => {
-            console.error(error);
-            Swal.fire({
-              icon: "error",
-              title: "Request Failed",
-              text: `${(error as Error).message}`,
-            });
+        ujianService.deleteUjian(ujian.id)
+        .then(() => fetchData())
+        .catch((error) => {
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Request Failed",
+            text: `${(error as Error).message}`,
           });
+        });
       }
     });
   };
@@ -304,24 +200,8 @@ export function UjianCMS() {
       <Table<IUjian>
         title="Daftar Ujian"
         data={ujian}
-        headList={[
-          "Ujian",
-          "Kelompok Ujian",
-          "Mapel",
-          "Kelas",
-          "Tanggal Mulai",
-          "Tanggal Berakhir",
-          "Status",
-        ]}
-        keyList={[
-          "nama",
-          "kelompok_id",
-          "mapel_id",
-          "kelas_id",
-          "start_date",
-          "end_date",
-          "status",
-        ]}
+        headList={ujianFormHeadList}
+        keyList={ujianFormKeyList}
         selectList={{
           kelompok_id: kelompokUjianList,
           mapel_id: mapelList,

@@ -11,7 +11,7 @@ export function isRoleAdmin() {
 }
 
 export function isRoleGuru() {
-    console.log(getTokenPayload(),"isRoleGuru")
+    // console.log(getTokenPayload(),"isRoleGuru")
     return getTokenPayload().role === 'guru';
 }
 
@@ -21,7 +21,7 @@ function jwtDecode(t: any) {
         token.raw = t;
         token.header = JSON.parse(window.atob(t.split('.')[0]));
         token.payload = JSON.parse(window.atob(t.split('.')[1]));
-        console.log(token.payload, "token payload")
+        // console.log(token.payload, "token payload")
         return (token)
 
     }

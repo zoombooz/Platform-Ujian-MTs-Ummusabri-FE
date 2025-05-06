@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Countdown } from "../components/countdown";
 import { Environment } from "../environment/environment";
 import axios from "axios";
@@ -9,6 +9,8 @@ import { Loader } from "../components/loader";
 import Swal from "sweetalert2";
 import AntiCheatGuard from "../components/AntiCheatGuard";
 import { Icon } from "../components/icon";
+import * as Rx from 'rxjs';
+import ArabicTextWrapper from "../components/ArabicTextWrapper/ArabicTextWrapper";
 
 interface IAnswerForm {
     soal_id: number,
@@ -44,6 +46,9 @@ export function Ujian() {
     const [loading, setLoading] = useState<boolean>(false);
     const [sesiUjian, setSesiUjian] = useState<any>({});
 
+    const essayInput$ = useRef(new Rx.Subject<IUploadAnswer>()).current;
+    const latestEssayAnswer = useRef<IUploadAnswer|null>(null);
+
     const endpoints = {
         get_soal: (ujian_id: number | string) => `siswa/soal?ujian_id=${ujian_id}`,
         get_duration: (id: string) => `siswa/ujian/${id}`,
@@ -68,7 +73,14 @@ export function Ujian() {
             getDuration(ujian_id)
             fetchSesiSoal()
         }
-    }, [])
+        const subscription = essayInput$
+            .pipe(Rx.debounceTime(5000))
+            .subscribe((body) => {
+                uploadJawaban(body)
+            }) 
+
+        return () => subscription.unsubscribe();
+    }, [essayInput$])
 
     // -----------------------------------------------------------------------------------------------------
     // @ CRUD Functions
@@ -181,6 +193,7 @@ export function Ujian() {
     }
 
     const changeSoal = (option: 'prev' | 'next'): void => {
+        flushPendingEssayAnswer();
         // Make sure to not change it to non existing number
         if(currentNumber === 1 && option === 'prev') return;
         if(currentNumber === questions.length && option === 'next') return;
@@ -205,7 +218,14 @@ export function Ujian() {
             tipe_soal: currentSoal().tipe_soal
         }
 
-        uploadJawaban(body);
+        if(body.tipe_soal === 'essai'){
+            latestEssayAnswer.current = body;
+            essayInput$.next(body)
+        }else {
+            uploadJawaban(body)
+        }
+
+        // uploadJawaban(body);
         setAnswers(prevAnswers => {
             return prevAnswers.map((answer, index) => 
                 index === currentNumber - 1 ? {...answer, jawaban: e.target.value} : answer
@@ -213,7 +233,15 @@ export function Ujian() {
         })
     }
 
+    const flushPendingEssayAnswer = () => {
+        if(latestEssayAnswer.current) {
+            uploadJawaban(latestEssayAnswer.current);
+            latestEssayAnswer.current = null;
+        }
+    }
+
     const handleSubmit = (open_dialog: boolean) => {
+        flushPendingEssayAnswer()
         const upload = () => {
             const answer: any[] = answers.map(el => {
                 return {
@@ -303,6 +331,16 @@ export function Ujian() {
             })
         }else {
             upload();
+        }
+    }
+
+    const isImageUrl = (input: string) => {
+        try {
+            const parsedUrl = new URL(input);
+            console.log(parsedUrl)
+            return /\.(jpeg|jpg|gif|png|webp|bmp|svg)$/i.test(parsedUrl.pathname);
+        }catch(_) {
+            return false;
         }
     }
 
@@ -413,14 +451,12 @@ export function Ujian() {
                         </div>
                     </div>
 
-                    <div id="content" className="flex flex-col gap-2 px-4 h-full">
+                    <div id="content" className="flex flex-col gap-2 px-4 pb-12 h-full overflow-y-auto">
 
                         {currentSoal() && currentSoal().soal && (
-                        <div className="">
-                            <p className="no-select">
-                                {currentSoal().soal}
-                            </p>
-                        </div>
+                        <p className="no-select ">
+                            <ArabicTextWrapper text={currentSoal().soal}></ArabicTextWrapper>
+                        </p>
                         )}
 
                         {currentSoal() && currentSoal().image && (
@@ -432,6 +468,8 @@ export function Ujian() {
                         }
 
                         {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd', 'e'].map((el) => (
+                            <>
+                            {currentSoal()[`pilihan_${el}` as keyof ISoal] && (
                             <div 
                                 className={`${style.radio_button} ${answers[currentNumber - 1].jawaban === el.toUpperCase() ? 'bg-gray-300' : ''} transition-all`} 
                                 key={el}
@@ -444,8 +482,15 @@ export function Ujian() {
                                     checked={answers[currentNumber - 1].jawaban === el.toUpperCase()} 
                                     onChange={handleChange}
                                 />
-                                <label htmlFor={el}>{currentSoal()[`pilihan_${el}` as keyof ISoal]}</label>
+                                <label htmlFor={el}>
+                                    {isImageUrl(currentSoal()[`pilihan_${el}` as keyof ISoal] as string) 
+                                    ? <img src={currentSoal()[`pilihan_${el}` as keyof ISoal] as string} className="ml-8"/>
+                                    : <ArabicTextWrapper text={currentSoal()[`pilihan_${el}` as keyof ISoal] as string} /> 
+                                    }
+                                </label>
                             </div>
+                            )}
+                            </>
                         ))}
 
                         { (currentSoal().tipe_soal === 'essai' || currentSoal().tipe_soal === 'essay')  && (
