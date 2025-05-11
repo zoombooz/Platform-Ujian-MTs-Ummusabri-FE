@@ -1,4 +1,5 @@
 .arabic_text {
     font-family: 'Amiri', serif; /* or Lateef, Scheherazade */
     direction: rtl; /* optional */
+    font-size: 1.5rem;
 }
