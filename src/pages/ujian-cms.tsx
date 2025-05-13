@@ -24,18 +24,21 @@ export function UjianCMS() {
   const [mapelList, setMapelList] = useState<{ name: string; key: string }[]>([]);
   const [pagination, setPagination] = useState<IPaginationNew>( defaultPaginationValueNew );
   const [daftarKelasList, setDaftarKelasList] = useState<{ name: string; key: string }[]>([]);
+  const [tingkatanList, setTingkatanList] = useState<{ name: string; key: string }[]>([]);
   const [kelompokUjianList, setKelompokUjianList] = useState<{ name: string; key: string }[]>([]);
 
   const endpoints = {
     get_kelompok_ujian: "admin/kelompok_ujian",
     get_mapel: "admin/mapel",
     get_daftar_kelas: "admin/daftar_kelas",
+    get_tingkatan: "admin/tingkatan",
   };
 
   useEffect(() => {
     console.log("Query Params: ", searchParams.get('kelompok_ujian_id'))
     fetchData();
     fetchAdditionalData(endpoints["get_daftar_kelas"], setDaftarKelasList);
+    fetchAdditionalData(endpoints["get_tingkatan"], setTingkatanList);
     fetchAdditionalData(endpoints["get_mapel"], setMapelList);
     fetchAdditionalData(endpoints["get_kelompok_ujian"], setKelompokUjianList);
   }, []);
@@ -113,6 +116,7 @@ export function UjianCMS() {
             kelompok_id: kelompokUjianList,
             mapel_id: mapelList,
             kelas_id: daftarKelasList,
+            tingkatan_id: tingkatanList,
             status: ujianFormStatus,
           }}
           onSubmit={addClass}
@@ -158,6 +162,7 @@ export function UjianCMS() {
             kelompok_id: kelompokUjianList,
             mapel_id: mapelList,
             kelas_id: daftarKelasList,
+            tingkatan_id: tingkatanList,
             status: ujianFormStatus,
           }}
           onSubmit={editClass}
@@ -206,6 +211,7 @@ export function UjianCMS() {
           kelompok_id: kelompokUjianList,
           mapel_id: mapelList,
           kelas_id: daftarKelasList,
+          tingkatan_id: tingkatanList,
         }}
         pagination={pagination}
         infoAction={true}

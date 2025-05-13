@@ -2,9 +2,9 @@ import { IDaftarKelas } from "./kelas.type"
 import { IMataPelajaran } from "./mapel.type"
 import { IPeserta } from "./peserta.type"
 
-export const ujianFormHeadList = [ "Ujian", "Kelompok Ujian", "Mapel", "Kelas", "Tanggal Mulai", "Tanggal Berakhir", "Status" ];
-export const ujianFormKeyList = [ "nama", "kelompok_id", "mapel_id", "kelas_id", "start_date", "end_date", "status"];
-export const ujianFormType = [ "text", "select", "select", "select", "date", "date", "select" ];
+export const ujianFormHeadList = [ "Ujian", "Kelompok Ujian", "Mapel", "Kelas","Tingkatan", "Tanggal Mulai", "Tanggal Berakhir", "Status" ];
+export const ujianFormKeyList = [ "nama", "kelompok_id", "mapel_id", "kelas_id","tingkatan_id", "start_date", "end_date", "status"];
+export const ujianFormType = [ "text", "select", "select", "select","select", "date", "date", "select" ];
 export const ujianFormStatus = [
     { name: "Selesai", key: "1" },
     { name: "Belum Selesai", key: "0" },
@@ -16,6 +16,7 @@ export interface IUjian {
     kelompok_id: string,
     mapel_id: string,
     kelas_id: string,
+    tingkatan_id: string,
     id_sekolah: string | number,
     start_date: string,
     end_date: string,

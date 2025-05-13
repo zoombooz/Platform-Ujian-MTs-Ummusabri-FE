@@ -55,6 +55,7 @@ export function Import<T extends Record<string, any>>({
 
   const handleChangeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       setFormData((prevData) => ({
           ...prevData,

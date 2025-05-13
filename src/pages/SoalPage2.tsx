@@ -152,12 +152,12 @@ export function SoalPage2() {
         }
 
         const headList = options === 'pilihan_ganda'
-            ? ["Ujian", "Tipe Soal", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
-            : ["Ujian", "Tipe Soal", "Soal", 'Jawaban']
+            ? ["Ujian", "Tipe Soal","Gambar", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+            : ["Ujian", "Tipe Soal","Gambar", "Soal", 'Jawaban']
 
         const keyList = options === 'pilihan_ganda'
-            ? ["ujian_id", "tipe_soal", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
-            : ["ujian_id", "tipe_soal", "soal", 'jawaban']
+            ? ["ujian_id", "tipe_soal","image", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+            : ["ujian_id", "tipe_soal","image", "soal", 'jawaban']
 
         openDrawer({
             content: (
@@ -169,7 +169,7 @@ export function SoalPage2() {
                     title="Tambah Soal"
                     headList={headList}
                     keyList={keyList}
-                    type={["select", "select", "text-editor", "text", "text", "text", "text", "text", "select"]}
+                    type={["select", "select","file", "text-editor", "text", "text", "text", "text", "text", "select"]}
                     selectList={{
                         ujian_id: ujianList,
                         tipe_soal: tipe_soal,
