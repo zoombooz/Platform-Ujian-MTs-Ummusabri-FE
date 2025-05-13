@@ -52,6 +52,8 @@ export function Peserta() {
     const [kelasList, setKelasList] = useState<
         { name: string; key: string | number }[]
     >([]);
+    const [tingkatanList, setTingkatanList] = useState<
+        { name: string; key: string | number }[]>([]);
     const [pagination, setPagination] = useState<IPaginationNew>(
         defaultPaginationValueNew
     );
@@ -65,6 +67,7 @@ export function Peserta() {
         get_agama: "admin/agama",
         get_jurusan: "admin/jurusan",
         get_kelas: "admin/daftar_kelas",
+        get_tingkatan: "admin/tingkatan",
         import_peserta: "admin/import_peserta",
     };
 
@@ -77,6 +80,7 @@ export function Peserta() {
         fetchAdditionalData(endpoints["get_agama"], setAgamaList);
         fetchAdditionalData(endpoints["get_jurusan"], setJurusanList);
         fetchAdditionalData(endpoints["get_kelas"], setKelasList);
+        fetchAdditionalData(endpoints["get_tingkatan"], setTingkatanList);
     }, []);
 
     // -----------------------------------------------------------------------------------------------------
@@ -151,9 +155,9 @@ export function Peserta() {
         content: (
             <Form<IPeserta>
             title="Tambah Peserta"
-            headList={["Nomor Peserta","Nama Peserta", "Password", "Jurusan", "Agama", "Kelas"]}
-            keyList={["nomor_peserta","nama", "password", "jurusan_id", "agama_id", "kelas_id"]}
-            type={["text","text", "password", "select", "select", "select"]}
+            headList={["Nomor Peserta","Nama Peserta", "Password", "Jurusan", "Agama", "Kelas", "Tingkatan"]}
+            keyList={["nomor_peserta","nama", "password", "jurusan_id", "agama_id", "kelas_id", "tingkatan_id"]}
+            type={["text","text", "password", "select", "select", "select", "select"]}
             selectList={{
                 jurusan_id: jurusanList,
                 agama_id: agamaList,
@@ -199,9 +203,9 @@ export function Peserta() {
                         <Form<IPeserta>
                         data={peserta}
                         title="Edit Peserta"
-                        headList={["Nomor Peserta","Nama Peserta", "Jurusan", "Agama", "Kelas"]}
-                        keyList={["nomor_peserta","nama", "jurusan_id", "agama_id", "kelas_id"]}
-                        type={["text","text", "select", "select", "select"]}
+                        headList={["Nomor Peserta","Nama Peserta", "Jurusan", "Agama", "Kelas","Tingkatan"]}
+                        keyList={["nomor_peserta","nama", "jurusan_id", "agama_id", "kelas_id", "tingkatan_id"]}
+                        type={["text","text", "select", "select", "select", "select"]}
                         selectList={{
                             jurusan_id: jurusanList,
                             agama_id: agamaList,
@@ -320,18 +324,20 @@ export function Peserta() {
         <Table<IPeserta>
             title="Daftar Peserta"
             data={peserta}
-            headList={["Nama", "Jurusan", "Agama", "Kelas", "Nomor Peserta"]}
+            headList={["Nama", "Jurusan", "Agama", "Kelas","Tingkatan", "Nomor Peserta"]}
             keyList={[
                 "nama",
                 "jurusan_id",
                 "agama_id",
                 "kelas_id",
+                "tingkatan_id",
                 "nomor_peserta",
             ]}
             selectList={{
                 jurusan_id: jurusanList,
                 agama_id: agamaList,
                 kelas_id: kelasList,
+                tingkatan_id: tingkatanList,
             }}
             pagination={pagination}
             downloadPdfButton={true}

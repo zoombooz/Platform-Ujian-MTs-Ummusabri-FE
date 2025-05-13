@@ -72,6 +72,9 @@ const ExamCard: React.FC<ExamCardProps> = ({ student, exam }) => (
               <Text>NIM/NPM: {student?.nomor_peserta}</Text>
             </View>
             <View style={styles.row}>
+              <Text>Password: {student?.password}</Text>
+            </View>
+            <View style={styles.row}>
               <Text>Kelas: {student?.kelas?.nama}</Text>
             </View>
             {/* <View style={styles.row}>

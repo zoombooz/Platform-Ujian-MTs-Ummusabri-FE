@@ -18,7 +18,7 @@ export function UjianLanding() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const endpoints = {
-        get_ujian: `siswa/ujian?nomor_peserta=${getTokenPayload().nomor_peserta}&kelas_id=${getTokenPayload().kelas_id}&date=${new Date().toISOString()}`,
+        get_ujian: `siswa/ujian?nomor_peserta=${getTokenPayload().nomor_peserta}&kelas_id=${getTokenPayload().kelas_id}&tingkatan_id=${getTokenPayload().tingkatan_id}&status=0`,
         get_kelompok_ujian: 'siswa/kelompok_ujian',
         sesi_soal: 'siswa/sesi_soal',
         sesi_ujian: 'siswa/sesi_ujian',
