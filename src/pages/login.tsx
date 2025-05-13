@@ -101,7 +101,13 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
                     console.log("Peserta")
                     localStorage.setItem("authToken", token);
                     console.log("Token Payload: ", getTokenPayload());
-                    navigate("/daftar-ujian")
+                    Swal.fire({
+                        title: "Successfully Login!",
+                        text: `Welcome ${getTokenPayload().nama}!`,
+                        icon: "success"
+                    }).then(() => {
+                        navigate('/daftar-ujian');
+                    });
                 }else {
                     console.log("Guru")
                     localStorage.setItem("authToken", token);
