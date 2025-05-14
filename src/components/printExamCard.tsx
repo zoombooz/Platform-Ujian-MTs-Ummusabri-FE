@@ -77,6 +77,9 @@ const ExamCard: React.FC<ExamCardProps> = ({ student, exam }) => (
             <View style={styles.row}>
               <Text>Kelas: {student?.kelas?.nama}</Text>
             </View>
+            <View style={styles.row}>
+              <Text>Password: {student?.password}</Text>
+            </View>
             {/* <View style={styles.row}>
               <Text>Tanggal: {exam?.date}</Text>
             </View> */}

@@ -152,12 +152,14 @@ export function SoalPage2() {
         }
 
         const headList = options === 'pilihan_ganda'
-            ? ["Ujian", "Tipe Soal","Gambar", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+
+            ? ["Ujian", "Tipe Soal","Gambar", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Jawaban"]
             : ["Ujian", "Tipe Soal","Gambar", "Soal", 'Jawaban']
 
         const keyList = options === 'pilihan_ganda'
-            ? ["ujian_id", "tipe_soal","image", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+            ? ["ujian_id", "tipe_soal","image", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "jawaban"]
             : ["ujian_id", "tipe_soal","image", "soal", 'jawaban']
+
 
         openDrawer({
             content: (
@@ -169,7 +171,8 @@ export function SoalPage2() {
                     title="Tambah Soal"
                     headList={headList}
                     keyList={keyList}
-                    type={["select", "select","file", "text-editor", "text", "text", "text", "text", "text", "select"]}
+                    type={["select", "select","file", "text-editor", "text", "text", "text", "text", "select"]}
+
                     selectList={{
                         ujian_id: ujianList,
                         tipe_soal: tipe_soal,
@@ -177,8 +180,7 @@ export function SoalPage2() {
                             {name: "A", key: 'A'},
                             {name: "B", key: 'B'},
                             {name: "C", key: 'C'},
-                            {name: "D", key: 'D'},
-                            {name: "E", key: 'E'}
+                            {name: "D", key: 'D'}
                         ]
                     }}
                     disabled={['ujian_id', 'tipe_soal']}
@@ -210,11 +212,11 @@ export function SoalPage2() {
         }
 
         const headList = soal.tipe_soal === 'pilihan_ganda'
-            ? ["Ujian", "Tipe Soal", "Upload Gambar", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E", "Jawaban"]
+            ? ["Ujian", "Tipe Soal", "Upload Gambar", "Soal", "Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Jawaban"]
             : ["Ujian", "Tipe Soal", "Upload Gambar", "Soal", "Jawaban"]
 
         const keyList = soal.tipe_soal === 'pilihan_ganda'
-            ? ["ujian_id", "tipe_soal", "image", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "pilihan_e", "jawaban"]
+            ? ["ujian_id", "tipe_soal", "image", "soal", "pilihan_a", "pilihan_b", "pilihan_c", "pilihan_d", "jawaban"]
             : ["ujian_id", "tipe_soal", "image", "soal", "jawaban"]
 
         openDrawer({
@@ -224,7 +226,7 @@ export function SoalPage2() {
                     title="Edit Soal"
                     headList={headList}
                     keyList={keyList}
-                    type={["select", "select", "file", "text-editor", "text", "text", "text", "text", "text", "select"]}
+                    type={["select", "select", "file", "text-editor", "text", "text", "text", "text", "select"]}
                     selectList={{
                         ujian_id: ujianList,
                         tipe_soal: tipe_soal,
@@ -232,8 +234,7 @@ export function SoalPage2() {
                             {name: "A", key: 'A'},
                             {name: "B", key: 'B'},
                             {name: "C", key: 'C'},
-                            {name: "D", key: 'D'},
-                            {name: "E", key: 'E'}
+                            {name: "D", key: 'D'}
                         ]
                     }}
                     disabled={['ujian_id', 'tipe_soal']}
@@ -411,14 +412,14 @@ export function SoalPage2() {
                             : <ArabicTextWrapper text={selectedSoal.pilihan_d} /> 
                             }
                         </p>
-                        {selectedSoal.pilihan_e && (
+                        {/* {selectedSoal.pilihan_e && (
                         <p>e. 
                             {isImageUrl(selectedSoal.pilihan_e)
                             ? <img src={selectedSoal.pilihan_e} className="ml-8"/>
                             : <ArabicTextWrapper text={selectedSoal.pilihan_e} /> 
                             }
                         </p>
-                        )}
+                        )} */}
                     </div>
                     )
                     }

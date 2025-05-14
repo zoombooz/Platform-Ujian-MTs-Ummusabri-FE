@@ -95,4 +95,10 @@ ul {
 
 .quill > .ql-toolbar:first-child {
     display: none !important;
-  }
+}
+
+.ql-tooltip.ql-editing[data-mode="formula"] {
+  left: 50% !important;
+  transform: translateX(-50%);
+  min-width: 200px;
+}
