@@ -58,7 +58,9 @@ const RichTextEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
         };
     }, []);
 
-    return <div ref={editorRef} />;
+    return (
+        <div ref={editorRef} />
+    );
 };
 
 export default RichTextEditor;

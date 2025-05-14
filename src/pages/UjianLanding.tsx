@@ -186,13 +186,24 @@ export function UjianLanding() {
                             <h1 className="font-bold">📝Daftar Ujian Tersedia</h1>
                             <p className="text-gray-500 font-normal md:font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
                         </div>
-                        <button 
-                            className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-full cursor-pointer" 
-                            onClick={() => logOut()}
-                        >
-                            <Icon name="heroicons:arrow-left-start-on-rectangle" shape="outline" customClass="text-white sm:hidden" />
-                            <p className="text-white hidden sm:block">Log Out</p>
-                        </button>
+                        <div className="flex gap-5 items-center">
+                            <div className="flex items-center gap-3">
+                                <div className="border-2 border-gray-400 p-3 rounded-full">
+                                    <Icon name="heroicons:user" shape="outline" />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <p className="text-lg font-semibold">Welcome!</p>
+                                    <p>{getTokenPayload().nama}</p>
+                                </div>
+                            </div>
+                            <button 
+                                className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-full cursor-pointer" 
+                                onClick={() => logOut()}
+                            >
+                                <Icon name="heroicons:arrow-left-start-on-rectangle" shape="outline" customClass="text-white sm:hidden" />
+                                <p className="text-white hidden sm:block">Log Out</p>
+                            </button>
+                        </div>
                     </div>
                     <div className="hidden md:block overflow-y-auto">
                         <Table <IUjian>

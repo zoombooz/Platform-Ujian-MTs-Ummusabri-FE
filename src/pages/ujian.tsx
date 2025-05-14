@@ -467,7 +467,7 @@ export function Ujian() {
                         )
                         }
 
-                        {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd', 'e'].map((el) => (
+                        {currentSoal().tipe_soal === 'pilihan_ganda' && ['a', 'b', 'c', 'd'].map((el) => (
                             <>
                             {currentSoal()[`pilihan_${el}` as keyof ISoal] && (
                             <div 
