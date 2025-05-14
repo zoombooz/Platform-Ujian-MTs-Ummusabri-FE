@@ -82,11 +82,11 @@ const ExamCardAll: React.FC<{ student: Student; exam?: Exam }> = ({ student, exa
           </View>
         </View>
 
-        {/* <View style={styles.footer}>
+        {exam && (<View style={styles.footer}>
           <Text>Harap membawa kartu identitas saat ujian</Text>
           <Text style={{ marginTop: 4 }}>{exam?.location}, {exam?.sign_date}</Text>
           <Text style={{ marginTop: 8 }}>{exam?.supervisor}</Text>
-        </View> */}
+        </View>)}
       </View>
     </Page>
   </Document>
