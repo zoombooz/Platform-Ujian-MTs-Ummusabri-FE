@@ -7,7 +7,7 @@ export function isTokenExpired() {
 }
 
 export function isRoleAdmin() {
-    return getTokenPayload().role === 'admin';
+    return getTokenPayload().role.toLowerCase() === 'admin';
 }
 
 export function isRoleGuru() {
