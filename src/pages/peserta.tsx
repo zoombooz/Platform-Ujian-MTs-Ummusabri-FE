@@ -12,6 +12,7 @@ import { useNavigate } from "react-router";
 // import { getTokenPayload, isRoleAdmin } from "../utils/jwt";
 import { pesertaService } from "../service/pesertaService";
 import { Import } from "../components/Import";
+import DownloadAllKartu from "../components/DownloadAllKartu";
 
 export interface ISoal {
     id: number,
@@ -42,6 +43,7 @@ export function Peserta() {
     const navigate = useNavigate();
     const { openDrawer, closeDrawer } = useDrawer();
     const [peserta, setPeserta] = useState<IPeserta[]>([]);
+    const [allPeserta, setAllPeserta] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [agamaList, setAgamaList] = useState<
         { name: string; key: string | number }[]
@@ -69,6 +71,7 @@ export function Peserta() {
         get_kelas: "admin/daftar_kelas",
         get_tingkatan: "admin/tingkatan",
         import_peserta: "admin/import_peserta",
+        get_all_peserta: "admin/peserta?all=1",
     };
 
     // -----------------------------------------------------------------------------------------------------
@@ -81,6 +84,7 @@ export function Peserta() {
         fetchAdditionalData(endpoints["get_jurusan"], setJurusanList);
         fetchAdditionalData(endpoints["get_kelas"], setKelasList);
         fetchAdditionalData(endpoints["get_tingkatan"], setTingkatanList);
+        fetchAllData(endpoints["get_all_peserta"], setAllPeserta);
     }, []);
 
     // -----------------------------------------------------------------------------------------------------
@@ -99,6 +103,31 @@ export function Peserta() {
         })
         .finally(() => {
             setLoading(false);
+        });
+    };
+
+    const fetchAllData = (
+        endpoint: string,
+        setList: React.Dispatch<
+        React.SetStateAction<{ name: string; key: string | number }[]>
+        >
+    ) => {
+        const url = `${baseUrl}${endpoint}`;
+        axios
+        .get(url, {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+        })
+        .then((response) => {
+            const list = response.data.data
+            setList(() => {
+            return [...list];
+            });
+            console.log("Check List: ", { agamaList, jurusanList, kelasList });
+        })
+        .catch((error) => {
+            console.error(error);
         });
     };
 
@@ -321,6 +350,9 @@ export function Peserta() {
 
   return (
     <div className="w-full h-full bg-gray-200 p-10 overflow-y-auto">
+        <DownloadAllKartu
+        students={allPeserta}
+        />
         <Table<IPeserta>
             title="Daftar Peserta"
             data={peserta}

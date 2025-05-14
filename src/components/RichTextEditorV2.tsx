@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Quill from 'quill';
-import Toolbar from 'quill/modules/toolbar';
-import Clipboard from 'quill/modules/clipboard';
+// import Toolbar from 'quill/modules/toolbar';
+// import Clipboard from 'quill/modules/clipboard';
 import katex from 'katex'; // Import library KaTeX
 import 'quill/dist/quill.snow.css';
 import 'katex/dist/katex.min.css';
@@ -48,7 +48,7 @@ const RichTextEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
 
             // Set nilai awal
             quillRef.current.root.innerHTML = value;
-            const toolbarModule = quillRef.current!.getModule('toolbar') as Toolbar;
+            // const toolbarModule = quillRef.current!.getModule('toolbar') as Toolbar;
             // const toolbarContainer = toolbarModule.container as HTMLElement;
             const toolbarContainer = editorRef.current!.previousElementSibling; // .ql-toolbar
             if (toolbarContainer) {

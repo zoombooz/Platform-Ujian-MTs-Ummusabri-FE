@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import RichTextEditor from './RichTextEditor';
+// import RichTextEditor from './RichTextEditor';
 import RichTextEditorV2 from './RichTextEditorV2';
 interface WysiwygAreaProps {
     content?: string,
