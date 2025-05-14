@@ -13,29 +13,29 @@ const ArabicTextWrapper: React.FC<ArabicTextWrapperProps> = ({ text }) => {
     // Add a style for <ol> elements based on data-list attribute
     
     // $SELECTION_PLACEHOLDER$
-    const dataListMatch = text.match(/data-list\s*=\s*"([^"]*)"/);
+    const dataListMatch = text?.match(/data-list\s*=\s*"([^"]*)"/);
     const dataListValue = dataListMatch ? dataListMatch[1] : '';
     // console.log("data-list match:", dataListMatch);
     // console.log("data-list value:", dataListValue);
 
     if(dataListValue == 'bullet') {
-        text = text.replace(/<ol[^>]*>/g, '<ul class="bullet">');
-        text = text.replace(/<\/ol>/g, '</ul>');
+        text = text?.replace(/<ol[^>]*>/g, '<ul class="bullet">');
+        text = text?.replace(/<\/ol>/g, '</ul>');
     }
     const addClassesToListItems = (text:string) => {
         console.log("TEST")
-        return text.replace(/<li data-list="([^"]+)">([^<]+)<\/li>/g, (__, listType:any, content:any) => {
+        return text?.replace(/<li data-list="([^"]+)">([^<]+)<\/li>/g, (__, listType:any, content:any) => {
             // console.log("Replace Prop: ", {listType, content})
             return `<li data-list="${listType}" class="${listType === 'bullet' ? 'list-disc' : 'list-decimal'}">${content}</li>`;
         });
       };
 
     text = addClassesToListItems(text);
-    text = text.replace(/\s+/g, ' ').trim();
+    text = text?.replace(/\s+/g, ' ').trim();
     // Match Arabic parts and split
-    text.replace(arabicRegex, (match, index) => {
+    text?.replace(arabicRegex, (match, index) => {
         if (lastIndex !== index) {
-            parts.push({ type: 'text', content: text.slice(lastIndex, index).trim() });
+            parts.push({ type: 'text', content: text?.slice(lastIndex, index).trim() });
         }
         parts.push({ type: 'arabic', content: match.trim() });
         lastIndex = index + match.length;
@@ -44,8 +44,8 @@ const ArabicTextWrapper: React.FC<ArabicTextWrapperProps> = ({ text }) => {
     
     // console.log("New Text: ", text)
     // Push any remaining text after the last match
-    if (lastIndex < text.length) {
-        parts.push({ type: 'text', content: text.slice(lastIndex).trim() });
+    if (lastIndex < text?.length) {
+        parts.push({ type: 'text', content: text?.slice(lastIndex).trim() });
     }
 
     return (
