@@ -9,6 +9,7 @@ import { useDrawer } from "../context/DrawerContext";
 import { Loader } from "../components/loader";
 import ArabicTextWrapper from "../components/ArabicTextWrapper/ArabicTextWrapper";
 import { Import } from "../components/Import";
+import { SoalForm } from "../components/soalForm";
 export interface ISoal {
     id: number,
     ujian_id: string | number,
@@ -162,7 +163,35 @@ export function SoalPage2() {
 
 
         openDrawer({
-            content: (
+            content: 
+            options === 'pilihan_ganda' ?
+            (
+                <SoalForm <Partial<ISoal>>
+                    data={{
+                        ujian_id,
+                        tipe_soal: options
+                    }}
+                    title="Edit Soal"
+                    headList={headList}
+                    keyList={keyList}
+                    type={["select", "select", "file", "text-editor", "text", "text", "text", "text", "select"]}
+                    selectList={{
+                        ujian_id: ujianList,
+                        tipe_soal: tipe_soal,
+                        jawaban: [
+                            {name: "A", key: 'A'},
+                            {name: "B", key: 'B'},
+                            {name: "C", key: 'C'},
+                            {name: "D", key: 'D'}
+                        ]
+                    }}
+                    disabled={['ujian_id', 'tipe_soal']}
+                    onSubmit={addSoal}
+                    onCancel={closeDrawer}
+                />
+            )
+            :
+            (
                 <Form <Partial<ISoal>>
                     data={{
                         ujian_id,
@@ -220,8 +249,8 @@ export function SoalPage2() {
             : ["ujian_id", "tipe_soal", "image", "soal", "jawaban"]
 
         openDrawer({
-            content: (
-                <Form <ISoal>
+            content: soal.tipe_soal === 'pilihan_ganda' ? (
+                <SoalForm <ISoal>
                     data={soal}
                     title="Edit Soal"
                     headList={headList}
@@ -241,7 +270,27 @@ export function SoalPage2() {
                     onSubmit={editAgama}
                     onCancel={closeDrawer}
                 />
-            )
+            ) :
+            <Form <ISoal>
+                    data={soal}
+                    title="Edit Soal"
+                    headList={headList}
+                    keyList={keyList}
+                    type={["select", "select", "file", "text-editor", "text", "text", "text", "text", "select"]}
+                    selectList={{
+                        ujian_id: ujianList,
+                        tipe_soal: tipe_soal,
+                        jawaban: [
+                            {name: "A", key: 'A'},
+                            {name: "B", key: 'B'},
+                            {name: "C", key: 'C'},
+                            {name: "D", key: 'D'}
+                        ]
+                    }}
+                    disabled={['ujian_id', 'tipe_soal']}
+                    onSubmit={editAgama}
+                    onCancel={closeDrawer}
+                />
         })
     }
 
