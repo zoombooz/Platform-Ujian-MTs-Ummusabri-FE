@@ -9,7 +9,7 @@ import { useDrawer } from "../context/DrawerContext";
 import { Loader } from "../components/loader";
 import ArabicTextWrapper from "../components/ArabicTextWrapper/ArabicTextWrapper";
 import { Import } from "../components/Import";
-import { SoalForm } from "../components/soalForm";
+import { SoalForm } from "../components/SoalForm";
 export interface ISoal {
     id: number,
     ujian_id: string | number,
