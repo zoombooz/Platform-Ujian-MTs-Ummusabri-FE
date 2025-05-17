@@ -454,7 +454,7 @@ export function Ujian() {
                     <div id="content" className="flex flex-col gap-2 px-4 pb-12 h-full overflow-y-auto">
 
                         {currentSoal() && currentSoal().soal && (
-                        <p className="no-select ">
+                        <p className="no-select py-5 sm:py-0">
                             <ArabicTextWrapper text={currentSoal().soal}></ArabicTextWrapper>
                         </p>
                         )}
@@ -482,7 +482,7 @@ export function Ujian() {
                                     checked={answers[currentNumber - 1].jawaban === el.toUpperCase()} 
                                     onChange={handleChange}
                                 />
-                                <label htmlFor={el}>
+                                <label htmlFor={el} className="py-4 sm:py-0">
                                     {isImageUrl(currentSoal()[`pilihan_${el}` as keyof ISoal] as string) 
                                     ? <img src={currentSoal()[`pilihan_${el}` as keyof ISoal] as string} className="ml-8"/>
                                     : <ArabicTextWrapper text={currentSoal()[`pilihan_${el}` as keyof ISoal] as string} /> 

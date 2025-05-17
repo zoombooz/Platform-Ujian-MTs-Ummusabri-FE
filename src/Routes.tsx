@@ -18,6 +18,8 @@ import { Guru } from "./pages/Guru";
 import { SoalPage2 } from "./pages/SoalPage2";
 import { MonitoringPage } from "./pages/Monitoring";
 import { Tingkatan } from "./pages/tingkatan";
+import { HasilUjianAnalysis } from "./pages/HasilUjianAnalysis";
+import { HasilUjianAnalysisSingle } from "./pages/HasilUjianAnalysisSingle";
 export function RouteLinks() {
 
     const ProtectedRoute = () => {
@@ -66,6 +68,8 @@ export function RouteLinks() {
                                     <Route path="jurusan" element={<Jurusan />} />
                                     <Route path="tingkatan" element={<Tingkatan />} />
                                     <Route path="ujian" element={<UjianCMS />} />
+                                    <Route path="hasil_ujian" element={<HasilUjianAnalysis />} />
+                                    <Route path="hasil_ujian/ujian/:ujian_id" element={<HasilUjianAnalysisSingle />} />
                                     <Route path="evaluasi/:nomor_peserta/" element={<Evaluasi />} />
                                     <Route path="evaluasi/:nomor_peserta/:ujian_id" element={<HasilUjian />} />
                                     <Route path="soal/:ujian_id/:nama_ujian" element={<SoalPage2 />} />

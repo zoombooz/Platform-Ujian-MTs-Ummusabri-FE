@@ -31,14 +31,14 @@ export function CardList<T extends Record<string, any>>({
     keyList,
     pagination,
     // classCustom,
-    // infoAction,
+    infoAction,
     // editAction,
     // deleteAction,
     // loading,
-    // onInfoAction,
+    onInfoAction,
     // onEditAction,
     // onDeleteAction,
-    // isCardDisabled,
+    isCardDisabled,
     // onChangePage,
 }: ICardList<T>) {
 
@@ -69,9 +69,19 @@ export function CardList<T extends Record<string, any>>({
                             <div>
                                 <p className="font-semibold text-md mb-2">Action</p>
                                 <div className="flex gap-2">
-                                    <button className="bg-green-500 p-1 rounded-md flex gap-1">
-                                        <Icon name="heroicons:play" shape="outline" customClass="text-white"/>
-                                    </button>
+                                    {infoAction && (
+                                        <button
+                                            onClick={() => onInfoAction && onInfoAction(data)}
+                                            className={`p-1 rounded-md flex gap-1 ${
+                                                isCardDisabled && isCardDisabled(data)
+                                                    ? "bg-gray-300 cursor-not-allowed"
+                                                    : "bg-green-500 cursor-pointer"
+                                            }`}
+                                            disabled={isCardDisabled && isCardDisabled(data)}
+                                        >
+                                            <Icon name="heroicons:play" shape="outline" customClass="text-white" />
+                                        </button>
+                                    )}
                                     <button className="bg-blue-500 p-1 rounded-md flex gap-1">
                                         <Icon name="heroicons:information-circle" shape="outline" customClass="text-white"/>
                                     </button>

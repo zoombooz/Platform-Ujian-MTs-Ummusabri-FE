@@ -2,9 +2,17 @@ import { IDaftarKelas } from "./kelas.type"
 import { IMataPelajaran } from "./mapel.type"
 import { IPeserta } from "./peserta.type"
 
-export const ujianFormHeadList = [ "Ujian", "Kelompok Ujian", "Mapel", "Kelas","Tingkatan", "Status" ];
-export const ujianFormKeyList = [ "nama", "kelompok_id", "mapel_id", "kelas_id","tingkatan_id", "status"];
-export const ujianFormType = [ "text", "select", "select", "select","select", "select" ];
+// export const ujianFormHeadList = [ "Ujian", "Kelompok Ujian", "Mapel", "Kelas","Tingkatan", "Status" ];
+// export const ujianFormKeyList = [ "nama", "kelompok_id", "mapel_id", "kelas_id","tingkatan_id", "status"];
+// export const ujianFormType = [ "text", "select", "select", "select","select", "select" ];
+// export const ujianFormStatus = [
+//     { name: "Selesai", key: "1" },
+//     { name: "Belum Selesai", key: "0" },
+// ];
+
+export const ujianFormHeadList = [ "Ujian", "Kelompok Ujian", "Mapel","Tingkatan", "Status" ];
+export const ujianFormKeyList = [ "nama", "kelompok_id", "mapel_id","tingkatan_id", "status"];
+export const ujianFormType = [ "text", "select", "select", "select", "select" ];
 export const ujianFormStatus = [
     { name: "Selesai", key: "1" },
     { name: "Belum Selesai", key: "0" },
