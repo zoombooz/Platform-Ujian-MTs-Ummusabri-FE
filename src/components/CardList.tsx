@@ -32,8 +32,8 @@ export function CardList<T extends Record<string, any>>({
     pagination,
     // classCustom,
     infoAction,
-    // editAction,
-    // deleteAction,
+    editAction =true,
+    deleteAction = true,
     // loading,
     onInfoAction,
     // onEditAction,
@@ -85,11 +85,12 @@ export function CardList<T extends Record<string, any>>({
                                     <button className="bg-blue-500 p-1 rounded-md flex gap-1">
                                         <Icon name="heroicons:information-circle" shape="outline" customClass="text-white"/>
                                     </button>
-                                    <button className="bg-yellow-500 p-1 rounded-md">
+                                    {editAction && (<button className="bg-yellow-500 p-1 rounded-md">
                                         <Icon name="heroicons:pencil-square" shape="outline" customClass="text-white"/>
-                                    </button><button className="bg-red-500 p-1 rounded-md">
+                                    </button>)}
+                                    {deleteAction &&(<button className="bg-red-500 p-1 rounded-md">
                                         <Icon name="heroicons:trash" shape="outline" customClass="text-white"/>
-                                    </button>
+                                    </button>)}
                                 </div>
                             </div>
                         </div>

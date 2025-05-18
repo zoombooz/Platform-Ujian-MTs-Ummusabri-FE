@@ -10,9 +10,9 @@ import { IPeserta } from "./peserta.type"
 //     { name: "Belum Selesai", key: "0" },
 // ];
 
-export const ujianFormHeadList = [ "Ujian", "Kelompok Ujian", "Mapel","Tingkatan", "Status" ];
-export const ujianFormKeyList = [ "nama", "kelompok_id", "mapel_id","tingkatan_id", "status"];
-export const ujianFormType = [ "text", "select", "select", "select", "select" ];
+export const ujianFormHeadList = [ "Ujian",'Token', "Kelompok Ujian", "Mapel","Tingkatan", "Status" ];
+export const ujianFormKeyList = [ "nama",'password', "kelompok_id", "mapel_id","tingkatan_id", "status"];
+export const ujianFormType = [ "text",'text', "select", "select", "select", "select" ];
 export const ujianFormStatus = [
     { name: "Selesai", key: "1" },
     { name: "Belum Selesai", key: "0" },
@@ -21,6 +21,7 @@ export const ujianFormStatus = [
 export interface IUjian {
     id: number,
     nama: string,
+    password: string,
     kelompok_id: string,
     mapel_id: string,
     kelas_id: string,

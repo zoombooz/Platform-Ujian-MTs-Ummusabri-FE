@@ -134,29 +134,72 @@ export function UjianLanding() {
 
 
 
-        Swal.fire({
-            title: "Memulai Ujian",
-            text: "Apakah anda yakin ingin memulai ujian sekarang?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Iya",
-            cancelButtonText: "Tidak"
-        }).then(async (result) => {
-            try{
-                if(result.isConfirmed){
-                    await post_sesi_ujian(ujian_id)
-                    navigate(`/ujian/${ujian_id}`)
+        // Swal.fire({
+        //     title: "Memulai Ujian",
+        //     text: "Apakah anda yakin ingin memulai ujian sekarang?",
+        //     icon: "warning",
+        //     showCancelButton: true,
+        //     confirmButtonText: "Iya",
+        //     cancelButtonText: "Tidak"
+        // }).then(async (result) => {
+        //     try{
+        //         if(result.isConfirmed){
+        //             await post_sesi_ujian(ujian_id)
+        //             navigate(`/ujian/${ujian_id}`)
+        //         }
+        //     }
+        //     catch(err){
+        //         console.error(err);
+        //         Swal.fire({
+        //             title: "Error",
+        //             text: "Gagal memulai ujian. " + err,
+        //             icon: "error",
+        //         });
+        //     }
+        // })
+    Swal.fire({
+        title: "Memulai Ujian",
+        text: "Apakah anda yakin ingin memulai ujian sekarang?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Iya",
+        cancelButtonText: "Tidak",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            // prompt for exam password
+            const pwResult = await Swal.fire({
+                title: "Masukkan Password Ujian",
+                input: "password",
+                inputLabel: "Password",
+                inputPlaceholder: "Masukkan password ujian",
+                showCancelButton: true,
+            });
+
+            if (pwResult.isConfirmed) {
+                const ujian = ujianList.find((u) => u.id === ujian_id);
+                if (!ujian) {
+                    return Swal.fire({
+                        title: "Error",
+                        text: "Ujian tidak ditemukan.",
+                        icon: "error",
+                    });
                 }
+
+                // compare with ujian.password
+                if (pwResult.value !== ujian.password) {
+                    return Swal.fire({
+                        title: "Error",
+                        text: "Token wrong",
+                        icon: "error",
+                    });
+                }
+
+                // password valid → start session
+                await post_sesi_ujian(ujian_id);
+                navigate(`/ujian/${ujian_id}`);
             }
-            catch(err){
-                console.error(err);
-                Swal.fire({
-                    title: "Error",
-                    text: "Gagal memulai ujian. " + err,
-                    icon: "error",
-                });
-            }
-        })
+        }
+    });
     }
 
     const logOut = () => {
@@ -239,6 +282,8 @@ export function UjianLanding() {
                             data={getUjianList()}
                             onChangePage={() => {}}
                             infoAction={true}
+                            editAction={false}
+                            deleteAction={false}
                             onInfoAction={res => startUjian(res.id)}
                             // infoButtonText="▶️ Mulai Ujian"
                             loading={loading}
