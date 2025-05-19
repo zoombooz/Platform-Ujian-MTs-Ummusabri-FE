@@ -72,9 +72,9 @@ export function DaftarKelas() {
             content: (
                 <Form <IDaftarKelas>
                     title="Tambah Kelas"
-                    headList={["Nama Kelas"]}
-                    keyList={["nama"]}
-                    type={["text"]}
+                    headList={["Nama Kelas", "Tingkatan Kelas"]}
+                    keyList={["nama",'tingkatan']}
+                    type={["text",'text']}
                     onSubmit={addClass}
                     onCancel={closeDrawer}
                 />
@@ -109,9 +109,9 @@ export function DaftarKelas() {
                 <Form <IDaftarKelas>
                     data={daftar_kelas}
                     title="Tambah Kelas"
-                    headList={["Nama Kelas"]}
-                    keyList={["nama"]}
-                    type={["text"]}
+                    headList={["Nama Kelas", "Tingkatan Kelas"]}
+                    keyList={["nama",'tingkatan']}
+                    type={["text",'text']}
                     onSubmit={editClass}
                     onCancel={closeDrawer}
                 />

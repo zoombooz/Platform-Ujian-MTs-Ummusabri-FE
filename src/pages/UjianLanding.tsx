@@ -18,7 +18,7 @@ export function UjianLanding() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const endpoints = {
-        get_ujian: `siswa/ujian?nomor_peserta=${getTokenPayload().nomor_peserta}&tingkatan_id=${getTokenPayload().tingkatan_id}&status=0`,
+        get_ujian: `siswa/ujian?nomor_peserta=${getTokenPayload().nomor_peserta}&tingkatan_id=${getTokenPayload().tingkatan_id ?? getTokenPayload().kelas?.tingkatan }&status=0`,
         get_kelompok_ujian: 'siswa/kelompok_ujian',
         sesi_soal: 'siswa/sesi_soal',
         sesi_ujian: 'siswa/sesi_ujian',
@@ -229,7 +229,7 @@ export function UjianLanding() {
                             <h1 className="font-bold">📝Daftar Ujian Tersedia</h1>
                             <p className="text-gray-500 font-normal md:font-medium">Silakan pilih ujian yang ingin Anda kerjakan dari daftar berikut.</p>
                         </div>
-                        <div className="flex gap-5 items-center">
+                        <div className="gap-5 sm:flex sm:items-center">
                             <div className="flex items-center gap-3">
                                 <div className="border-2 border-gray-400 p-3 rounded-full">
                                     <Icon name="heroicons:user" shape="outline" />
@@ -239,16 +239,22 @@ export function UjianLanding() {
                                     <p>{getTokenPayload().nama}</p>
                                 </div>
                             </div>
-                            <button 
-                                className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-full cursor-pointer" 
-                                onClick={() => logOut()}
-                            >
-                                <Icon name="heroicons:arrow-left-start-on-rectangle" shape="outline" customClass="text-white sm:hidden" />
-                                <p className="text-white hidden sm:block">Log Out</p>
-                            </button>
+                            <div className="ml-auto">
+                                <button
+                                    className="bg-blue-500 hover:bg-blue-600 transition-all active:bg-blue-700 px-3 py-1 sm:w-32 h-12 rounded-full cursor-pointer"
+                                    onClick={logOut}
+                                >
+                                    <Icon
+                                        name="heroicons:arrow-left-start-on-rectangle"
+                                        shape="outline"
+                                        customClass="text-white sm:hidden"
+                                    />
+                                    <p className="text-white hidden sm:block">Log Out</p>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div className="hidden md:block overflow-y-auto">
+                    <div className="hidden sm:block overflow-y-auto">
                         <Table <IUjian>
                             title={''}
                             headList={['ID', 'Ujian', 'Kelompok Ujian', 'Kelas', 'Mata Pelajaran', 'Status']}
@@ -272,7 +278,7 @@ export function UjianLanding() {
                         />
                     </div>
 
-                    <div className="block md:hidden overflow-y-auto h-full">
+                    <div className="block sm:hidden overflow-y-auto h-full">
                         <CardList 
                             title={'Daftar Ujian'}
                             cardTitle="nama"

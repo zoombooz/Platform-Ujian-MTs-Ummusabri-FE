@@ -67,8 +67,21 @@ export function SoalForm<T extends Record<string, any>>({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    console.log("Form: ", formData);
+    // encode any text-editor fields to base64
+    const payload = keyList.reduce((acc, key, idx) => {
+      const val = formData[key] ?? ""
+      acc[key] =
+        itype[idx] === "text-editor"
+          ? btoa(unescape(encodeURIComponent(val)))
+          : val
+      return acc
+    }, {} as T)
+
+    // submit encoded payload
+    onSubmit(payload)
+    console.log("Form: ", payload)
+    // onSubmit(formData);
+    // console.log("Form: ", formData);
   };
 
   const isDisabled = (property: string) => {
@@ -165,7 +178,7 @@ export function SoalForm<T extends Record<string, any>>({
                 <WysiwygArea
                   content={formData[item]}
                   onChange={(value) =>
-                    setFormData((prevData) => ({ ...prevData, [item]: btoa(unescape(encodeURIComponent(value))) }))
+                    setFormData((prevData) => ({ ...prevData, [item]: value }))
                   }
                 />
               </div>

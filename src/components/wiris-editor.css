@@ -1,0 +1,30 @@
+/* App.css */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .editor-section, .preview-section {
+    margin: 30px 0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .wiris-editor-container .ck-editor__editable {
+    min-height: 400px;
+    font-size: 16px;
+  }
+  
+  .formula-display {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  .formula-display math {
+    font-size: 1.2em;
+    margin: 10px 0;
+  }
