@@ -202,7 +202,7 @@ export function Import<T extends Record<string, any>>({
               "bg-blue-400 hover:bg-blue-500 font-semibold " + style.button
             }
           >
-            UPDATE
+            IMPORT
           </button>
           <button
             type="button"

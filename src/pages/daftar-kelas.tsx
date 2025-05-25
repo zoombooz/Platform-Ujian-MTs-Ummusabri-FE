@@ -153,8 +153,8 @@ export function DaftarKelas() {
             <Table <IDaftarKelas>
                 title="Daftar Kelas"
                 data={daftarKelas}
-                headList={['Nama Rombel']}
-                keyList={['nama']}
+                headList={['Nama Rombel','Tingkatan']}
+                keyList={['nama','tingkatan']}
                 pagination={pagination}
                 editAction={true}
                 deleteAction={true}

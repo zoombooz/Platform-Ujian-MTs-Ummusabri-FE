@@ -127,7 +127,7 @@ export function Login({type, role}: {type: 'login' | 'register', role: 'admin' |
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: err.message,
+                text: err.response.data.message,
             });
         })
 

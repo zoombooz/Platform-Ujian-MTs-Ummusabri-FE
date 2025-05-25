@@ -283,6 +283,7 @@ export function Peserta() {
 
     const handleImport = () => {
         const importSoal = async (body: Partial<ISoal>) => {
+            setLoading(true);
             body = {
                 ...body,
             }
@@ -323,6 +324,8 @@ export function Peserta() {
                     title: "Request Failed",
                     text: `${(error as Error).message}`
                 })
+            } finally {
+                setLoading(false);
             }
         }
         openDrawer({

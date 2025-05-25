@@ -72,7 +72,10 @@ export function SoalForm<T extends Record<string, any>>({
       const val = formData[key] ?? ""
       acc[key] =
         itype[idx] === "text-editor"
-          ? btoa(unescape(encodeURIComponent(val)))
+          ? btoa(unescape(encodeURIComponent(val.replace(
+            /<annotation encoding="application\/vnd\.wiris\.mtweb-params\+json">[\s\S]*?<\/annotation>/g,
+            ''
+          ))))
           : val
       return acc
     }, {} as T)
@@ -176,7 +179,10 @@ export function SoalForm<T extends Record<string, any>>({
                   className="bg-gray-50 border-2 border-gray-300 rounded-lg px-2 py-1.5 text-black w-full"
                 ></textarea> */}
                 <WysiwygArea
-                  content={formData[item]}
+                  content={formData[item]?.replace(
+                    /<annotation encoding="application\/vnd\.wiris\.mtweb-params\+json">[\s\S]*?<\/annotation>/g,
+                    ''
+                  )}
                   onChange={(value) =>
                     setFormData((prevData) => ({ ...prevData, [item]: value }))
                   }
